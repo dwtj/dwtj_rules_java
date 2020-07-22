@@ -15,6 +15,16 @@ load("//java:rules/java_compiler_toolchain.bzl", "java_compiler_toolchain")
 
 load("//java:rules/java_runtime_toolchain.bzl", "java_runtime_toolchain")
 
+load(
+    "//java:aspects/google_java_format_aspect/defs.bzl",
+    _google_java_format_aspect = "google_java_format_aspect"
+)
+
+load(
+    "//java:rules/google_java_format_toolchain.bzl",
+    _google_java_format_toolchain = "google_java_format_toolchain"
+)
+
 CustomJavaInfo = _CustomJavaInfo
 
 dwtj_java_binary = java_binary
@@ -28,3 +38,7 @@ dwtj_java_test = java_test
 dwtj_java_compiler_toolchain = java_compiler_toolchain
 
 dwtj_java_runtime_toolchain = java_runtime_toolchain
+
+google_java_format_aspect = _google_java_format_aspect
+
+google_java_format_toolchain = _google_java_format_toolchain

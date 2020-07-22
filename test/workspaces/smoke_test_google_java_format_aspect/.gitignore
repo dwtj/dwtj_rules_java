@@ -1,0 +1,4 @@
+bazel-bin
+bazel-out
+bazel-smoke_test_google_java_format_aspect
+bazel-testlogs

@@ -1,9 +1,13 @@
 workspace(name = "smoke_test_basic_java_rules")
 
+# CONFIGURE `@dwtj_rules_java` #################################################
+
 local_repository(
     name = "dwtj_rules_java",
     path = "../../..",
 )
+
+# CONFIGURE `@local_openjdk_repository` ########################################
 
 load("@dwtj_rules_java//java:repositories.bzl", "dwtj_local_openjdk_repository")
 

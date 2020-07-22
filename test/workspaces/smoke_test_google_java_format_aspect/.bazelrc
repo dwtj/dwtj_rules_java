@@ -1,0 +1,1 @@
+build --aspects @dwtj_rules_java//java:defs.bzl%google_java_format_aspect

@@ -39,8 +39,8 @@ def _java_binary_impl(ctx):
         ),
         CustomJavaInfo(
             jar = output_jar,
-            srcs = depset(ctx.attr.srcs),
-            deps = depset(ctx.attr.deps),
+            srcs = depset(ctx.files.srcs),
+            deps = depset(ctx.files.deps),
         ),
     ]
 
