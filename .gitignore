@@ -1,0 +1,4 @@
+bazel-bin
+bazel-dwtj_rules_java
+bazel-out
+bazel-testlogs
