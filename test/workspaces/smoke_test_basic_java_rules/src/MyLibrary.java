@@ -1,4 +1,4 @@
-class MyDep {
+class MyLibrary {
     public static void hello() {
         System.out.println("Hello, from `MyDep`.");
     }
