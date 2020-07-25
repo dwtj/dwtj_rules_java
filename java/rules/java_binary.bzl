@@ -34,6 +34,6 @@ java_binary = rule(
         ),
     },
     toolchains = [
-        "@dwtj_rules_java//java/toolchains/java_compiler_toolchain:toolchain_type"
+        "@dwtj_rules_java//java/toolchains/java_compiler_toolchain:toolchain_type",
     ],
 )

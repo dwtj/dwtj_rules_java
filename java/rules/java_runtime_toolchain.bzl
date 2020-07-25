@@ -35,13 +35,17 @@ toolchain(
 JavaRuntimeToolchainInfo = provider(
     fields = {
         "java_executable": "A `java` executable file (in the host configuration).",
+        "java_run_script_template": "A template from which Java run scripts are instantiated.",
+        "class_path_separator": "The class path separator to use when invoking this `java` executable."
     },
 )
 
 def _java_compiler_toolchain_impl(ctx):
     toolchain_info = platform_common.ToolchainInfo(
         java_runtime_toolchain_info = JavaRuntimeToolchainInfo(
-            javac_executable = ctx.file.java_executable,
+            java_executable = ctx.file.java_executable,
+            java_run_script_template = ctx.file._java_run_script_template,
+            class_path_separator = ctx.attr.class_path_separator,
         ),
     )
     return [toolchain_info]
@@ -55,5 +59,16 @@ java_runtime_toolchain = rule(
             executable = True,
             cfg = "host",
         ),
+        # TODO(dwtj): This seems like a somewhat roundabout way to make this
+        #  template available for instantiation in the `build_java_run_script`
+        #  helper function, but I haven't yet figured out another way to do it
+        #  which resolves the label to a file.
+        "_java_run_script_template": attr.label(
+            default = ":rules/common/build/TEMPLATE.java_run_script.sh",
+            allow_single_file = True,
+        ),
+        "class_path_separator": attr.string(
+            default = ":",
+        )
     }
 )

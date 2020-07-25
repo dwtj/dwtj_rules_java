@@ -3,6 +3,7 @@ load(
     "dwtj_java_binary",
     "dwtj_java_library",
     "dwtj_java_import",
+    "dwtj_java_test",
 )
 
 dwtj_java_binary(
@@ -28,4 +29,11 @@ dwtj_java_library(
 dwtj_java_import(
     name = "MyImportWrapper",
     jar = ":lib/MyImport.jar",
+)
+
+dwtj_java_test(
+    name = "MyTest",
+    srcs = ["src/MyTest.java"],
+    main_class = "MyTest",
+    deps = [":MyLibrary"],
 )

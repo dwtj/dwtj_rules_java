@@ -35,6 +35,7 @@ JavaCompilerToolchainInfo = provider(
         "javac_executable": "A `javac` executable file (in the host configuration).",
         "jar_executable": "A `jar` executable file (in the host configuration).",
         "build_jar_from_java_sources_script_template": "A template for a script which is used to compile Java sources to a JAR file.",
+        "class_path_separator": "The class path separator to use when invoking this `javac` executable."
     },
 )
 
@@ -44,6 +45,7 @@ def _java_compiler_toolchain_impl(ctx):
             javac_executable = ctx.file.javac_executable,
             jar_executable = ctx.file.jar_executable,
             build_jar_from_java_sources_script_template = ctx.file._build_jar_from_java_sources_script_template,
+            class_path_separator = ctx.attr.class_path_separator,
         ),
     )
     return [toolchain_info]
@@ -71,5 +73,8 @@ java_compiler_toolchain = rule(
             default = ":rules/common/build/TEMPLATE.build_jar_from_java_sources.sh",
             allow_single_file = True,
         ),
+        "class_path_separator": attr.string(
+            default = ":",
+        )
     }
 )
