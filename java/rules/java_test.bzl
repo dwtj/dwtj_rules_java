@@ -13,6 +13,7 @@ def _extract_java_executable(ctx):
     toolchain_info = ctx.toolchains[_JAVA_RUNTIME_TOOLCHAIN_TYPE].java_runtime_toolchain_info
     return toolchain_info.java_executable
 
+# NOTE(dwtj): See also and compare this to `_java_binary_impl()`.
 def _java_test_impl(ctx):
     output_jar = build_jar_from_java_sources(ctx)
     deps_jars = depset(direct = [dep[CustomJavaInfo].jar for dep in ctx.attr.deps])
