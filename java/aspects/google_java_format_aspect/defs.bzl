@@ -1,4 +1,5 @@
-# TODO(dwtj): draft module docstring
+'''Defines the `google_java_format_aspect` and some helper definitions for it.
+'''
 
 load("@dwtj_rules_java//java:rules/common/CustomJavaInfo.bzl", "CustomJavaInfo")
 

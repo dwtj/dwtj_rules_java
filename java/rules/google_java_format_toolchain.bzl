@@ -1,4 +1,5 @@
-# TODO(dwtj): Add module docstring
+'''Defines the `google_java_format_toolchain` rule.
+'''
 
 GoogleJavaFormatToolchainInfo = provider(
     fields = [
