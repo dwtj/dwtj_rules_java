@@ -1,0 +1,28 @@
+workspace(name = "example")
+
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
+# CONFIGURE `@dwtj_rules_java` #################################################
+
+DWTJ_RULES_JAVA_ARCHIVE_INFO = {
+    "commit": "2a92db155f0a1d016ce566922d92cef1462b4aef",
+    "sha256": "d30399b30f50e4e44ea03fd6f2cf38036fe5b174315d6b5b06f91d73b2f9eb81",
+}
+http_archive(
+    name = "dwtj_rules_java",
+    url = "https://github.com/dwtj/dwtj_rules_java/archive/{}.zip".format(DWTJ_RULES_JAVA_ARCHIVE_INFO["commit"]),
+    strip_prefix = "dwtj_rules_java-{}".format(DWTJ_RULES_JAVA_ARCHIVE_INFO["commit"]),
+    sha256 = DWTJ_RULES_JAVA_ARCHIVE_INFO["sha256"],
+)
+
+# CONFIGURE A `@local_openjdk_repository` ######################################
+
+load("@dwtj_rules_java//java:repositories.bzl", "dwtj_local_openjdk_repository")
+
+dwtj_local_openjdk_repository(
+    name = "dwtj_local_openjdk",
+)
+
+load("@dwtj_local_openjdk//:defs.bzl", "register_java_toolchains")
+
+register_java_toolchains()
