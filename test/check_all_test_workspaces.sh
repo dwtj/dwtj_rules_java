@@ -30,4 +30,10 @@ if bazel build //:BadlyFormatted > /dev/null 2> /dev/null ; then
     exit 1
 fi
 
+# All of these commands should pass:
+cd "$ROOT_WORKSPACE/test/workspaces/smoke_test_deps_from_rules_jvm_external"
+bazel clean
+bazel build //...
+bazel test //...
+
 echo "SUCCESS: All test workspace checks passed."
