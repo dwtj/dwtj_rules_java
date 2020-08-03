@@ -1,7 +1,7 @@
 '''Defines the `google_java_format_aspect` and some helper definitions for it.
 '''
 
-load("@dwtj_rules_java//java:rules/common/CustomJavaInfo.bzl", "CustomJavaInfo")
+load("@dwtj_rules_java//java:providers/JavaCompilationInfo.bzl", "JavaCompilationInfo")
 
 def _extract_google_java_format_deploy_jar(aspect_ctx):
     return aspect_ctx.toolchains['@dwtj_rules_java//java/toolchains/google_java_format_toolchain:toolchain_type'] \
@@ -28,12 +28,12 @@ def _target_name_with_suffix(target, suffix):
     return target.label.name + suffix
 
 def _google_java_format_aspect_impl(target, aspect_ctx):
-    # Skip a target if it doesn't provide `CustomJavaInfo`.
-    if CustomJavaInfo not in target:
+    # Skip a target if it doesn't provide a `JavaCompilationInfo`.
+    if JavaCompilationInfo not in target:
         return [GoogleJavaFormatAspectInfo()]
     
     # Extract some information from the target and the toolchains:
-    srcs = target[CustomJavaInfo].srcs
+    srcs = target[JavaCompilationInfo].srcs
     google_java_format_deploy_jar = _extract_google_java_format_deploy_jar(aspect_ctx)
     java_executable = _extract_java_executable(aspect_ctx)
 

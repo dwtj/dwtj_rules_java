@@ -1,21 +1,25 @@
 '''Defines the `java_import` rule.
 '''
 
-load("@dwtj_rules_java//java:rules/common/CustomJavaInfo.bzl", "CustomJavaInfo")
+load("@dwtj_rules_java//java:providers/JavaDependencyInfo.bzl", "JavaDependencyInfo")
 
 def _java_import_impl(ctx):
+    jars_depset = depset(direct = ctx.files.jars)
     return [
-        CustomJavaInfo(jar = ctx.file.jar)
+        JavaDependencyInfo(
+            compile_time_class_path_jars = jars_depset,
+            run_time_class_path_jars = jars_depset,
+        ),
     ]
 
 java_import = rule(
     implementation = _java_import_impl,
-    # TODO(dwtj): Change this so that it takes a list of JARs, like the standard
-    #  `java_import` rule. This currently takes just a single JAR to make this
-    #  quick hack work.
     attrs = {
-        "jar": attr.label(
-            allow_single_file = [".jar"]
+        "jars": attr.label_list(
+            allow_files = [".jar"]
         ),
-    }
+    },
+    provides = [
+        JavaDependencyInfo,
+    ],
 )

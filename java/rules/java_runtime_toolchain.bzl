@@ -64,7 +64,7 @@ java_runtime_toolchain = rule(
         #  helper function, but I haven't yet figured out another way to do it
         #  which resolves the label to a file.
         "_java_run_script_template": attr.label(
-            default = ":rules/common/build/TEMPLATE.java_run_script.sh",
+            default = ":rules/common/actions/TEMPLATE.java_run_script.sh",
             allow_single_file = True,
         ),
         "class_path_separator": attr.string(

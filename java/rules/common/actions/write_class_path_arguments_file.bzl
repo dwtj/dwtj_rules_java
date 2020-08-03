@@ -1,4 +1,4 @@
-'''Defines the helper function which build Java class-path arguments files.
+'''Defines functions which write Java class-path arguments files.
 
 This is meant to be used by various Java rules.
 '''
@@ -13,8 +13,8 @@ def _to_short_path(class_path_item):
     '''
     return class_path_item.short_path
 
-def build_run_time_class_path_arguments_file(name, jars, actions, class_path_separator):
-    return _build_class_path_arguments_file(
+def write_run_time_class_path_arguments_file(name, jars, actions, class_path_separator):
+    return _write_class_path_arguments_file(
         name,
         jars,
         actions,
@@ -22,8 +22,8 @@ def build_run_time_class_path_arguments_file(name, jars, actions, class_path_sep
         variant = "run_time",
     )
 
-def build_compile_time_class_path_arguments_file(name, jars, actions, class_path_separator):
-    return _build_class_path_arguments_file(
+def write_compile_time_class_path_arguments_file(name, jars, actions, class_path_separator):
+    return _write_class_path_arguments_file(
         name,
         jars,
         actions,
@@ -31,11 +31,11 @@ def build_compile_time_class_path_arguments_file(name, jars, actions, class_path
         variant = "compile_time",
     )
 
-def _build_class_path_arguments_file(name, jars, actions, class_path_separator, variant):
+def _write_class_path_arguments_file(name, jars, actions, class_path_separator, variant):
     '''Writes an arguments file with the classpath made from `jars`.
 
     The `java` and `javac` commands accept "Command Line Arguments Files" using
-    the `@filename` notation. This is a helper class to build such a file.
+    the `@filename` notation. This is a helper class to write such a file.
     
     The `variant` argument is used to indicate whether the file is meant to be
     used at runtime or at compile time. (This is relevant to how `file`s are

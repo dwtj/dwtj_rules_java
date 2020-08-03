@@ -2,7 +2,6 @@
 #
 # This script was generated from a template with the following substitutions:
 # 
-# - TARGET_NAME: {TARGET_NAME}
 # - JAVAC_EXECUTABLE: {JAVAC_EXECUTABLE}
 # - CLASS_OUTPUT_DIRECTORY: {CLASS_OUTPUT_DIRECTORY}
 # - CLASS_PATH_ARGS_FILE: {CLASS_PATH_ARGS_FILE}

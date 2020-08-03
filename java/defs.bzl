@@ -1,7 +1,9 @@
 '''This is part of the public API for this project.
 '''
 
-load("//java:rules/common/CustomJavaInfo.bzl", _CustomJavaInfo = "CustomJavaInfo")
+load("//java:providers/JavaCompilationInfo.bzl", _JavaCompilationInfo = "JavaCompilationInfo")
+
+load("//java:providers/JavaDependencyInfo.bzl", _JavaDependencyInfo = "JavaDependencyInfo")
 
 load("//java:rules/java_binary.bzl", "java_binary")
 
@@ -25,7 +27,9 @@ load(
     _google_java_format_toolchain = "google_java_format_toolchain"
 )
 
-CustomJavaInfo = _CustomJavaInfo
+JavaCompilationInfo = _JavaCompilationInfo
+
+JavaDependencyInfo = _JavaDependencyInfo
 
 dwtj_java_binary = java_binary
 

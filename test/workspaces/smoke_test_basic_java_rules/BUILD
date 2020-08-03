@@ -28,7 +28,7 @@ dwtj_java_library(
 
 dwtj_java_import(
     name = "MyImportWrapper",
-    jar = ":lib/MyImport.jar",
+    jars = [":lib/MyImport.jar"],
 )
 
 dwtj_java_test(

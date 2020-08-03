@@ -34,7 +34,7 @@ JavaCompilerToolchainInfo = provider(
     fields = {
         "javac_executable": "A `javac` executable file (in the host configuration).",
         "jar_executable": "A `jar` executable file (in the host configuration).",
-        "build_jar_from_java_sources_script_template": "A template for a script which is used to compile Java sources to a JAR file.",
+        "compile_and_jar_java_sources_script_template": "A template for a script which is used to compile Java sources to a JAR file.",
         "class_path_separator": "The class path separator to use when invoking this `javac` executable."
     },
 )
@@ -44,7 +44,7 @@ def _java_compiler_toolchain_impl(ctx):
         java_compiler_toolchain_info = JavaCompilerToolchainInfo(
             javac_executable = ctx.file.javac_executable,
             jar_executable = ctx.file.jar_executable,
-            build_jar_from_java_sources_script_template = ctx.file._build_jar_from_java_sources_script_template,
+            compile_and_jar_java_sources_script_template = ctx.file._compile_and_jar_java_sources_script_template,
             class_path_separator = ctx.attr.class_path_separator,
         ),
     )
@@ -69,8 +69,8 @@ java_compiler_toolchain = rule(
         #  template available for instantiation in the
         #  `build_jar_from_java_sources` helper function, but I haven't yet
         #  figured out another way to do it which resolves the label to a file.
-        "_build_jar_from_java_sources_script_template": attr.label(
-            default = ":rules/common/build/TEMPLATE.build_jar_from_java_sources.sh",
+        "_compile_and_jar_java_sources_script_template": attr.label(
+            default = ":rules/common/actions/TEMPLATE.compile_and_jar_java_sources.sh",
             allow_single_file = True,
         ),
         "class_path_separator": attr.string(

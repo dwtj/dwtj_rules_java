@@ -1,24 +1,23 @@
 '''Defines the `java_test` rule.
 '''
 
-load("@dwtj_rules_java//java:rules/common/CustomJavaInfo.bzl", "CustomJavaInfo")
-load("@dwtj_rules_java//java:rules/common/build/build_jar_from_java_sources.bzl", "build_jar_from_java_sources")
-load("@dwtj_rules_java//java:rules/common/build/build_java_run_script.bzl", "build_java_run_script")
-
-_JAVA_RUNTIME_TOOLCHAIN_TYPE = "@dwtj_rules_java//java/toolchains/java_runtime_toolchain:toolchain_type"
-
-def _extract_java_executable(ctx):
-    '''Returns a `file` pointing to the `java` exec in the runtime toolchain.
-    '''
-    toolchain_info = ctx.toolchains[_JAVA_RUNTIME_TOOLCHAIN_TYPE].java_runtime_toolchain_info
-    return toolchain_info.java_executable
+load("@dwtj_rules_java//java:providers/JavaCompilationInfo.bzl", "JavaCompilationInfo")
+load("@dwtj_rules_java//java:providers/JavaDependencyInfo.bzl", "JavaDependencyInfo")
+load("@dwtj_rules_java//java:rules/common/actions/compile_and_jar_java_sources.bzl", "compile_and_jar_java_target")
+load("@dwtj_rules_java//java:rules/common/actions/write_java_run_script.bzl", "write_java_run_script")
+load("@dwtj_rules_java//java:rules/common/extract/toolchain_info.bzl", "extract_java_executable")
 
 # NOTE(dwtj): See also and compare this to `_java_binary_impl()`.
 def _java_test_impl(ctx):
-    output_jar = build_jar_from_java_sources(ctx)
-    deps_jars = depset(direct = [dep[CustomJavaInfo].jar for dep in ctx.attr.deps])
-    runtime_jars = depset(direct = [output_jar], transitive = [deps_jars])
-    run_script, class_path_args_file = build_java_run_script(ctx, runtime_jars)
+    java_compilation_info = compile_and_jar_java_target(ctx)
+    output_jar = java_compilation_info.class_files_output_jar
+    run_time_jars = depset(
+        direct = [output_jar],
+        transitive = [dep[JavaDependencyInfo].run_time_class_path_jars \
+                          for dep \
+                          in ctx.attr.deps],
+    )
+    run_script, class_path_args_file = write_java_run_script(ctx, run_time_jars)
 
     return [
         DefaultInfo(
@@ -26,18 +25,14 @@ def _java_test_impl(ctx):
             executable = run_script,
             runfiles = ctx.runfiles(
                 files = [
-                    _extract_java_executable(ctx),
+                    extract_java_executable(ctx),
                     run_script,
                     class_path_args_file
                 ],
-                transitive_files = runtime_jars
+                transitive_files = run_time_jars
             ),
         ),
-        CustomJavaInfo(
-            jar = output_jar,
-            srcs = depset(ctx.files.srcs),
-            deps = depset(ctx.files.deps),
-        ),
+        java_compilation_info,
     ]
 
 java_test = rule(
@@ -53,9 +48,12 @@ java_test = rule(
             mandatory = True,
         ),
         "deps": attr.label_list(
-            providers = [CustomJavaInfo],
+            providers = [JavaDependencyInfo],
         ),
     },
+    provides = [
+        JavaCompilationInfo,
+    ],
     toolchains = [
         "@dwtj_rules_java//java/toolchains/java_compiler_toolchain:toolchain_type",
         "@dwtj_rules_java//java/toolchains/java_runtime_toolchain:toolchain_type",
