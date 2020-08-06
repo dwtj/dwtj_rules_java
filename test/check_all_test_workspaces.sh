@@ -14,6 +14,13 @@ bazel build //...
 bazel test //...
 bazel run //:MyBinary
 
+# All of these commands should pass:
+cd "$ROOT_WORKSPACE/test/workspaces/smoke_test_use_legacy_java_rules"
+bazel clean
+bazel build //...
+bazel test //...
+bazel run //:MyBinary
+
 # `:WellFormatted` should pass, but `:BadlyFormatted` should fail:
 cd "$ROOT_WORKSPACE/test/workspaces/smoke_test_google_java_format_aspect"
 bazel clean
