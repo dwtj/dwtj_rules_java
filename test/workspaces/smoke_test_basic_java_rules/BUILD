@@ -12,7 +12,7 @@ dwtj_java_binary(
     main_class = "MyBinary",
     deps = [
         ":MyLibrary",
-        ":MyImportWrapper",
+        ":MyImport",
     ],
 )
 
@@ -21,14 +21,17 @@ dwtj_java_library(
     srcs = ["src/MyLibrary.java"],
 )
 
+# A copy of this target's output JAR was manually copied to the `lib` directory.
+# This target isn't directly used as a "dep" of any other target. Rather,
+# `MyImport` is used as a dep.
 dwtj_java_library(
-    name = "MyImport",
-    srcs = ["src/MyImport.java"],
+    name = "MyJar",
+    srcs = ["src/MyJar.java"],
 )
 
 dwtj_java_import(
-    name = "MyImportWrapper",
-    jars = [":lib/MyImport.jar"],
+    name = "MyImport",
+    jars = [":lib/MyJar.jar"],
 )
 
 dwtj_java_test(
