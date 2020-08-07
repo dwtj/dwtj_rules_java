@@ -35,6 +35,10 @@ java_library = rule(
         "deps": attr.label_list(
             providers = [JavaDependencyInfo],
         ),
+        "include_in_jar_manifest": attr.string_list(
+            doc = "A list of strings; each will be added as a line of the output JAR's manifest file.",
+            default = [],
+        ),
     },
     provides = [
         JavaCompilationInfo,

@@ -55,6 +55,10 @@ java_binary = rule(
         "deps": attr.label_list(
             providers = [JavaDependencyInfo],
         ),
+        "include_in_jar_manifest": attr.string_list(
+            doc = "A list of strings; each will be added as a line of the output JAR's manifest file. The JAR's `Main-Class` header is automatically set according to the target's `main_class` attribute.",
+            default = [],
+        ),
     },
     provides = [
         JavaCompilationInfo,

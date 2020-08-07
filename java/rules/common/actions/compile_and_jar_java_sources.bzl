@@ -47,6 +47,7 @@ def compile_and_jar_java_target(ctx):
             transitive = [dep[JavaDependencyInfo].compile_time_class_path_jars for dep in ctx.attr.deps],
         ),
         class_files_output_jar = ctx.actions.declare_file(ctx.attr.name + ".jar"),
+        include_in_jar_manifest = ctx.attr.include_in_jar_manifest,
     )
     compile_and_jar_java_sources(
         compilation_info = java_compilation_info,
@@ -84,6 +85,20 @@ def compile_and_jar_java_sources(compilation_info, compiler_toolchain_info, acti
         class_path_separator = compiler_toolchain_info.class_path_separator
     )
 
+    # Declare, build and write a JAR manifest file:
+    jar_manifest_file = actions.declare_file(temp_file_prefix + ".include_in_jar_manifest")
+    jar_manifest_args = actions.args()
+    jar_manifest_args.add_all(
+        compilation_info.include_in_jar_manifest,
+        omit_if_empty = False,
+    )
+    jar_manifest_args.set_param_file_format("multiline")
+    actions.write(
+        output = jar_manifest_file,
+        content = jar_manifest_args,
+        is_executable = False,
+    )
+
     # Declare, build, and write an @args file to hold all other `javac` command
     # arguments.
     javac_args_file = actions.declare_file(temp_file_prefix + ".javac.args")
@@ -111,6 +126,7 @@ def compile_and_jar_java_sources(compilation_info, compiler_toolchain_info, acti
             "{JAR_EXECUTABLE}": compiler_toolchain_info.jar_executable.path,
             "{CLASS_PATH_ARGS_FILE}": class_path_args_file.path,
             "{JAVAC_ARGUMENTS_FILE}": javac_args_file.path,
+            "{JAR_MANIFEST_FILE}": jar_manifest_file.path,
             "{OUTPUT_JAR}": output_jar.path,
         },
         is_executable = True,
@@ -126,6 +142,7 @@ def compile_and_jar_java_sources(compilation_info, compiler_toolchain_info, acti
             direct = [
                 class_path_args_file,
                 javac_args_file,
+                jar_manifest_file,
             ],
             transitive = [
                 compilation_info.srcs,
