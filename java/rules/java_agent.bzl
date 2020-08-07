@@ -8,6 +8,13 @@ load("@dwtj_rules_java//java:providers/JavaDependencyInfo.bzl", "JavaDependencyI
 load("@dwtj_rules_java//java:rules/common/providers.bzl", "singleton_java_dependency_info")
 load("@dwtj_rules_java//java:rules/common/actions/compile_and_jar_java_sources.bzl", "compile_and_jar_java_sources")
 
+def _bool_to_str(b):
+    if b == True:
+        return "true"
+    if b == False:
+        return "false"
+    fail("The argument `b` is not a boolean: " + repr(b))
+
 def _java_agent_impl(ctx):
     # NOTE(dwtj): This code is very similar to `compile_and_jar_java_target()`,
     #  but we can't directly use that function, since we need to append a to
@@ -16,10 +23,14 @@ def _java_agent_impl(ctx):
 
     output_jar = ctx.actions.declare_file(ctx.attr.name + ".jar")
 
-    # NOTE(dwtj): Rule `attr` are frozen; we can't modify it directly. So, we
-    #  first copy its contents and append to that.
-    manifest_attr = [a for a in ctx.attr.additional_jar_manifest_attributes]
-    manifest_attr.append("Premain-Class: " + ctx.attr.premain_class)
+    # NOTE(dwtj): Rule `attr` are frozen; we can't modify it directly.
+    manifest_attr = [
+        "Premain-Class: " + ctx.attr.premain_class,
+        "Can-Redefine-Classes: " + _bool_to_str(ctx.attr.can_redefine_classes),
+        "Can-Retransform-Classes: " + _bool_to_str(ctx.attr.can_retransform_classes),
+        "Can-Set-Native-Method-Prefix: " + _bool_to_str(ctx.attr.can_set_native_method_prefix),
+    ]
+    manifest_attr.extend(ctx.attr.additional_jar_manifest_attributes)
 
     compilation_info = JavaCompilationInfo(
         srcs = depset(ctx.files.srcs),
@@ -45,6 +56,9 @@ def _java_agent_impl(ctx):
         JavaAgentInfo(
             java_agent_jar = output_jar,
             premain_class = ctx.attr.premain_class,
+            can_redefine_classes = ctx.attr.can_redefine_classes,
+            can_retransform_classes = ctx.attr.can_retransform_classes,
+            can_set_native_method_prefix = ctx.attr.can_set_native_method_prefix,
         ),
     ]
 
@@ -67,7 +81,16 @@ java_agent = rule(
         ),
         "premain_class": attr.string(
             mandatory = True,
-        )
+        ),
+        "can_redefine_classes": attr.bool(
+            default = False,
+        ),
+        "can_retransform_classes": attr.bool(
+            default = False,
+        ),
+        "can_set_native_method_prefix": attr.bool(
+            default = False,
+        ),
     },
     provides = [
         JavaAgentInfo,
