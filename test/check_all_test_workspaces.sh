@@ -31,7 +31,7 @@ if bazel build //:BadlyFormatted > /dev/null 2> /dev/null ; then
 fi
 
 # All of these commands should pass:
-cd "$ROOT_WORKSPACE/test/workspaces/smoke_test_deps_from_rules_jvm_external"
+cd "$ROOT_WORKSPACE/test/workspaces/smoke_test_use_rules_jvm_external"
 bazel clean
 bazel build //...
 bazel test //...
