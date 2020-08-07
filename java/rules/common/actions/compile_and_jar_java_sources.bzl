@@ -40,6 +40,7 @@ def compile_and_jar_java_target(ctx):
       this target. This object's `class_files_output_jar` field will be assigned
       a `File` named `<target_name>.jar`.
     '''
+    maybe_main_class = None if not hasattr(ctx.attr, "main_class") else ctx.attr.main_class
     java_compilation_info = JavaCompilationInfo(
         srcs = depset(ctx.files.srcs),
         class_path_jars = depset(
@@ -48,6 +49,7 @@ def compile_and_jar_java_target(ctx):
         ),
         class_files_output_jar = ctx.actions.declare_file(ctx.attr.name + ".jar"),
         include_in_jar_manifest = ctx.attr.include_in_jar_manifest,
+        main_class = maybe_main_class,
     )
     compile_and_jar_java_sources(
         compilation_info = java_compilation_info,
@@ -88,6 +90,11 @@ def compile_and_jar_java_sources(compilation_info, compiler_toolchain_info, acti
     # Declare, build and write a JAR manifest file:
     jar_manifest_file = actions.declare_file(temp_file_prefix + ".include_in_jar_manifest")
     jar_manifest_args = actions.args()
+    if compilation_info.main_class != None:
+        jar_manifest_args.add(
+            compilation_info.main_class,
+            format = "Main-Class: %s",
+        )
     jar_manifest_args.add_all(
         compilation_info.include_in_jar_manifest,
         omit_if_empty = False,
