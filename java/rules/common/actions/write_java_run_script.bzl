@@ -3,50 +3,109 @@
 This function is meant to be used by different kinds of Java rules.
 '''
 
+load("@dwtj_rules_java//java:providers/JavaAgentInfo.bzl", "JavaAgentInfo")
+load("@dwtj_rules_java//java:providers/JavaDependencyInfo.bzl", "JavaDependencyInfo")
+load("@dwtj_rules_java//java:providers/JavaExecutionInfo.bzl", "JavaExecutionInfo")
+
 load("@dwtj_rules_java//java:rules/common/actions/write_class_path_arguments_file.bzl", "write_run_time_class_path_arguments_file")
 
-_JAVA_RUNTIME_TOOLCHAIN_TYPE = "@dwtj_rules_java//java/toolchains/java_runtime_toolchain:toolchain_type"
+def _java_agent_to_jar(java_agent):
+    return "-javaagent:{}".format(java_agent[JavaAgentInfo].java_agent_jar.short_path)
 
-def write_java_run_script(ctx, run_time_jars):
-    '''Declares/writes the script to be run when this `ctx`'s target is run.
+def write_java_run_script_from_ctx(ctx, java_dependency_info, java_runtime_toolchain_info):
+    '''Unpacks a target `ctx` by convention and calls `write_java_run_script()`.
 
     Args:
       ctx: The [`ctx`][1] of the Java target for which this function is building
           a run script.
-      run_time_jars: A list of `file`s. Each `file` should be a JAR to be
-          included on the runtime class path.
+      java_dependency_info: The `JavaDependencyInfo` of *this* target.
+      java_runtime_toolchain_info: The `JavaRuntimeToolchainInfo` to use.
 
-    Returns:
-      A two-tuple of `file` handles: `(java_run_script, class_path_args_file)`
-
-    NOTE(dwtj): Use of `ctx` here is a bit of a hack. See the
-    `build_jar_from_sources` helper function for some notes.
-
-    TODO(dwtj): Consider tidying up this hack.
+    Returns: A 4-tuple: (info: JavaExecutionInfo, java_run_script: File, class_path_args_file: File, run_time_jars: depset of File)
 
     [1]: https://docs.bazel.build/versions/3.4.0/skylark/lib/ctx.html
-    [2]: https://docs.bazel.build/versions/3.4.0/skylark/lib/File.html
     '''
-
-    toolchain_info = ctx.toolchains[_JAVA_RUNTIME_TOOLCHAIN_TYPE].java_runtime_toolchain_info
-
-    class_path_args_file = write_run_time_class_path_arguments_file(
-        name = ctx.attr.name + ".run_time_class_path.args",
-        jars = run_time_jars,
-        actions = ctx.actions,
-        class_path_separator = toolchain_info.class_path_separator,
+    java_execution_info = JavaExecutionInfo(
+        java_dependency_info = java_dependency_info,
+        deps = ctx.attr.deps,
+        main_class = ctx.attr.main_class,
+        java_agents = ctx.attr.java_agents,
+        java_runtime_toolchain_info = java_runtime_toolchain_info,
     )
 
-    java_run_script = ctx.actions.declare_file(ctx.attr.name + ".java_run_script.sh")
-    ctx.actions.expand_template(
-        template = toolchain_info.java_run_script_template,
+    run_script, cp_args_file, jvm_flags_args_file, run_time_jars = write_java_run_script(
+        java_execution_info,
+        ctx.actions,
+        ctx.attr.name,
+    )
+
+    return java_execution_info, run_script, cp_args_file, jvm_flags_args_file, run_time_jars
+
+def write_java_run_script(java_execution_info, actions, temp_file_prefix):
+    '''Declares/writes the script to run Java according to the given argument.
+
+    Args:
+      java_execution_info: A `JavaExecutionInfo`.
+      actions: The `actions` instance from which actions are emitted.
+      temp_file_prefix: A string to prefix to the name of temporary files. This
+        is conventionally the name of the target calling this function.
+
+    Returns:
+      A 3-tuple: `(java_run_script: File, class_path_args_file: File, run_time_jars: depset of File)`
+
+    [1]: https://docs.bazel.build/versions/3.4.0/skylark/lib/File.html
+    '''
+    # We include run time jars from three kinds of targets: this target, this
+    # target's declared deps, and this target's declared java agents.
+    java_dependencies = [d for d in java_execution_info.deps]
+    java_dependencies.extend(java_execution_info.java_agents)
+    java_dependency_infos = [java_execution_info.java_dependency_info]
+    java_dependency_infos.extend([dep[JavaDependencyInfo] for dep in java_dependencies])
+
+    # Merge all of these depsets together into one:
+    run_time_jars = depset(
+        transitive = [info.run_time_class_path_jars for info in java_dependency_infos],
+    )
+
+    # Abbreviate this:
+    rt_info = java_execution_info.java_runtime_toolchain_info
+
+    # Create a class path arguments file:
+    class_path_args_file = write_run_time_class_path_arguments_file(
+        name = temp_file_prefix + ".run_time_class_path.args",
+        jars = run_time_jars,
+        actions = actions,
+        class_path_separator = rt_info.class_path_separator,
+    )
+
+    # Create a sequence of command line flags to pass to the `java` command:
+    jvm_flags = actions.args()
+    jvm_flags.add_all(
+        java_execution_info.java_agents,
+        map_each = _java_agent_to_jar,
+    )
+    jvm_flags.set_param_file_format("shell")
+    jvm_flags_args_file = actions.declare_file(temp_file_prefix + ".jvm_flags.args")
+    actions.write(
+        output = jvm_flags_args_file,
+        content = jvm_flags,
+        is_executable = False,
+    )
+
+    # TODO(dwtj): Currently, we list a Java agent JAR as part of both a
+    #  `-javaagent` argument and as part of the `--class-path`. Figure out if
+    #  this can cause problems.
+    java_run_script = actions.declare_file(temp_file_prefix + ".java_run_script.sh")
+    actions.expand_template(
+        template = rt_info.java_run_script_template,
         output = java_run_script,
         substitutions = {
-            "{JAVA_EXECUTABLE}": toolchain_info.java_executable.short_path,
+            "{JAVA_EXECUTABLE}": rt_info.java_executable.short_path,
             "{CLASS_PATH_ARGUMENTS_FILE}": class_path_args_file.short_path,
-            "{MAIN_CLASS}": ctx.attr.main_class,
+            "{JVM_FLAGS_ARGUMENTS_FILE}": jvm_flags_args_file.short_path,
+            "{MAIN_CLASS}": java_execution_info.main_class,
         },
         is_executable = True,
     )
 
-    return java_run_script, class_path_args_file
+    return java_run_script, class_path_args_file, jvm_flags_args_file, run_time_jars

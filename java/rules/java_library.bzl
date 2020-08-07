@@ -4,15 +4,7 @@
 load("@dwtj_rules_java//java:providers/JavaCompilationInfo.bzl", "JavaCompilationInfo")
 load("@dwtj_rules_java//java:providers/JavaDependencyInfo.bzl", "JavaDependencyInfo")
 load("@dwtj_rules_java//java:rules/common/actions/compile_and_jar_java_sources.bzl", "compile_and_jar_java_target")
-
-def singleton_java_dependency_info(jar):
-    '''Returns a `JavaDependencyInfo` with just the given `jar` as a CT/RT dep.
-    '''
-    singleton_depset = depset(direct = [jar])
-    return JavaDependencyInfo(
-        run_time_class_path_jars = singleton_depset,
-        compile_time_class_path_jars = singleton_depset,
-    )
+load("@dwtj_rules_java//java:rules/common/providers.bzl", "singleton_java_dependency_info")
 
 def _java_library_impl(ctx):
     java_compilation_info = compile_and_jar_java_target(ctx)

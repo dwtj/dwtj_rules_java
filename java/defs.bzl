@@ -1,9 +1,13 @@
 '''This is part of the public API for this project.
 '''
 
+load("//java:providers/JavaAgentInfo.bzl", _JavaAgentInfo = "JavaAgentInfo")
+
 load("//java:providers/JavaCompilationInfo.bzl", _JavaCompilationInfo = "JavaCompilationInfo")
 
 load("//java:providers/JavaDependencyInfo.bzl", _JavaDependencyInfo = "JavaDependencyInfo")
+
+load("//java:providers/JavaExecutionInfo.bzl", _JavaExecutionInfo = "JavaExecutionInfo")
 
 load("//java:rules/java_binary.bzl", "java_binary")
 
@@ -31,9 +35,13 @@ load(
     _google_java_format_toolchain = "google_java_format_toolchain"
 )
 
+JavaAgentInfo = _JavaAgentInfo
+
 JavaCompilationInfo = _JavaCompilationInfo
 
 JavaDependencyInfo = _JavaDependencyInfo
+
+JavaExecutionInfo = _JavaExecutionInfo
 
 dwtj_java_binary = java_binary
 

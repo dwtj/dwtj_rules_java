@@ -25,6 +25,7 @@ bazel run //:MyBinary
 cd "$ROOT_WORKSPACE/test/workspaces/smoke_test_java_agent_rule"
 bazel clean
 bazel build //...
+bazel test //...
 
 # `:WellFormatted` should pass, but `:BadlyFormatted` should fail:
 cd "$ROOT_WORKSPACE/test/workspaces/smoke_test_google_java_format_aspect"
