@@ -17,7 +17,7 @@ def java_agent(**attributes):
     if type(attributes['premain_class']) != 'string':
         fail("Expected attribute `premain_class` to be a `string`.")
 
-    attributes.setdefault('include_in_jar_manifest', []).append("Premain-Class: " + attributes['premain_class'])
+    attributes.setdefault('additional_jar_manifest_attributes', []).append("Premain-Class: " + attributes['premain_class'])
     attributes.pop('premain_class')
 
     java_library(**attributes)

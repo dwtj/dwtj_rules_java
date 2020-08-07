@@ -48,7 +48,7 @@ def compile_and_jar_java_target(ctx):
             transitive = [dep[JavaDependencyInfo].compile_time_class_path_jars for dep in ctx.attr.deps],
         ),
         class_files_output_jar = ctx.actions.declare_file(ctx.attr.name + ".jar"),
-        include_in_jar_manifest = ctx.attr.include_in_jar_manifest,
+        additional_jar_manifest_attributes = ctx.attr.additional_jar_manifest_attributes,
         main_class = maybe_main_class,
     )
     compile_and_jar_java_sources(
@@ -88,7 +88,7 @@ def compile_and_jar_java_sources(compilation_info, compiler_toolchain_info, acti
     )
 
     # Declare, build and write a JAR manifest file:
-    jar_manifest_file = actions.declare_file(temp_file_prefix + ".include_in_jar_manifest")
+    jar_manifest_file = actions.declare_file(temp_file_prefix + ".additional_jar_manifest_attributes")
     jar_manifest_args = actions.args()
     if compilation_info.main_class != None:
         jar_manifest_args.add(
@@ -96,7 +96,7 @@ def compile_and_jar_java_sources(compilation_info, compiler_toolchain_info, acti
             format = "Main-Class: %s",
         )
     jar_manifest_args.add_all(
-        compilation_info.include_in_jar_manifest,
+        compilation_info.additional_jar_manifest_attributes,
         omit_if_empty = False,
     )
     jar_manifest_args.set_param_file_format("multiline")
