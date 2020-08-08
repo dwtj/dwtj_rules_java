@@ -16,6 +16,7 @@ java_import = rule(
     implementation = _java_import_impl,
     attrs = {
         "jars": attr.label_list(
+            mandatory = True,
             allow_files = [".jar"]
         ),
     },

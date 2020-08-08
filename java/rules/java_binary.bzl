@@ -46,6 +46,8 @@ java_binary = rule(
     implementation = _java_binary_impl,
     attrs = {
         "srcs": attr.label_list(
+            # TODO(dwtj): Consider supporting empty `srcs` list once `exports`
+            #  is supported.
             allow_empty = False,
             doc = "A list of Java source files whose derived class files should be included in this binary (and any of its dependents).",
             allow_files = [".java"],
@@ -62,13 +64,28 @@ java_binary = rule(
             doc = "A list of strings; each will be added as a line of the output JAR's manifest file. The JAR's `Main-Class` header is automatically set according to the target's `main_class` attribute.",
             default = [],
         ),
-        "java_agents": attr.label_list(
-            doc = "A list of `java_agent` targets with which this target should be run.",
+        # TODO(dwtj): A dict is used here in order to support Java agent
+        #  options, but this causes two problems. First, it means that a single
+        #  Java agent cannot be listed multiple times. Second, the order of
+        #  agents is lost. These are problems because according to the
+        #  [`java.lang.instrument` Javadoc][1], agents can be listed multiple
+        #  times and their order dictates the sequence by which `premain()`
+        #  functions are called. Thus, this design doesn't support all use cases
+        #  provided by the `java` command line interface.
+        #
+        #  Unfortunately, I don't immediately see an alternative to this use of
+        #  dict. At least these use cases are probably rare.
+        #
+        #  ---
+        #
+        #  1: https://docs.oracle.com/en/java/javase/14/docs/api/java.instrument/java/lang/instrument/package-summary.html
+        "java_agents": attr.label_keyed_string_dict(
+            doc = "A dict from `java_agent` targets to option strings. Each key is a `java_agent` target (i.e. a target which provides both `JavaAgentInfo` and `JavaDependencyInfo`) with which this target should be run; each value is an option string to be passed to that Java agent.",
             providers = [
                 JavaAgentInfo,
                 JavaDependencyInfo,
             ],
-            default = [],
+            default = dict(),
         ),
     },
     provides = [

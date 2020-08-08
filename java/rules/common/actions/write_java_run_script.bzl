@@ -9,8 +9,26 @@ load("@dwtj_rules_java//java:providers/JavaExecutionInfo.bzl", "JavaExecutionInf
 
 load("@dwtj_rules_java//java:rules/common/actions/write_class_path_arguments_file.bzl", "write_run_time_class_path_arguments_file")
 
-def _java_agent_to_jar(java_agent):
-    return "-javaagent:{}".format(java_agent[JavaAgentInfo].java_agent_jar.short_path)
+def _java_agent_and_options_to_flag(java_agent_and_options):
+    '''Convert a 2-tuple to a java flag.
+
+    Args:
+      java_agent_and_options: A 2-tuple. First is a target providing a
+        `JavaAgentInfo`; second is an options string to be passed to the java
+        agent.
+
+    Returns:
+      A string of the form `-javaagent:<java_agent_jar>=<options>`.
+    '''
+    java_agent, options = java_agent_and_options
+
+    return "-javaagent:{}={}".format(
+        java_agent[JavaAgentInfo].java_agent_jar.short_path,
+        options,
+    )
+
+def _java_agents_dict_as_list_of_pairs(java_agents_dict):
+    return java_agents_dict.items()
 
 def write_java_run_script_from_ctx(ctx, java_dependency_info, java_runtime_toolchain_info):
     '''Unpacks a target `ctx` by convention and calls `write_java_run_script()`.
@@ -29,7 +47,7 @@ def write_java_run_script_from_ctx(ctx, java_dependency_info, java_runtime_toolc
         java_dependency_info = java_dependency_info,
         deps = ctx.attr.deps,
         main_class = ctx.attr.main_class,
-        java_agents = ctx.attr.java_agents,
+        java_agents = _java_agents_dict_as_list_of_pairs(ctx.attr.java_agents),
         java_runtime_toolchain_info = java_runtime_toolchain_info,
     )
 
@@ -58,7 +76,7 @@ def write_java_run_script(java_execution_info, actions, temp_file_prefix):
     # We include run time jars from three kinds of targets: this target, this
     # target's declared deps, and this target's declared java agents.
     java_dependencies = [d for d in java_execution_info.deps]
-    java_dependencies.extend(java_execution_info.java_agents)
+    java_dependencies.extend([pair[0] for pair in java_execution_info.java_agents])
     java_dependency_infos = [java_execution_info.java_dependency_info]
     java_dependency_infos.extend([dep[JavaDependencyInfo] for dep in java_dependencies])
 
@@ -82,7 +100,7 @@ def write_java_run_script(java_execution_info, actions, temp_file_prefix):
     jvm_flags = actions.args()
     jvm_flags.add_all(
         java_execution_info.java_agents,
-        map_each = _java_agent_to_jar,
+        map_each = _java_agent_and_options_to_flag,
     )
     jvm_flags.set_param_file_format("shell")
     jvm_flags_args_file = actions.declare_file(temp_file_prefix + ".jvm_flags.args")

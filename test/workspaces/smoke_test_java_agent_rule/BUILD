@@ -13,6 +13,6 @@ dwtj_java_agent(
 dwtj_java_test(
     name = "MyJavaTest",
     srcs = ["mypkg/MyJavaTest.java"],
-    java_agents = [":MyJavaAgent"],
+    java_agents = {":MyJavaAgent": ""},
     main_class = "mypkg.MyJavaTest",
 )

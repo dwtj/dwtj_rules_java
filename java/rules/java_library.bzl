@@ -20,16 +20,20 @@ java_library = rule(
     implementation = _java_library_impl,
     attrs = {
         "srcs": attr.label_list(
+            # TODO(dwtj): Consider supporting empty `srcs` list once `exports`
+            #  is supported.
             allow_empty = False,
             doc = "A list of Java source files whose derived class files should be included in this library (and any of its dependents).",
             allow_files = [".java"],
+            default = list(),
         ),
         "deps": attr.label_list(
             providers = [JavaDependencyInfo],
+            default = list(),
         ),
         "additional_jar_manifest_attributes": attr.string_list(
             doc = "A list of strings; each will be added as a line of the output JAR's manifest file.",
-            default = [],
+            default = list(),
         ),
     },
     provides = [
