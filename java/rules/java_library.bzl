@@ -4,7 +4,11 @@
 load("@dwtj_rules_java//java:providers/JavaCompilationInfo.bzl", "JavaCompilationInfo")
 load("@dwtj_rules_java//java:providers/JavaDependencyInfo.bzl", "JavaDependencyInfo")
 load("@dwtj_rules_java//java:rules/common/actions/compile_and_jar_java_sources.bzl", "compile_and_jar_java_target")
-load("@dwtj_rules_java//java:rules/common/providers.bzl", "singleton_java_dependency_info")
+load(
+    "@dwtj_rules_java//java:rules/common/providers.bzl",
+    "singleton_java_dependency_info",
+    "make_legacy_java_info",
+)
 
 def _java_library_impl(ctx):
     java_compilation_info = compile_and_jar_java_target(ctx)
@@ -14,6 +18,7 @@ def _java_library_impl(ctx):
         DefaultInfo(files = depset(direct = [output_jar])),
         java_compilation_info,
         singleton_java_dependency_info(output_jar),
+        make_legacy_java_info(java_compilation_info, ctx.attr.deps),
     ]
 
 java_library = rule(
@@ -28,7 +33,10 @@ java_library = rule(
             default = list(),
         ),
         "deps": attr.label_list(
-            providers = [JavaDependencyInfo],
+            providers = [
+                JavaDependencyInfo,
+                JavaInfo,
+            ],
             default = list(),
         ),
         "additional_jar_manifest_attributes": attr.string_list(
@@ -39,6 +47,7 @@ java_library = rule(
     provides = [
         JavaCompilationInfo,
         JavaDependencyInfo,
+        JavaInfo,
     ],
     toolchains = [
         "@dwtj_rules_java//java/toolchains/java_compiler_toolchain:toolchain_type",

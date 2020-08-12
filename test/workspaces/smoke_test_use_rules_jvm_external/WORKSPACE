@@ -9,9 +9,12 @@ local_repository(
     path = "../../..",
 )
 
-# CONFIGURE `@local_openjdk_repository` ########################################
+load(
+    "@dwtj_rules_java//java:repositories.bzl",
+    "dwtj_local_openjdk_repository",
+)
 
-load("@dwtj_rules_java//java:repositories.bzl", "dwtj_local_openjdk_repository")
+# CONFIGURE `@local_openjdk_repository` ########################################
 
 dwtj_local_openjdk_repository(
     name = "dwtj_local_openjdk",

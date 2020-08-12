@@ -1,24 +1,24 @@
 load(
     "@dwtj_rules_java//java:defs.bzl",
     "dwtj_java_binary",
-    "dwtj_java_library",
     "dwtj_java_import",
+    "dwtj_java_library",
     "dwtj_java_test",
 )
 
 dwtj_java_binary(
     name = "MyBinary",
-    srcs = ["src/MyBinary.java"],
-    main_class = "MyBinary",
+    srcs = ["mypkg/MyBinary.java"],
+    main_class = "mypkg.MyBinary",
     deps = [
-        ":MyLibrary",
         ":MyImport",
+        ":MyLibrary",
     ],
 )
 
 dwtj_java_library(
     name = "MyLibrary",
-    srcs = ["src/MyLibrary.java"],
+    srcs = ["mypkg/MyLibrary.java"],
 )
 
 # A copy of this target's output JAR was manually copied to the `lib` directory.
@@ -26,7 +26,7 @@ dwtj_java_library(
 # `MyImport` is used as a dep.
 dwtj_java_library(
     name = "MyJar",
-    srcs = ["src/MyJar.java"],
+    srcs = ["mypkg/MyJar.java"],
 )
 
 dwtj_java_import(
@@ -36,7 +36,7 @@ dwtj_java_import(
 
 dwtj_java_test(
     name = "MyTest",
-    srcs = ["src/MyTest.java"],
-    main_class = "MyTest",
+    srcs = ["mypkg/MyTest.java"],
+    main_class = "mypkg.MyTest",
     deps = [":MyLibrary"],
 )

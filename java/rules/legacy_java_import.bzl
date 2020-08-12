@@ -11,11 +11,12 @@ def _legacy_java_import_impl(ctx):
         JavaDependencyInfo(
             compile_time_class_path_jars = ct,
             run_time_class_path_jars = rt,
-        )
+        ),
+        java_common.merge(java_infos),
     ]
 
 legacy_java_import = rule(
-    doc = "Wraps legacy Java targets (i.e. those providing `JavaInfo`) so that they can be used as a dependency of these new Java rules.",
+    doc = "Wraps legacy Java targets (i.e. those providing `JavaInfo` but not `JavaDependencyInfo`) so that they can be used as a dependency of these new Java rules.",
     implementation = _legacy_java_import_impl,
     attrs = {
         "imports": attr.label_list(
@@ -23,5 +24,8 @@ legacy_java_import = rule(
             mandatory = True,
         )
     },
-    provides = [JavaDependencyInfo],
+    provides = [
+        JavaDependencyInfo,
+        JavaInfo,
+    ],
 )

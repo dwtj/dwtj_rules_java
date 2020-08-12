@@ -9,7 +9,11 @@ load("@dwtj_rules_java//java:providers/JavaExecutionInfo.bzl", "JavaExecutionInf
 load("@dwtj_rules_java//java:rules/common/actions/compile_and_jar_java_sources.bzl", "compile_and_jar_java_target")
 load("@dwtj_rules_java//java:rules/common/actions/write_java_run_script.bzl", "write_java_run_script_from_ctx")
 load("@dwtj_rules_java//java:rules/common/extract/toolchain_info.bzl", "extract_java_runtime_toolchain_info", "extract_java_executable")
-load("@dwtj_rules_java//java:rules/common/providers.bzl", "singleton_java_dependency_info")
+load(
+    "@dwtj_rules_java//java:rules/common/providers.bzl",
+    "singleton_java_dependency_info",
+    "make_legacy_java_info",
+)
 
 # NOTE(dwtj): This is very similar to `_java_test_impl()`.
 def _java_binary_impl(ctx):
@@ -40,6 +44,7 @@ def _java_binary_impl(ctx):
         java_compilation_info,
         java_dependency_info,
         java_execution_info,
+        make_legacy_java_info(java_compilation_info, ctx.attr.deps),
     ]
 
 java_binary = rule(
@@ -57,7 +62,10 @@ java_binary = rule(
             mandatory = True,
         ),
         "deps": attr.label_list(
-            providers = [JavaDependencyInfo],
+            providers = [
+                JavaDependencyInfo,
+                JavaInfo,
+            ],
             default = [],
         ),
         "additional_jar_manifest_attributes": attr.string_list(
@@ -92,6 +100,7 @@ java_binary = rule(
         JavaCompilationInfo,
         JavaDependencyInfo,
         JavaExecutionInfo,
+        JavaInfo,
     ],
     executable = True,
     toolchains = [
