@@ -5,7 +5,11 @@ load("@dwtj_rules_java//java:providers/JavaAgentInfo.bzl", "JavaAgentInfo")
 load("@dwtj_rules_java//java:providers/JavaCompilationInfo.bzl", "JavaCompilationInfo")
 load("@dwtj_rules_java//java:providers/JavaDependencyInfo.bzl", "JavaDependencyInfo")
 
-load("@dwtj_rules_java//java:rules/common/providers.bzl", "singleton_java_dependency_info")
+load(
+    "@dwtj_rules_java//java:rules/common/providers.bzl",
+    "singleton_java_dependency_info",
+    "make_legacy_java_info",
+)
 load("@dwtj_rules_java//java:rules/common/actions/compile_and_jar_java_sources.bzl", "compile_and_jar_java_sources")
 
 def _bool_to_str(b):
@@ -60,6 +64,7 @@ def _java_agent_impl(ctx):
             can_retransform_classes = ctx.attr.can_retransform_classes,
             can_set_native_method_prefix = ctx.attr.can_set_native_method_prefix,
         ),
+        make_legacy_java_info(compilation_info, ctx.attr.deps)
     ]
 
 java_agent = rule(
@@ -98,6 +103,7 @@ java_agent = rule(
         JavaAgentInfo,
         JavaCompilationInfo,
         JavaDependencyInfo,
+        JavaInfo,
     ],
     toolchains = [
         "@dwtj_rules_java//java/toolchains/java_compiler_toolchain:toolchain_type",
