@@ -1,7 +1,6 @@
 '''Defines the `JavaCompilationInfo` provider.
 '''
 
-# TODO(dwtj): Redesign `build_jar_from_java_sources(ctx)` to take an instance of this provider.
 JavaCompilationInfo = provider(
     doc = "Describes the inputs, outputs, and options of a Java compiler invocation for a particular Java target.",
     fields = {

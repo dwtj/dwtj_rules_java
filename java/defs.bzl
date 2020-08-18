@@ -39,6 +39,10 @@ load("//java:aspects/javadoc_aspect/defs.bzl", _javadoc_aspect = "javadoc_aspect
 
 load("//java:rules/javadoc_toolchain.bzl", _javadoc_toolchain = "javadoc_toolchain")
 
+load("//java:aspects/error_prone_aspect/defs.bzl", _error_prone_aspect = "error_prone_aspect")
+
+load("//java:rules/error_prone_toolchain.bzl", _error_prone_toolchain = "error_prone_toolchain")
+
 JavaAgentInfo = _JavaAgentInfo
 
 JavaCompilationInfo = _JavaCompilationInfo
@@ -70,3 +74,7 @@ google_java_format_toolchain = _google_java_format_toolchain
 javadoc_aspect = _javadoc_aspect
 
 javadoc_toolchain = _javadoc_toolchain
+
+error_prone_toolchain = _error_prone_toolchain
+
+error_prone_aspect = _error_prone_aspect

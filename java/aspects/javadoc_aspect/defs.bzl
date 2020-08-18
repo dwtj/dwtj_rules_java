@@ -4,10 +4,10 @@
 load("@dwtj_rules_java//java:providers/JavaCompilationInfo.bzl", "JavaCompilationInfo")
 load("@dwtj_rules_java//java:rules/common/actions/write_class_path_arguments_file.bzl", "write_compile_time_class_path_arguments_file")
 
-def _to_short_path(file):
+def _to_path(file):
     '''Used as a map function to convert a file to its short path.
     '''
-    return file.short_path
+    return file.path
 
 JavadocAspectInfo = provider(
     fields = {
@@ -64,7 +64,7 @@ def _javadoc_aspect_impl(target, aspect_ctx):
     java_sources_args.add_all(
         srcs,
         omit_if_empty = False,
-        map_each = _to_short_path,
+        map_each = _to_path,
     )
     actions.write(
         output = java_sources_args_file,

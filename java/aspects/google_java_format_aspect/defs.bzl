@@ -14,9 +14,9 @@ def _extract_java_executable(aspect_ctx):
             .java_executable
 
 
-def _to_short_path(file):
+def _to_path(file):
     '''Used as a map function.'''
-    return file.short_path
+    return file.path
 
 GoogleJavaFormatAspectInfo = provider(
     fields = {
@@ -42,7 +42,7 @@ def _google_java_format_aspect_impl(target, aspect_ctx):
     srcs_args = aspect_ctx.actions.args()
     srcs_args.add_all(
         srcs,
-        map_each = _to_short_path,
+        map_each = _to_path,
     )
     srcs_args_file = aspect_ctx.actions.declare_file(_target_name_with_suffix(target, ".java_srcs.args"))
     aspect_ctx.actions.write(

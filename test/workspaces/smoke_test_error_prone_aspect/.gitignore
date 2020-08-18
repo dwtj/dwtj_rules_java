@@ -1,0 +1,4 @@
+bazel-bin
+bazel-out
+bazel-smoke_test_error_prone_aspect
+bazel-testlogs

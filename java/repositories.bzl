@@ -8,6 +8,13 @@ load(
     _remote_google_java_format_repository = "remote_google_java_format_repository",
 )
 
+load(
+    "//java:repository_rules/maven_error_prone_repository/defs.bzl",
+    _maven_error_prone_repository = "maven_error_prone_repository",
+)
+
 dwtj_local_openjdk_repository = local_openjdk_repository
 
 remote_google_java_format_repository = _remote_google_java_format_repository
+
+maven_error_prone_repository = _maven_error_prone_repository

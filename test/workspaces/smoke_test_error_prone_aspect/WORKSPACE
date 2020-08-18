@@ -1,4 +1,4 @@
-workspace(name = "smoke_test_use_rules_jvm_extenal")
+workspace(name = "smoke_test_error_prone_aspect")
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
@@ -12,6 +12,7 @@ local_repository(
 load(
     "@dwtj_rules_java//java:repositories.bzl",
     "dwtj_local_openjdk_repository",
+    "maven_error_prone_repository",
 )
 
 # CONFIGURE `@dwtj_local_openjdk` ##############################################
@@ -25,10 +26,11 @@ load("@dwtj_local_openjdk//:defs.bzl", "register_java_toolchains")
 register_java_toolchains()
 
 # CONFIGURE `@rules_jvm_external` ##############################################
-#
+
+# NOTE(dwtj): These rules are a prerequisite of `maven_error_prone_repository`.
+
 # NOTE(dwtj): This version was used just because it was the latest release as of
 #  2020-07-28.
-
 RULES_JVM_EXTERNAL_ARCHIVE_INFO = {
     "tag": "3.3",
     "sha256": "d85951a92c0908c80bd8551002d66cb23c3434409c814179c0ff026b53544dab",
@@ -41,19 +43,17 @@ http_archive(
     url = "https://github.com/bazelbuild/rules_jvm_external/archive/%s.zip" % RULES_JVM_EXTERNAL_ARCHIVE_INFO["tag"],
 )
 
-# CONFIGURE `@maven` ###########################################################
+# CONFIGURE `@error_prone` #####################################################
 
-load("@rules_jvm_external//:defs.bzl", "maven_install")
-
-maven_install(
-    name = "maven",
-    artifacts = [
-        "org.ow2.asm:asm:8.0.1",
-    ],
-    repositories = [
-        "https://jcenter.bintray.com/",
-        "https://maven.google.com",
-        "https://repo1.maven.org/maven2",
-    ],
-    fetch_sources = True,
+maven_error_prone_repository(
+    name = "error_prone",
 )
+
+load(
+    "@error_prone//:defs.bzl",
+    "fetch_error_prone_toolchain",
+    "register_error_prone_toolchain",
+)
+
+fetch_error_prone_toolchain()
+register_error_prone_toolchain()

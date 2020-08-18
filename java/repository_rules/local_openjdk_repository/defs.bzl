@@ -51,6 +51,4 @@ local_openjdk_repository = repository_rule(
             allow_single_file = True,
         ),
     }
-
-
 )

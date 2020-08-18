@@ -12,7 +12,7 @@ load(
     "dwtj_local_openjdk_repository",
 )
 
-# CONFIGURE `@local_openjdk_repository` ########################################
+# CONFIGURE `@dwtj_local_openjdk` ##############################################
 
 dwtj_local_openjdk_repository(
     name = "dwtj_local_openjdk",
