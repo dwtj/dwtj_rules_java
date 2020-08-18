@@ -42,4 +42,14 @@ bazel clean
 bazel build //...
 bazel test //...
 
+# `:GoodJavadoc` should pass, but `:BadJavadoc` should fail:
+cd "$ROOT_WORKSPACE/test/workspaces/smoke_test_javadoc_aspect"
+bazel clean
+bazel build //:GoodJavadoc
+if bazel build //:BadJavadoc > /dev/null 2> /dev/null ; then
+    echo 'ERROR: `bazel build @smoke_test_javadoc_aspect//:BadJavadoc` passed, but it should have failed.'
+    exit 1
+fi
+
+echo
 echo "SUCCESS: All test workspace checks passed."

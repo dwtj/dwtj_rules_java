@@ -4,3 +4,4 @@ test/workspaces/smoke_test_use_legacy_java_rules
 test/workspaces/smoke_test_java_agent_rule
 test/workspaces/smoke_test_use_rules_jvm_external
 test/workspaces/smoke_test_google_java_format_aspect
+test/workspaces/smoke_test_javadoc_aspect

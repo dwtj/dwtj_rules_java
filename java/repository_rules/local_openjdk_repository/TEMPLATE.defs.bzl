@@ -10,4 +10,5 @@ def register_java_toolchains():
     native.register_toolchains(
         "@{REPOSITORY_NAME}//:java_runtime_toolchain",
         "@{REPOSITORY_NAME}//:java_compiler_toolchain",
+        "@{REPOSITORY_NAME}//:javadoc_toolchain",
     )

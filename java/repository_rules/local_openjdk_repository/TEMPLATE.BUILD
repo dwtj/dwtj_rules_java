@@ -9,6 +9,7 @@ load(
     "@dwtj_rules_java//java:defs.bzl",
     "dwtj_java_compiler_toolchain",
     "dwtj_java_runtime_toolchain",
+    "javadoc_toolchain",
 )
 
 dwtj_java_compiler_toolchain(
@@ -33,5 +34,17 @@ toolchain(
     name = "java_runtime_toolchain",
     toolchain = ":_java_runtime_toolchain",
     toolchain_type = "@dwtj_rules_java//java/toolchains/java_runtime_toolchain:toolchain_type",
+    visibility = ["//visibility:public"],
+)
+
+javadoc_toolchain(
+    name = "_javadoc_toolchain",
+    javadoc_executable = ":javadoc"
+)
+
+toolchain(
+    name = "javadoc_toolchain",
+    toolchain = ":_javadoc_toolchain",
+    toolchain_type = "@dwtj_rules_java//java/toolchains/javadoc_toolchain:toolchain_type",
     visibility = ["//visibility:public"],
 )

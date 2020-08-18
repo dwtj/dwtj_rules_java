@@ -10,15 +10,15 @@ load("@dwtj_rules_java//java:rules/common/actions/write_class_path_arguments_fil
 
 _JAVA_COMPILER_TOOLCHAIN_TYPE = "@dwtj_rules_java//java/toolchains/java_compiler_toolchain:toolchain_type"
 
-def _to_path(classpath_item):
+def _to_path(file):
     '''Used as a map function to convert a file to its path.
     '''
-    return classpath_item.path
+    return file.path
 
-def _to_short_path(classpath_item):
+def _to_short_path(file):
     '''Used as a map function to convert a file to its short path.
     '''
-    return classpath_item.short_path
+    return file.short_path
 
 def compile_and_jar_java_target(ctx):
     '''Interprets a Java target's `ctx` & calls `compile_and_jar_java_sources`.

@@ -35,6 +35,10 @@ load(
     _google_java_format_toolchain = "google_java_format_toolchain"
 )
 
+load("//java:aspects/javadoc_aspect/defs.bzl", _javadoc_aspect = "javadoc_aspect")
+
+load("//java:rules/javadoc_toolchain.bzl", _javadoc_toolchain = "javadoc_toolchain")
+
 JavaAgentInfo = _JavaAgentInfo
 
 JavaCompilationInfo = _JavaCompilationInfo
@@ -62,3 +66,7 @@ dwtj_java_runtime_toolchain = java_runtime_toolchain
 google_java_format_aspect = _google_java_format_aspect
 
 google_java_format_toolchain = _google_java_format_toolchain
+
+javadoc_aspect = _javadoc_aspect
+
+javadoc_toolchain = _javadoc_toolchain

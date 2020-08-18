@@ -16,6 +16,7 @@ def _local_openjdk_repository_impl(repository_ctx):
     _symlink_which_executable_else_fail(repository_ctx, "java")
     _symlink_which_executable_else_fail(repository_ctx, "jar")
     _symlink_which_executable_else_fail(repository_ctx, "javac")
+    _symlink_which_executable_else_fail(repository_ctx, "javadoc")
 
     repository_ctx.template(
         "BUILD",
@@ -42,7 +43,7 @@ local_openjdk_repository = repository_rule(
     implementation = _local_openjdk_repository_impl,
     attrs = {
         "_build_file_template": attr.label(
-            default = Label("@dwtj_rules_java//java:repository_rules/local_openjdk_repository/TEMPLATE.BUILD.bazel"),
+            default = Label("@dwtj_rules_java//java:repository_rules/local_openjdk_repository/TEMPLATE.BUILD"),
             allow_single_file = True,
         ),
         "_defs_bzl_file_template": attr.label(

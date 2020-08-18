@@ -56,7 +56,7 @@ def _write_class_path_arguments_file(name, jars, actions, class_path_separator, 
       variant: One of two strings: "compile_time" or "run_time".
 
     Returns:
-      A `file` handle to the new class path arguments file.
+      A `File` handle to the new class path arguments file.
     '''
     if variant != "compile_time" and variant != "run_time":
         fail("Unexpected `variant` argument value: " + variant)
