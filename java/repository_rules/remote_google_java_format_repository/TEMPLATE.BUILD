@@ -2,7 +2,7 @@
 #
 # - GOOGLE_JAVA_FORMAT_DEPLOY_JAR: {GOOGLE_JAVA_FORMAT_DEPLOY_JAR}
 
-load("@dwtj_rules_java//java:defs.bzl", "google_java_format_toolchain")
+load("@dwtj_rules_java//java:toolchains.bzl", "google_java_format_toolchain")
 
 google_java_format_toolchain(
     name = "google_java_format_toolchain",

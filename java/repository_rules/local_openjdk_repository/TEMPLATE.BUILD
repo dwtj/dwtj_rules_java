@@ -6,7 +6,7 @@
 '''
 
 load(
-    "@dwtj_rules_java//java:defs.bzl",
+    "@dwtj_rules_java//java:toolchains.bzl",
     "dwtj_java_compiler_toolchain",
     "dwtj_java_runtime_toolchain",
     "javadoc_toolchain",

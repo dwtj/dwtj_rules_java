@@ -1,13 +1,7 @@
-'''This is part of the public API for this project.
+'''This is the main part of the public API for this project.
+
+This file re-exports all rules for public use.
 '''
-
-load("//java:providers/JavaAgentInfo.bzl", _JavaAgentInfo = "JavaAgentInfo")
-
-load("//java:providers/JavaCompilationInfo.bzl", _JavaCompilationInfo = "JavaCompilationInfo")
-
-load("//java:providers/JavaDependencyInfo.bzl", _JavaDependencyInfo = "JavaDependencyInfo")
-
-load("//java:providers/JavaExecutionInfo.bzl", _JavaExecutionInfo = "JavaExecutionInfo")
 
 load("//java:rules/java_binary.bzl", "java_binary")
 
@@ -21,36 +15,6 @@ load("//java:rules/legacy_java_import.bzl", "legacy_java_import")
 
 load("//java:rules/java_agent.bzl", "java_agent")
 
-load("//java:rules/java_compiler_toolchain.bzl", "java_compiler_toolchain")
-
-load("//java:rules/java_runtime_toolchain.bzl", "java_runtime_toolchain")
-
-load(
-    "//java:aspects/google_java_format_aspect/defs.bzl",
-    _google_java_format_aspect = "google_java_format_aspect"
-)
-
-load(
-    "//java:rules/google_java_format_toolchain.bzl",
-    _google_java_format_toolchain = "google_java_format_toolchain"
-)
-
-load("//java:aspects/javadoc_aspect/defs.bzl", _javadoc_aspect = "javadoc_aspect")
-
-load("//java:rules/javadoc_toolchain.bzl", _javadoc_toolchain = "javadoc_toolchain")
-
-load("//java:aspects/error_prone_aspect/defs.bzl", _error_prone_aspect = "error_prone_aspect")
-
-load("//java:rules/error_prone_toolchain.bzl", _error_prone_toolchain = "error_prone_toolchain")
-
-JavaAgentInfo = _JavaAgentInfo
-
-JavaCompilationInfo = _JavaCompilationInfo
-
-JavaDependencyInfo = _JavaDependencyInfo
-
-JavaExecutionInfo = _JavaExecutionInfo
-
 dwtj_java_binary = java_binary
 
 dwtj_java_library = java_library
@@ -62,19 +26,3 @@ dwtj_java_test = java_test
 dwtj_legacy_java_import = legacy_java_import
 
 dwtj_java_agent = java_agent
-
-dwtj_java_compiler_toolchain = java_compiler_toolchain
-
-dwtj_java_runtime_toolchain = java_runtime_toolchain
-
-google_java_format_aspect = _google_java_format_aspect
-
-google_java_format_toolchain = _google_java_format_toolchain
-
-javadoc_aspect = _javadoc_aspect
-
-javadoc_toolchain = _javadoc_toolchain
-
-error_prone_toolchain = _error_prone_toolchain
-
-error_prone_aspect = _error_prone_aspect

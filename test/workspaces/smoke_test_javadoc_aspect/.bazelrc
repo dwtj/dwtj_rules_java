@@ -1,1 +1,1 @@
-build --aspects @dwtj_rules_java//java:defs.bzl%javadoc_aspect
+build --aspects @dwtj_rules_java//java:aspects.bzl%javadoc_aspect

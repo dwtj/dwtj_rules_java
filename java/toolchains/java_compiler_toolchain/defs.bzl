@@ -10,19 +10,19 @@ An example might look something like this:
 
 ```build
 java_compiler_toolchain(
-    name = "my_javac",
+    name = "_my_javac",
     javac_executable = ":my_javac_executable",
 )
 
 toolchain(
-    name = "my_javac_toolchain",
+    name = "my_javac",
     exec_compatible_with = [
         ...
     ],
     target_compatible_with = [
         ...
     ],
-    toolchain = ":my_javac",
+    toolchain = ":_my_javac",
     toolchain_type = "@dwtj_rules_java//java/toolchains/java_compiler_toolchain:toolchain_type",
 )
 ```
@@ -71,7 +71,7 @@ java_compiler_toolchain = rule(
         #  figured out another way to do it which resolves the label to a file.
         # TODO(dwtj): Try the `Label()` constructor.
         "_compile_and_jar_java_sources_script_template": attr.label(
-            default = ":rules/common/actions/TEMPLATE.compile_and_jar_java_sources.sh",
+            default = "@dwtj_rules_java//java:rules/common/actions/TEMPLATE.compile_and_jar_java_sources.sh",
             allow_single_file = True,
         ),
         "class_path_separator": attr.string(

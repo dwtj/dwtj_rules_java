@@ -5,7 +5,7 @@
 '''Defines an Error Prone toolchain within this repo, "@{REPOSITORY_NAME}".
 '''
 
-load("@dwtj_rules_java//java:defs.bzl", "error_prone_toolchain")
+load("@dwtj_rules_java//java:toolchains.bzl", "error_prone_toolchain")
 
 error_prone_toolchain(
     name = "_error_prone_toolchain",
