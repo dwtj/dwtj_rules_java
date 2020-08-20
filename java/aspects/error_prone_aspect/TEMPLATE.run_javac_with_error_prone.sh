@@ -9,14 +9,16 @@
 # - JAVA_SOURCES_ARGS_FILE: {JAVA_SOURCES_ARGS_FILE}
 # - ERROR_PRONE_LOG_FILE: {ERROR_PRONE_LOG_FILE}
 
-set -e
+"{JAVAC_EXECUTABLE}" \
+    -d "{OUTPUT_CLASS_DIR}" \
+    --processor-path "@{PROCESSOR_PATH_ARGS_FILE}" \
+    "-Xplugin:ErrorProne" \
+    "-XDcompilePolicy=byfile" \
+    "@{CLASS_PATH_ARGS_FILE}" \
+    "@{JAVA_SOURCES_ARGS_FILE}" \
+        2>&1 > "{ERROR_PRONE_LOG_FILE}"
+RETURN_CODE=$?
 
-{
-    "{JAVAC_EXECUTABLE}" \
-        -d "{OUTPUT_CLASS_DIR}" \
-        --processor-path "@{PROCESSOR_PATH_ARGS_FILE}" \
-        "-Xplugin:ErrorProne" \
-        "-XDcompilePolicy=byfile" \
-        "@{CLASS_PATH_ARGS_FILE}" \
-        "@{JAVA_SOURCES_ARGS_FILE}"
-} > "{ERROR_PRONE_LOG_FILE}" 2>&1
+cat "{ERROR_PRONE_LOG_FILE}"
+
+exit $RETURN_CODE
