@@ -8,6 +8,11 @@ def _extract_google_java_format_deploy_jar(aspect_ctx):
             .google_java_format_toolchain_info \
             .google_java_format_deploy_jar
 
+def _extract_colordiff_executable(aspect_ctx):
+    return aspect_ctx.toolchains['@dwtj_rules_java//java/toolchains/google_java_format_toolchain:toolchain_type'] \
+            .google_java_format_toolchain_info \
+            .colordiff_executable
+
 def _extract_java_executable(aspect_ctx):
     return aspect_ctx.toolchains['@dwtj_rules_java//java/toolchains/java_runtime_toolchain:toolchain_type'] \
             .java_runtime_toolchain_info \
@@ -35,6 +40,7 @@ def _google_java_format_aspect_impl(target, aspect_ctx):
     # Extract some information from the target and the toolchains:
     srcs = target[JavaCompilationInfo].srcs
     google_java_format_deploy_jar = _extract_google_java_format_deploy_jar(aspect_ctx)
+    colordiff_executable = _extract_colordiff_executable(aspect_ctx)
     java_executable = _extract_java_executable(aspect_ctx)
 
     # Write all of this target's srcs to a file using a `ctx.actions.args()`.
@@ -51,8 +57,8 @@ def _google_java_format_aspect_impl(target, aspect_ctx):
         is_executable = False,
     )
 
-    # Declare an output log file for `google-java-format` to write to.
-    output_file = aspect_ctx.actions.declare_file(_target_name_with_suffix(target, ".google_java_format.log"))
+    # Declare an output file for `google-java-format` to write to.
+    output_file = aspect_ctx.actions.declare_file(_target_name_with_suffix(target, ".google_java_format.out"))
 
     # Instantiate a script which will run `google-java-format` from a template.
     run_google_java_format = aspect_ctx.actions.declare_file(_target_name_with_suffix(target, ".run_google_java_format.sh"))
@@ -64,6 +70,7 @@ def _google_java_format_aspect_impl(target, aspect_ctx):
             "{GOOGLE_JAVA_FORMAT_DEPLOY_JAR}": google_java_format_deploy_jar.path,
             "{JAVA_SOURCES_ARGS_FILE}": srcs_args_file.path,
             "{OUTPUT_FILE}": output_file.path,
+            "{COLORDIFF_EXECUTABLE}": colordiff_executable.path,
         },
         is_executable = True,
     )
@@ -73,6 +80,7 @@ def _google_java_format_aspect_impl(target, aspect_ctx):
         direct = [
             java_executable,
             google_java_format_deploy_jar,
+            colordiff_executable,
             srcs_args_file,
         ],
         transitive = [srcs]

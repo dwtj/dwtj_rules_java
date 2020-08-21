@@ -14,9 +14,17 @@ _REPOSITORY_PATHS = {
     "deploy_jar": "google-java-format_all_deps.jar",
     "defs_bzl_file": "defs.bzl",
     "build_file": "BUILD",
+    "colordiff_executable": "colordiff",
 }
 
 def _remote_google_java_format_repository_impl(repository_ctx):
+    # Try to find a local `colordiff` executable. Otherwise try to find `diff`.
+    # Otherwise fail. Symlink the first found into the repository.
+    colordiff_path = repository_ctx.which("colordiff")
+    if colordiff_path == None:
+        fail("Could not find `colordiff` on the PATH.")
+    repository_ctx.symlink(colordiff_path, _REPOSITORY_PATHS['colordiff_executable'])
+
     # Download the JAR file:
     repository_ctx.download(
         url = repository_ctx.attr.url,
@@ -30,6 +38,7 @@ def _remote_google_java_format_repository_impl(repository_ctx):
         repository_ctx.attr._build_file_template,
         substitutions = {
             "{GOOGLE_JAVA_FORMAT_DEPLOY_JAR}": _REPOSITORY_PATHS["deploy_jar"],
+            "{COLORDIFF_EXECUTABLE}": _REPOSITORY_PATHS['colordiff_executable'],
         },
         executable = False,
     )
@@ -49,7 +58,6 @@ def _remote_google_java_format_repository_impl(repository_ctx):
 
 remote_google_java_format_repository = repository_rule(
     implementation = _remote_google_java_format_repository_impl,
-    local = False,
     attrs = {
         "url": attr.string(
             default = _DEFAULT_GOOGLE_JAVA_FORMAT_JAR_INFO['url'],
@@ -65,5 +73,10 @@ remote_google_java_format_repository = repository_rule(
             default = Label("@dwtj_rules_java//java:repository_rules/remote_google_java_format_repository/TEMPLATE.defs.bzl"),
             allow_single_file = True,
         ),
-    }
+    },
+    local = True,
+    environ = [
+        # NOTE(dwtj): This rule uses `which` to search `PATH` for `colordiff`.
+        "PATH",
+    ],
 )
