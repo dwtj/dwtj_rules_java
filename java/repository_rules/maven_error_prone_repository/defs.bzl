@@ -39,4 +39,5 @@ maven_error_prone_repository = repository_rule(
             allow_single_file = True,
         ),
     }
+    local = False,
 )
