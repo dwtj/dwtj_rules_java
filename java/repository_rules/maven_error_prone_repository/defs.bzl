@@ -38,6 +38,6 @@ maven_error_prone_repository = repository_rule(
             default = Label("@dwtj_rules_java//java:repository_rules/maven_error_prone_repository/TEMPLATE.defs.bzl"),
             allow_single_file = True,
         ),
-    }
+    },
     local = False,
 )

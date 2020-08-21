@@ -50,7 +50,7 @@ local_openjdk_repository = repository_rule(
             default = Label("@dwtj_rules_java//java:repository_rules/local_openjdk_repository/TEMPLATE.defs.bzl"),
             allow_single_file = True,
         ),
-    }
+    },
     local = True,
     environ = [
         # NOTE(dwtj): This rule uses `which` to search the `PATH` for `java`.
