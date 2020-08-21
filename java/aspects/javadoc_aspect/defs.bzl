@@ -108,7 +108,7 @@ def _javadoc_aspect_impl(target, aspect_ctx):
             ],
         ),
         mnemonic = "Javadoc",
-        progress_message = "Linting and compiling Javadoc for target " + name,
+        progress_message = "Linting and compiling Javadoc for Java target {}".format(target.label),
         use_default_shell_env = False,
     )
 

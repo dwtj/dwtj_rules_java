@@ -90,7 +90,7 @@ def _google_java_format_aspect_impl(target, aspect_ctx):
         inputs = inputs,
         outputs = [output_file],
         mnemonic = "GoogleJavaFormat",
-        progress_message = "Running `google-java-format` on Java sources of target `" + str(target.label) + "`.",
+        progress_message = "Using `google-java-format` to format Java sources of Java target `{}`".format(target.label),
         use_default_shell_env = False,
     )
 

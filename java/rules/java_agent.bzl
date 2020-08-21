@@ -47,6 +47,7 @@ def _java_agent_impl(ctx):
     )
 
     compile_and_jar_java_sources(
+        label = ctx.label,
         compilation_info = compilation_info,
         compiler_toolchain_info = ctx.toolchains["@dwtj_rules_java//java/toolchains/java_compiler_toolchain:toolchain_type"].java_compiler_toolchain_info,
         actions = ctx.actions,

@@ -137,7 +137,7 @@ def _error_prone_aspect_impl(target, aspect_ctx):
             ],
         ),
         mnemonic = "ErrorProne",
-        progress_message = "Processing target `:{}` with Error Prone.".format(target.label.name),
+        progress_message = "Using Error Prone to check Java sources of Java target `{}`".format(target.label),
         use_default_shell_env = False,
     )
 

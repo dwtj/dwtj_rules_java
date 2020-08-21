@@ -52,6 +52,7 @@ def compile_and_jar_java_target(ctx):
         main_class = maybe_main_class,
     )
     compile_and_jar_java_sources(
+        label = ctx.label,
         compilation_info = java_compilation_info,
         compiler_toolchain_info = ctx.toolchains[_JAVA_COMPILER_TOOLCHAIN_TYPE].java_compiler_toolchain_info,
         actions = ctx.actions,
@@ -59,7 +60,7 @@ def compile_and_jar_java_target(ctx):
     )
     return java_compilation_info
 
-def compile_and_jar_java_sources(compilation_info, compiler_toolchain_info, actions, temp_file_prefix):
+def compile_and_jar_java_sources(label, compilation_info, compiler_toolchain_info, actions, temp_file_prefix):
     '''Invokes `javac` on Java sources and then `jar`s the results.
 
     To create the output JAR, some temporary temporary files are created (e.g.
@@ -68,6 +69,7 @@ def compile_and_jar_java_sources(compilation_info, compiler_toolchain_info, acti
     file paths to help prevent these files from conflicting.
 
     Args:
+      label: The label of the Java target to be built.
       compilation_info: A `JavaCompilationInfo` provider instance.
       compiler_toolchain_info: A `JavaCompilerToolchainInfo` provider instance.
       actions: The `actions` instance from which actions are emitted.
@@ -161,6 +163,6 @@ def compile_and_jar_java_sources(compilation_info, compiler_toolchain_info, acti
             compiler_toolchain_info.javac_executable
         ],
         mnemonic = "CompileJavaJar",
-        progress_message = "Compiling Java sources and archiving them into `" + output_jar.basename + "`.",
+        progress_message = "Compiling and archiving Java target `{}`".format(label),
         use_default_shell_env = False,
     )
