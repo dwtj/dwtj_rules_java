@@ -7,12 +7,20 @@ set -e
 
 ROOT_WORKSPACE="$PWD"
 
-# All of these commands should pass:
+# All targets should pass except for `:MyBadLibrary`.
 cd "$ROOT_WORKSPACE/test/workspaces/smoke_test_basic_java_rules"
 bazel clean
-bazel build //...
-bazel test //...
+bazel build //:MyBinary
 bazel run //:MyBinary
+bazel build //:MyLibrary
+bazel build //:MyJar
+bazel build //:MyImport
+bazel build //:MyTest
+bazel test //:MyTest
+if bazel build //:MyBadLibrary > /dev/null 2> /dev/null ; then
+    echo 'ERROR: `bazel build @smoke_test_basic_java_rules//:MyBadLibrary` passed, but it should have failed.'
+    exit 1
+fi
 
 # All of these commands should pass:
 cd "$ROOT_WORKSPACE/test/workspaces/smoke_test_use_legacy_java_rules"

@@ -40,3 +40,9 @@ dwtj_java_test(
     main_class = "mypkg.MyTest",
     deps = [":MyLibrary"],
 )
+
+# NOTE(dwtj): This target should fail to build because the source is invalid Java.
+dwtj_java_library(
+    name = "MyBadLibrary",
+    srcs = ["mypkg/MyBadLibrary.java"],
+)
