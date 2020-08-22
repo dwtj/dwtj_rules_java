@@ -7,7 +7,7 @@ load("@dwtj_rules_java//java:providers/JavaAgentInfo.bzl", "JavaAgentInfo")
 load("@dwtj_rules_java//java:providers/JavaDependencyInfo.bzl", "JavaDependencyInfo")
 load("@dwtj_rules_java//java:providers/JavaExecutionInfo.bzl", "JavaExecutionInfo")
 
-load("@dwtj_rules_java//java:rules/common/actions/write_class_path_arguments_file.bzl", "write_run_time_class_path_arguments_file")
+load("@dwtj_rules_java//java:rules/common/actions/write_class_path_args_file.bzl", "write_run_time_class_path_args_file")
 
 def _java_agent_and_options_to_flag(java_agent_and_options):
     '''Convert a 2-tuple to a java flag.
@@ -88,8 +88,8 @@ def write_java_run_script(java_execution_info, actions, temp_file_prefix):
     # Abbreviate this:
     rt_info = java_execution_info.java_runtime_toolchain_info
 
-    # Create a class path arguments file:
-    class_path_args_file = write_run_time_class_path_arguments_file(
+    # Create a class path args file:
+    class_path_args_file = write_run_time_class_path_args_file(
         name = temp_file_prefix + ".run_time_class_path.args",
         jars = run_time_jars,
         actions = actions,
@@ -119,8 +119,8 @@ def write_java_run_script(java_execution_info, actions, temp_file_prefix):
         output = java_run_script,
         substitutions = {
             "{JAVA_EXECUTABLE}": rt_info.java_executable.short_path,
-            "{CLASS_PATH_ARGUMENTS_FILE}": class_path_args_file.short_path,
-            "{JVM_FLAGS_ARGUMENTS_FILE}": jvm_flags_args_file.short_path,
+            "{CLASS_PATH_ARGS_FILE}": class_path_args_file.short_path,
+            "{JVM_FLAGS_ARGS_FILE}": jvm_flags_args_file.short_path,
             "{MAIN_CLASS}": java_execution_info.main_class,
         },
         is_executable = True,

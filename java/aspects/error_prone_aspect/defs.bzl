@@ -2,7 +2,7 @@
 '''
 
 load("@dwtj_rules_java//java:providers/JavaCompilationInfo.bzl", "JavaCompilationInfo")
-load("@dwtj_rules_java//java:rules/common/actions/write_class_path_arguments_file.bzl", "write_compile_time_class_path_arguments_file")
+load("@dwtj_rules_java//java:rules/common/actions/write_class_path_args_file.bzl", "write_compile_time_class_path_args_file")
 
 ErrorProneAspectInfo = provider(
     fields = {
@@ -43,6 +43,7 @@ def _error_prone_aspect_impl(target, aspect_ctx):
     actions = aspect_ctx.actions
     jars = target[JavaCompilationInfo].class_path_jars
     srcs = target[JavaCompilationInfo].srcs
+    srcs_args_file = target[JavaCompilationInfo].srcs_args_file
     javac_executable = _extract_javac_executable(aspect_ctx)
     error_prone_info = _extract_error_prone_java_info(aspect_ctx)
     path_separator = _extract_class_path_separator(aspect_ctx)
@@ -50,23 +51,11 @@ def _error_prone_aspect_impl(target, aspect_ctx):
     # Create both temporary args files, i.e., `@`-files.
     # TODO(dwtj): Similar args files should be made by the target rule. Consider
     #  re-using those args files instead of re-creating them here.
-    class_path_args_file = write_compile_time_class_path_arguments_file(
+    class_path_args_file = write_compile_time_class_path_args_file(
         name = _file_name(target, "class_path.args"),
         jars = jars,
         actions = actions,
         class_path_separator = path_separator,
-    )
-    java_sources_args_file = actions.declare_file(_file_name(target, "java_sources.args"))
-    java_sources_args = actions.args()
-    java_sources_args.add_all(
-        srcs,
-        omit_if_empty = False,
-        map_each = _to_path,
-    )
-    actions.write(
-        output = java_sources_args_file,
-        content = java_sources_args,
-        is_executable = False,
     )
 
     # Create a processor path string from Error Prone's `JavaInfo`.
@@ -109,7 +98,7 @@ def _error_prone_aspect_impl(target, aspect_ctx):
             "{OUTPUT_CLASS_DIR}": output_class_dir.path,
             "{CLASS_PATH_ARGS_FILE}": class_path_args_file.path,
             "{PROCESSOR_PATH_ARGS_FILE}": processor_path_args_file.path,
-            "{JAVA_SOURCES_ARGS_FILE}": java_sources_args_file.path,
+            "{JAVA_SOURCES_ARGS_FILE}": srcs_args_file.path,
             "{ERROR_PRONE_LOG_FILE}": error_prone_log.path,
         }
     )
@@ -128,7 +117,7 @@ def _error_prone_aspect_impl(target, aspect_ctx):
             direct = [
                 processor_path_args_file,
                 class_path_args_file,
-                java_sources_args_file,
+                srcs_args_file,
             ],
             transitive = [
                 srcs,

@@ -13,8 +13,8 @@ def _to_short_path(class_path_item):
     '''
     return class_path_item.short_path
 
-def write_run_time_class_path_arguments_file(name, jars, actions, class_path_separator):
-    return _write_class_path_arguments_file(
+def write_run_time_class_path_args_file(name, jars, actions, class_path_separator):
+    return _write_class_path_args_file(
         name,
         jars,
         actions,
@@ -22,8 +22,8 @@ def write_run_time_class_path_arguments_file(name, jars, actions, class_path_sep
         variant = "run_time",
     )
 
-def write_compile_time_class_path_arguments_file(name, jars, actions, class_path_separator):
-    return _write_class_path_arguments_file(
+def write_compile_time_class_path_args_file(name, jars, actions, class_path_separator):
+    return _write_class_path_args_file(
         name,
         jars,
         actions,
@@ -31,7 +31,7 @@ def write_compile_time_class_path_arguments_file(name, jars, actions, class_path
         variant = "compile_time",
     )
 
-def _write_class_path_arguments_file(name, jars, actions, class_path_separator, variant):
+def _write_class_path_args_file(name, jars, actions, class_path_separator, variant):
     '''Writes an arguments file with the classpath made from `jars`.
 
     The `java` and `javac` commands accept "Command Line Arguments Files" using

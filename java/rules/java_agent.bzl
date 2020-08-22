@@ -10,6 +10,7 @@ load(
     "singleton_java_dependency_info",
     "make_legacy_java_info",
 )
+load("@dwtj_rules_java//java:rules/common/actions/write_java_sources_args_file.bzl", "write_java_sources_args_file")
 load("@dwtj_rules_java//java:rules/common/actions/compile_and_jar_java_sources.bzl", "compile_and_jar_java_sources")
 
 def _bool_to_str(b):
@@ -36,8 +37,15 @@ def _java_agent_impl(ctx):
     ]
     manifest_attr.extend(ctx.attr.additional_jar_manifest_attributes)
 
+    srcs_args_file = write_java_sources_args_file(
+        name = ctx.attr.name + ".java_srcs.args",
+        srcs = ctx.files.srcs,
+        actions = ctx.actions,
+    )
+
     compilation_info = JavaCompilationInfo(
         srcs = depset(ctx.files.srcs),
+        srcs_args_file = srcs_args_file,
         class_path_jars = depset(
             transitive = [dep[JavaDependencyInfo].compile_time_class_path_jars for dep in ctx.attr.deps],
         ),

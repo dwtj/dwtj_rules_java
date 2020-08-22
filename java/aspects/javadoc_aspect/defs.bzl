@@ -2,7 +2,7 @@
 '''
 
 load("@dwtj_rules_java//java:providers/JavaCompilationInfo.bzl", "JavaCompilationInfo")
-load("@dwtj_rules_java//java:rules/common/actions/write_class_path_arguments_file.bzl", "write_compile_time_class_path_arguments_file")
+load("@dwtj_rules_java//java:rules/common/actions/write_class_path_args_file.bzl", "write_compile_time_class_path_args_file")
 
 def _to_path(file):
     '''Used as a map function to convert a file to its short path.
@@ -39,6 +39,7 @@ def _javadoc_aspect_impl(target, aspect_ctx):
     path_prefix = name + ".javadoc_aspect/"
     actions = aspect_ctx.actions
     srcs = target[JavaCompilationInfo].srcs
+    srcs_args_file = target[JavaCompilationInfo].srcs_args_file
     class_path_jars = target[JavaCompilationInfo].class_path_jars
     javadoc_exec = _extract_javadoc_executable(aspect_ctx)
 
@@ -50,26 +51,14 @@ def _javadoc_aspect_impl(target, aspect_ctx):
     run_javadoc_script = actions.declare_file(path_prefix + name + ".run_javadoc.sh")
     html_temp_directory = actions.declare_directory(path_prefix + name + ".javadoc.html.temp")
 
-    # Create both args files, i.e., `@`-files.
-    # TODO(dwtj): Similar args files should be made by the target rule. Consider
-    #  re-using those args files instead of re-creating them here.
-    class_path_args_file = write_compile_time_class_path_arguments_file(
+    # Create a class path args file.
+    # TODO(dwtj): A similar args files should be made by the target rule.
+    #  Consider re-using that one instead of re-creating it here.
+    class_path_args_file = write_compile_time_class_path_args_file(
         name = path_prefix + name + ".javadoc_class_path.args",
         jars = class_path_jars,
         actions = actions,
         class_path_separator = _extract_class_path_separator(aspect_ctx),
-    )
-    java_sources_args_file = actions.declare_file(path_prefix + name + ".javadoc.java_sources.args")
-    java_sources_args = actions.args()
-    java_sources_args.add_all(
-        srcs,
-        omit_if_empty = False,
-        map_each = _to_path,
-    )
-    actions.write(
-        output = java_sources_args_file,
-        content = java_sources_args,
-        is_executable = False,
     )
 
     # Create the run script.
@@ -79,7 +68,7 @@ def _javadoc_aspect_impl(target, aspect_ctx):
         substitutions = {
             "{JAVADOC_EXECUTABLE}": javadoc_exec.path,
             "{CLASS_PATH_ARGS_FILE}": class_path_args_file.path,
-            "{JAVA_SOURCE_ARGS_FILE}": java_sources_args_file.path,
+            "{JAVA_SOURCE_ARGS_FILE}": srcs_args_file.path,
             "{HTML_TEMP_DIRECTORY}": html_temp_directory.path,
             "{HTML_ARCHIVE_FILE}": html_archive.path,
             "{JAVADOC_LINT_LOG_FILE}": doclint_log.path,
@@ -100,7 +89,7 @@ def _javadoc_aspect_impl(target, aspect_ctx):
         inputs = depset(
             direct = [
                 class_path_args_file,
-                java_sources_args_file,
+                srcs_args_file,
             ],
             transitive = [
                 srcs,

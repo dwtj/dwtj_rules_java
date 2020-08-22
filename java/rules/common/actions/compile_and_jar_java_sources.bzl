@@ -6,19 +6,10 @@ sources. For example, `java_library`, `java_binary`, and `java_test`.
 
 load("@dwtj_rules_java//java:providers/JavaCompilationInfo.bzl", "JavaCompilationInfo")
 load("@dwtj_rules_java//java:providers/JavaDependencyInfo.bzl", "JavaDependencyInfo")
-load("@dwtj_rules_java//java:rules/common/actions/write_class_path_arguments_file.bzl", "write_compile_time_class_path_arguments_file")
+load("@dwtj_rules_java//java:rules/common/actions/write_java_sources_args_file.bzl", "write_java_sources_args_file")
+load("@dwtj_rules_java//java:rules/common/actions/write_class_path_args_file.bzl", "write_compile_time_class_path_args_file")
 
 _JAVA_COMPILER_TOOLCHAIN_TYPE = "@dwtj_rules_java//java/toolchains/java_compiler_toolchain:toolchain_type"
-
-def _to_path(file):
-    '''Used as a map function to convert a file to its path.
-    '''
-    return file.path
-
-def _to_short_path(file):
-    '''Used as a map function to convert a file to its short path.
-    '''
-    return file.short_path
 
 def compile_and_jar_java_target(ctx):
     '''Interprets a Java target's `ctx` & calls `compile_and_jar_java_sources`.
@@ -41,8 +32,16 @@ def compile_and_jar_java_target(ctx):
       a `File` named `<target_name>.jar`.
     '''
     maybe_main_class = None if not hasattr(ctx.attr, "main_class") else ctx.attr.main_class
+
+    srcs_args_file = write_java_sources_args_file(
+        name = ctx.attr.name + ".java_srcs.args",
+        srcs = ctx.files.srcs,
+        actions = ctx.actions,
+    )
+
     java_compilation_info = JavaCompilationInfo(
         srcs = depset(ctx.files.srcs),
+        srcs_args_file = srcs_args_file,
         class_path_jars = depset(
             direct = [],
             transitive = [dep[JavaDependencyInfo].compile_time_class_path_jars for dep in ctx.attr.deps],
@@ -51,6 +50,7 @@ def compile_and_jar_java_target(ctx):
         additional_jar_manifest_attributes = ctx.attr.additional_jar_manifest_attributes,
         main_class = maybe_main_class,
     )
+
     compile_and_jar_java_sources(
         label = ctx.label,
         compilation_info = java_compilation_info,
@@ -82,7 +82,7 @@ def compile_and_jar_java_sources(label, compilation_info, compiler_toolchain_inf
 
     # Use a helper function to declare, build and write an @args file for the
     #  `javac` class path:
-    class_path_args_file = write_compile_time_class_path_arguments_file(
+    class_path_args_file = write_compile_time_class_path_args_file(
         name = temp_file_prefix + ".compile_time_class_path.args",
         jars = compilation_info.class_path_jars,
         actions = actions,
@@ -108,21 +108,6 @@ def compile_and_jar_java_sources(label, compilation_info, compiler_toolchain_inf
         is_executable = False,
     )
 
-    # Declare, build, and write an @args file to hold all other `javac` command
-    # arguments.
-    javac_args_file = actions.declare_file(temp_file_prefix + ".javac.args")
-    javac_args = actions.args()
-    javac_args.add_all(
-        compilation_info.srcs,
-        omit_if_empty = False,
-        map_each = _to_short_path,
-    )
-    actions.write(
-        output = javac_args_file,
-        content = javac_args,
-        is_executable = False,
-    )
-
     # Declare and instantiate the script which calls `javac` & `jar`.
     output_jar = compilation_info.class_files_output_jar
     compile_and_jar_script = actions.declare_file(temp_file_prefix + ".compile_java_binary_to_jar.sh")
@@ -134,7 +119,7 @@ def compile_and_jar_java_sources(label, compilation_info, compiler_toolchain_inf
             "{CLASS_OUTPUT_DIRECTORY}": temp_file_prefix + ".classes.temp",
             "{JAR_EXECUTABLE}": compiler_toolchain_info.jar_executable.path,
             "{CLASS_PATH_ARGS_FILE}": class_path_args_file.path,
-            "{JAVAC_ARGUMENTS_FILE}": javac_args_file.path,
+            "{JAVA_SRCS_ARGS_FILE}": compilation_info.srcs_args_file.path,
             "{JAR_MANIFEST_FILE}": jar_manifest_file.path,
             "{OUTPUT_JAR}": output_jar.path,
         },
@@ -150,7 +135,7 @@ def compile_and_jar_java_sources(label, compilation_info, compiler_toolchain_inf
         inputs = depset(
             direct = [
                 class_path_args_file,
-                javac_args_file,
+                compilation_info.srcs_args_file,
                 jar_manifest_file,
             ],
             transitive = [

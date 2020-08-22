@@ -37,25 +37,12 @@ def _google_java_format_aspect_impl(target, aspect_ctx):
     if JavaCompilationInfo not in target:
         return [GoogleJavaFormatAspectInfo()]
     
-    # Extract some information from the target and the toolchains:
+    # Extract some information from the target and the toolchains for brevity:
     srcs = target[JavaCompilationInfo].srcs
+    srcs_args_file = target[JavaCompilationInfo].srcs_args_file
     google_java_format_deploy_jar = _extract_google_java_format_deploy_jar(aspect_ctx)
     colordiff_executable = _extract_colordiff_executable(aspect_ctx)
     java_executable = _extract_java_executable(aspect_ctx)
-
-    # Write all of this target's srcs to a file using a `ctx.actions.args()`.
-    # TODO(dwtj): Consider re-using a srcs args file output by the target.
-    srcs_args = aspect_ctx.actions.args()
-    srcs_args.add_all(
-        srcs,
-        map_each = _to_path,
-    )
-    srcs_args_file = aspect_ctx.actions.declare_file(_target_name_with_suffix(target, ".java_srcs.args"))
-    aspect_ctx.actions.write(
-        output = srcs_args_file,
-        content = srcs_args,
-        is_executable = False,
-    )
 
     # Declare an output file for `google-java-format` to write to.
     output_file = aspect_ctx.actions.declare_file(_target_name_with_suffix(target, ".google_java_format.out"))

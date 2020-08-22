@@ -5,8 +5,8 @@ load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 # CONFIGURE `@dwtj_rules_java` #################################################
 
 DWTJ_RULES_JAVA_ARCHIVE_INFO = {
-    "commit": "13260377e5c786b9aa5f622f7037291d98db4990",
-    "sha256": "24f4fd9a03cc36a3fc6d56b03d80cb84e8c5c67dcb4f9761a084495e1eaa389b",
+    "commit": "44f030ad2cc6541b24d0af9a148199b4f7b56dde",
+    "sha256": "c96306487745a2d0e27d2f1ba1dfa9f10117f500e84bf8c61838dc8568c91918",
 }
 http_archive(
     name = "dwtj_rules_java",
