@@ -1,7 +1,7 @@
 '''Defines the `maven_error_prone_repository` repository rule.
 
-This rule is used to create an Error Prone toolchain from using dependencies
-obtained from Maven. The `@rules_jvm_external` rules must be available for this
+This rule is used to create an Error Prone toolchain using dependencies obtained
+from Maven. The `@rules_jvm_external` rules must be available for this
 repository rule to work.
 '''
 
