@@ -7,7 +7,7 @@ load("//java:providers/JavaAgentInfo.bzl", "JavaAgentInfo")
 load("//java:providers/JavaDependencyInfo.bzl", "JavaDependencyInfo")
 load("//java:providers/JavaExecutionInfo.bzl", "JavaExecutionInfo")
 
-load("//java:rules/common/actions/write_class_path_args_file.bzl", "write_run_time_class_path_args_file")
+load("//java:common/actions/write_class_path_args_file.bzl", "write_run_time_class_path_args_file")
 
 def _java_agent_and_options_to_flag(java_agent_and_options):
     '''Convert a 2-tuple to a java flag.

@@ -3,7 +3,7 @@
 
 load("//java:providers/JavaCompilationInfo.bzl", "JavaCompilationInfo")
 load(
-    "//java:rules/common/extract/toolchain_info.bzl",
+    "//java:common/extract/toolchain_info.bzl",
     "extract_java_executable",
     "extract_java_runtime_toolchain_class_path_separator",
     "extract_checkstyle_toolchain_info",

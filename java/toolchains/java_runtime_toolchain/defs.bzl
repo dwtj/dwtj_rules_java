@@ -65,7 +65,7 @@ java_runtime_toolchain = rule(
         #  which resolves the label to a file.
         # TODO(dwtj): Try the `Label()` constructor.
         "_java_run_script_template": attr.label(
-            default = "@dwtj_rules_java//java:rules/common/actions/TEMPLATE.java_run_script.sh",
+            default = "@dwtj_rules_java//java:common/actions/TEMPLATE.java_run_script.sh",
             allow_single_file = True,
         ),
         "class_path_separator": attr.string(

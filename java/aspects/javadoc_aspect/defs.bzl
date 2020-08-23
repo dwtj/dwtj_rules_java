@@ -2,7 +2,7 @@
 '''
 
 load("//java:providers/JavaCompilationInfo.bzl", "JavaCompilationInfo")
-load("//java:rules/common/actions/write_class_path_args_file.bzl", "write_compile_time_class_path_args_file")
+load("//java:common/actions/write_class_path_args_file.bzl", "write_compile_time_class_path_args_file")
 
 def _to_path(file):
     '''Used as a map function to convert a file to its short path.

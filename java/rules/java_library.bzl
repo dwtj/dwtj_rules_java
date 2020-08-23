@@ -3,9 +3,9 @@
 
 load("//java:providers/JavaCompilationInfo.bzl", "JavaCompilationInfo")
 load("//java:providers/JavaDependencyInfo.bzl", "JavaDependencyInfo")
-load("//java:rules/common/actions/compile_and_jar_java_sources.bzl", "compile_and_jar_java_target")
+load("//java:common/actions/compile_and_jar_java_sources.bzl", "compile_and_jar_java_target")
 load(
-    "//java:rules/common/providers.bzl",
+    "//java:common/providers.bzl",
     "singleton_java_dependency_info",
     "make_legacy_java_info",
 )

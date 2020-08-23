@@ -2,7 +2,7 @@
 '''
 
 load("//java:providers/JavaCompilationInfo.bzl", "JavaCompilationInfo")
-load("//java:rules/common/actions/write_class_path_args_file.bzl", "write_compile_time_class_path_args_file")
+load("//java:common/actions/write_class_path_args_file.bzl", "write_compile_time_class_path_args_file")
 
 ErrorProneAspectInfo = provider(
     fields = {

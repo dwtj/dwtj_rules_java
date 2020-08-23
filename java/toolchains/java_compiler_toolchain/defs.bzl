@@ -71,7 +71,7 @@ java_compiler_toolchain = rule(
         #  figured out another way to do it which resolves the label to a file.
         # TODO(dwtj): Try the `Label()` constructor.
         "_compile_and_jar_java_sources_script_template": attr.label(
-            default = "@dwtj_rules_java//java:rules/common/actions/TEMPLATE.compile_and_jar_java_sources.sh",
+            default = "@dwtj_rules_java//java:common/actions/TEMPLATE.compile_and_jar_java_sources.sh",
             allow_single_file = True,
         ),
         "class_path_separator": attr.string(

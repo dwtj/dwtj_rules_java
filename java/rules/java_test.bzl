@@ -5,11 +5,11 @@ load("//java:providers/JavaAgentInfo.bzl", "JavaAgentInfo")
 load("//java:providers/JavaCompilationInfo.bzl", "JavaCompilationInfo")
 load("//java:providers/JavaDependencyInfo.bzl", "JavaDependencyInfo")
 
-load("//java:rules/common/actions/compile_and_jar_java_sources.bzl", "compile_and_jar_java_target")
-load("//java:rules/common/actions/write_java_run_script.bzl", "write_java_run_script_from_ctx")
-load("//java:rules/common/extract/toolchain_info.bzl", "extract_java_runtime_toolchain_info", "extract_java_executable")
+load("//java:common/actions/compile_and_jar_java_sources.bzl", "compile_and_jar_java_target")
+load("//java:common/actions/write_java_run_script.bzl", "write_java_run_script_from_ctx")
+load("//java:common/extract/toolchain_info.bzl", "extract_java_runtime_toolchain_info", "extract_java_executable")
 load(
-    "//java:rules/common/providers.bzl",
+    "//java:common/providers.bzl",
     "singleton_java_dependency_info",
     "make_legacy_java_info",
 )

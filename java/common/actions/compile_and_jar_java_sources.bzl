@@ -6,8 +6,8 @@ sources. For example, `java_library`, `java_binary`, and `java_test`.
 
 load("//java:providers/JavaCompilationInfo.bzl", "JavaCompilationInfo")
 load("//java:providers/JavaDependencyInfo.bzl", "JavaDependencyInfo")
-load("//java:rules/common/actions/write_java_sources_args_file.bzl", "write_java_sources_args_file")
-load("//java:rules/common/actions/write_class_path_args_file.bzl", "write_compile_time_class_path_args_file")
+load("//java:common/actions/write_java_sources_args_file.bzl", "write_java_sources_args_file")
+load("//java:common/actions/write_class_path_args_file.bzl", "write_compile_time_class_path_args_file")
 
 _JAVA_COMPILER_TOOLCHAIN_TYPE = "@dwtj_rules_java//java/toolchains/java_compiler_toolchain:toolchain_type"
 

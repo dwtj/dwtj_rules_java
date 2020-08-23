@@ -6,12 +6,12 @@ load("//java:providers/JavaCompilationInfo.bzl", "JavaCompilationInfo")
 load("//java:providers/JavaDependencyInfo.bzl", "JavaDependencyInfo")
 
 load(
-    "//java:rules/common/providers.bzl",
+    "//java:common/providers.bzl",
     "singleton_java_dependency_info",
     "make_legacy_java_info",
 )
-load("//java:rules/common/actions/write_java_sources_args_file.bzl", "write_java_sources_args_file")
-load("//java:rules/common/actions/compile_and_jar_java_sources.bzl", "compile_and_jar_java_sources")
+load("//java:common/actions/write_java_sources_args_file.bzl", "write_java_sources_args_file")
+load("//java:common/actions/compile_and_jar_java_sources.bzl", "compile_and_jar_java_sources")
 
 def _bool_to_str(b):
     if b == True:
