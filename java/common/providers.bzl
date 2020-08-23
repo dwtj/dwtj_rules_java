@@ -1,7 +1,7 @@
 '''Some common helper functions for creating/manipulating/adpating providers.
 '''
 
-load("@dwtj_rules_java//java:providers/JavaDependencyInfo.bzl", "JavaDependencyInfo")
+load("//java:providers/JavaDependencyInfo.bzl", "JavaDependencyInfo")
 
 def singleton_java_dependency_info(jar):
     '''Returns a `JavaDependencyInfo` with just the given `jar` as a CT/RT dep.
