@@ -1,11 +1,11 @@
 '''Defines the `java_library` rule.
 '''
 
-load("@dwtj_rules_java//java:providers/JavaCompilationInfo.bzl", "JavaCompilationInfo")
-load("@dwtj_rules_java//java:providers/JavaDependencyInfo.bzl", "JavaDependencyInfo")
-load("@dwtj_rules_java//java:rules/common/actions/compile_and_jar_java_sources.bzl", "compile_and_jar_java_target")
+load("//java:providers/JavaCompilationInfo.bzl", "JavaCompilationInfo")
+load("//java:providers/JavaDependencyInfo.bzl", "JavaDependencyInfo")
+load("//java:rules/common/actions/compile_and_jar_java_sources.bzl", "compile_and_jar_java_target")
 load(
-    "@dwtj_rules_java//java:rules/common/providers.bzl",
+    "//java:rules/common/providers.bzl",
     "singleton_java_dependency_info",
     "make_legacy_java_info",
 )

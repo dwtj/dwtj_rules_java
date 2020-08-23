@@ -1,7 +1,7 @@
 '''Defines the `legacy_java_import` rule.
 '''
 
-load("@dwtj_rules_java//java:providers/JavaDependencyInfo.bzl", "JavaDependencyInfo")
+load("//java:providers/JavaDependencyInfo.bzl", "JavaDependencyInfo")
 
 def _legacy_java_import_impl(ctx):
     java_infos = [i[JavaInfo] for i in ctx.attr.imports]

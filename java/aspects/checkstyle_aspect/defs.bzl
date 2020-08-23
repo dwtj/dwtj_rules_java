@@ -1,9 +1,9 @@
 '''Defines the `checkstyle_aspect`.
 '''
 
-load("@dwtj_rules_java//java:providers/JavaCompilationInfo.bzl", "JavaCompilationInfo")
+load("//java:providers/JavaCompilationInfo.bzl", "JavaCompilationInfo")
 load(
-    "@dwtj_rules_java//java:rules/common/extract/toolchain_info.bzl",
+    "//java:rules/common/extract/toolchain_info.bzl",
     "extract_java_executable",
     "extract_java_runtime_toolchain_class_path_separator",
     "extract_checkstyle_toolchain_info",

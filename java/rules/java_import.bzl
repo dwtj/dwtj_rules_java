@@ -1,7 +1,7 @@
 '''Defines the `java_import` rule.
 '''
 
-load("@dwtj_rules_java//java:providers/JavaDependencyInfo.bzl", "JavaDependencyInfo")
+load("//java:providers/JavaDependencyInfo.bzl", "JavaDependencyInfo")
 
 def _java_import_impl(ctx):
     jars_depset = depset(direct = ctx.files.jars)

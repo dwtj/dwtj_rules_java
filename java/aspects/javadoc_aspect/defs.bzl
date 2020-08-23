@@ -1,8 +1,8 @@
 '''Defines the `javadoc_aspect`. It runs the `javadoc` exec on Java `srcs`.
 '''
 
-load("@dwtj_rules_java//java:providers/JavaCompilationInfo.bzl", "JavaCompilationInfo")
-load("@dwtj_rules_java//java:rules/common/actions/write_class_path_args_file.bzl", "write_compile_time_class_path_args_file")
+load("//java:providers/JavaCompilationInfo.bzl", "JavaCompilationInfo")
+load("//java:rules/common/actions/write_class_path_args_file.bzl", "write_compile_time_class_path_args_file")
 
 def _to_path(file):
     '''Used as a map function to convert a file to its short path.

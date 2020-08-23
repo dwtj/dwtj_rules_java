@@ -1,7 +1,7 @@
 '''Defines the `google_java_format_aspect` and some helper definitions for it.
 '''
 
-load("@dwtj_rules_java//java:providers/JavaCompilationInfo.bzl", "JavaCompilationInfo")
+load("//java:providers/JavaCompilationInfo.bzl", "JavaCompilationInfo")
 
 def _extract_google_java_format_deploy_jar(aspect_ctx):
     return aspect_ctx.toolchains['@dwtj_rules_java//java/toolchains/google_java_format_toolchain:toolchain_type'] \

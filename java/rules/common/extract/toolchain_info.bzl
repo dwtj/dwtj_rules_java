@@ -19,6 +19,5 @@ def extract_java_runtime_toolchain_info(ctx):
     '''
     return ctx.toolchains[_JAVA_RUNTIME_TOOLCHAIN_TYPE].java_runtime_toolchain_info
 
-
 def extract_checkstyle_toolchain_info(ctx):
     return ctx.toolchains[_CHECKSTYLE_TOOLCHAIN_TYPE].checkstyle_toolchain_info

@@ -1,8 +1,8 @@
 '''Defines the `error_prone_aspect`. It runs Error Prone on Java `srcs`.
 '''
 
-load("@dwtj_rules_java//java:providers/JavaCompilationInfo.bzl", "JavaCompilationInfo")
-load("@dwtj_rules_java//java:rules/common/actions/write_class_path_args_file.bzl", "write_compile_time_class_path_args_file")
+load("//java:providers/JavaCompilationInfo.bzl", "JavaCompilationInfo")
+load("//java:rules/common/actions/write_class_path_args_file.bzl", "write_compile_time_class_path_args_file")
 
 ErrorProneAspectInfo = provider(
     fields = {

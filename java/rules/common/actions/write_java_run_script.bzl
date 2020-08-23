@@ -3,11 +3,11 @@
 This function is meant to be used by different kinds of Java rules.
 '''
 
-load("@dwtj_rules_java//java:providers/JavaAgentInfo.bzl", "JavaAgentInfo")
-load("@dwtj_rules_java//java:providers/JavaDependencyInfo.bzl", "JavaDependencyInfo")
-load("@dwtj_rules_java//java:providers/JavaExecutionInfo.bzl", "JavaExecutionInfo")
+load("//java:providers/JavaAgentInfo.bzl", "JavaAgentInfo")
+load("//java:providers/JavaDependencyInfo.bzl", "JavaDependencyInfo")
+load("//java:providers/JavaExecutionInfo.bzl", "JavaExecutionInfo")
 
-load("@dwtj_rules_java//java:rules/common/actions/write_class_path_args_file.bzl", "write_run_time_class_path_args_file")
+load("//java:rules/common/actions/write_class_path_args_file.bzl", "write_run_time_class_path_args_file")
 
 def _java_agent_and_options_to_flag(java_agent_and_options):
     '''Convert a 2-tuple to a java flag.
