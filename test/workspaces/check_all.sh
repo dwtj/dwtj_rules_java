@@ -59,13 +59,23 @@ if bazel build //:BadJavadoc > /dev/null 2> /dev/null ; then
     exit 1
 fi
 
-# `:GoodJava` should pass, but `:ErrorJava` should fail:
+# `:GoodJava` and ``:WarningJava` should pass, but `:ErrorJava` should fail:
 cd "$ROOT_WORKSPACE/test/workspaces/smoke_test_error_prone_aspect"
 bazel clean
 bazel build //:GoodJava
 bazel build //:WarningJava
 if bazel build //:ErrorJava > /dev/null 2> /dev/null ; then
     echo 'ERROR: `bazel build @smoke_test_error_prone_aspect//:ErrorJava` passed, but it should have failed.'
+    exit 1
+fi
+
+# `:GoodJava` and ``:WarningJava` should pass, but `:ErrorJava` should fail:
+cd "$ROOT_WORKSPACE/test/workspaces/smoke_test_checkstyle_aspect"
+bazel clean
+bazel build //:GoodJava
+bazel build //:WarningJava
+if bazel build //:ErrorJava > /dev/null 2> /dev/null ; then
+    echo 'ERROR: `bazel build @smoke_test_checkstyle_aspect//:ErrorJava` passed, but it should have failed.'
     exit 1
 fi
 

@@ -16,6 +16,8 @@ load("//java/toolchains/javadoc_toolchain:defs.bzl", _javadoc_toolchain = "javad
 
 load("//java/toolchains/error_prone_toolchain:defs.bzl", _error_prone_toolchain = "error_prone_toolchain")
 
+load("//java/toolchains/checkstyle_toolchain:defs.bzl", _checkstyle_toolchain = "checkstyle_toolchain")
+
 dwtj_java_compiler_toolchain = java_compiler_toolchain
 
 dwtj_java_runtime_toolchain = java_runtime_toolchain
@@ -25,3 +27,5 @@ google_java_format_toolchain = _google_java_format_toolchain
 javadoc_toolchain = _javadoc_toolchain
 
 error_prone_toolchain = _error_prone_toolchain
+
+checkstyle_toolchain = _checkstyle_toolchain

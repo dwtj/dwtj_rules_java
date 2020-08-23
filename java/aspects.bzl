@@ -10,8 +10,12 @@ load("//java:aspects/javadoc_aspect/defs.bzl", _javadoc_aspect = "javadoc_aspect
 
 load("//java:aspects/error_prone_aspect/defs.bzl", _error_prone_aspect = "error_prone_aspect")
 
+load("//java:aspects/checkstyle_aspect/defs.bzl", _checkstyle_aspect = "checkstyle_aspect")
+
 google_java_format_aspect = _google_java_format_aspect
 
 javadoc_aspect = _javadoc_aspect
 
 error_prone_aspect = _error_prone_aspect
+
+checkstyle_aspect = _checkstyle_aspect

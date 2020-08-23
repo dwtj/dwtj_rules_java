@@ -1,0 +1,3 @@
+package mypkg;
+
+class GoodJava {}

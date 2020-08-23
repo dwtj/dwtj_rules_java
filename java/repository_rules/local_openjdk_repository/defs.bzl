@@ -10,7 +10,7 @@ def _symlink_which_executable_else_fail(repository_ctx, exec_name):
     if exec != None:
         repository_ctx.symlink(exec, exec_name)
     else:
-        fail("Could not find a `java` executable on the system path.")
+        fail("Could not find a required executable on the system path: `{}`".format(exec_name))
 
 def _local_openjdk_repository_impl(repository_ctx):
     _symlink_which_executable_else_fail(repository_ctx, "java")
