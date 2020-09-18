@@ -1,4 +1,6 @@
-'''Exports all repository rules. These help users setup their Bazel workspace.
+'''Exports all repository rules.
+
+These help users setup their Bazel workspace and its external workspaces.
 '''
 
 load("//java:repository_rules/local_openjdk_repository/defs.bzl", "local_openjdk_repository")

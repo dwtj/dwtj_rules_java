@@ -1,6 +1,4 @@
-load("@io_bazel_stardoc//stardoc:stardoc.bzl", "stardoc")
-load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
-
+# TODO(dwtj): Analyze and document why these templates need to be exported.
 exports_files([
     "aspects/google_java_format_aspect/TEMPLATE.run_google_java_format.sh",
     "aspects/javadoc_aspect/TEMPLATE.run_javadoc.sh",
@@ -10,86 +8,30 @@ exports_files([
     "common/actions/TEMPLATE.java_run_script.sh",
 ])
 
-stardoc(
-    name = "defs_md",
-    input = "defs.bzl",
-    out = "defs.md",
-    deps = ["all_bzl"],
+exports_files(
+    # NOTE(dwtj): We export all `bzl` files in this package so that the website
+    #  can wrap these files in `bzl_library` targets and pass them to `stardoc`.
+    #  We don't want to declare `bzl_library` targets and `stardoc` targets in
+    #  this package, because then all users of these rules would also depend
+    #  upon the `bazel-skylib` and `stardoc` external repositories (and thus
+    #  need to configure their Bazel workspace to include these dependencies).
+    glob([
+        "**/*.bzl",
+    ]),
+    # TODO(dwtj): These files are probably only needed for the website. Can we
+    #  make visibility narrower even though the website is in an external
+    #  repository?
+    visibility = ["//visibility:public"],
 )
 
-stardoc(
-    name = "providers_md",
-    input = "providers.bzl",
-    out = "providers.md",
-    deps = ["all_bzl"],
+filegroup(
+    name = "all_bzl_files_in_package",
+    srcs = glob(["**/*.bzl"], exclude = ["**/TEMPLATE*.bzl"]),
+    # TODO(dwtj): These files are probably only needed for the website. Can we
+    #  make visibility narrower even though the website is in an external
+    #  repository?
+    visibility = ["//visibility:public"]
 )
 
-stardoc(
-    name = "aspects_md",
-    input = "aspects.bzl",
-    out = "aspects.md",
-    deps = ["all_bzl"],
-)
-
-stardoc(
-    name = "repository_rules_md",
-    input = "repositories.bzl",
-    out = "repository_rules.md",
-    deps = ["all_bzl"],
-)
-
-stardoc(
-    name = "toolchains_md",
-    input = "toolchains.bzl",
-    out = "toolchains.md",
-    deps = [":toolchains_bzl"],
-)
-
-bzl_library(
-    name = "all_bzl",
-    deps = [
-        ":rules_bzl",
-        ":providers_bzl",
-        ":common_bzl",
-        ":aspects_bzl",
-        ":repository_rules_bzl",
-        ":toolchains_bzl",
-    ]
-)
-
-bzl_library(
-    name = "rules_bzl",
-    srcs = glob(["rules/*.bzl"])
-)
-
-bzl_library(
-    name = "providers_bzl",
-    srcs = glob(["providers/*.bzl"])
-)
-
-bzl_library(
-    name = "common_bzl",
-    srcs = glob(["common/**/*.bzl"])
-)
-
-bzl_library(
-    name = "aspects_bzl",
-    srcs = glob(["aspects/*/*.bzl"])
-)
-
-bzl_library(
-    name = "repository_rules_bzl",
-    srcs = glob(["repository_rules/*/*.bzl"], exclude = ["**/TEMPLATE*.bzl"])
-)
-
-bzl_library(
-    name = "toolchains_bzl",
-    deps = [
-        "//java/toolchains/checkstyle_toolchain:defs_bzl",
-        "//java/toolchains/error_prone_toolchain:defs_bzl",
-        "//java/toolchains/google_java_format_toolchain:defs_bzl",
-        "//java/toolchains/java_compiler_toolchain:defs_bzl",
-        "//java/toolchains/java_runtime_toolchain:defs_bzl",
-        "//java/toolchains/javadoc_toolchain:defs_bzl",
-    ]
-)
+# TODO(dwtj): Consider exporting the toolchains for convenient use by the
+#  website.
