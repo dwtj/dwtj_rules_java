@@ -25,7 +25,7 @@ exports_files(
 )
 
 filegroup(
-    name = "all_bzl_files_in_package",
+    name = "all_bzl_files_in_project",
     srcs = glob(["**/*.bzl"], exclude = ["**/TEMPLATE*.bzl"]),
     # TODO(dwtj): These files are probably only needed for the website. Can we
     #  make visibility narrower even though the website is in an external
