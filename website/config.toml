@@ -4,7 +4,7 @@ title = "Somebody's Java Bazel Rules"
 [params]
   AuthorName = "David Johnston"
   HeaderBrandName = "Java Rules"
-  GitHubUserName = "dwtj"
+  GitHubUser = "dwtj"
   GitHubRepositoryName = "dwtj_rules_java"
   GitHubUserPortraitUrl = "https://avatars0.githubusercontent.com/u/2457848?s=400&u=e0cfa4b84f65f4fb6f73e6bc39762d82b85cb58c&v=4"
   Subtitle = "Somebody's alternative Java Bazel rules"
