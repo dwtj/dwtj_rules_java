@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Somebody&#39;s Java Bazel Rules</title>
+    <link>https://dwtj.github.io/dwtj_rules_java/</link>
+    <description>Recent content on Somebody&#39;s Java Bazel Rules</description>
+    <generator>Hugo -- gohugo.io</generator>
+    
+	<atom:link href="https://dwtj.github.io/dwtj_rules_java/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>java_agent</title>
+      <link>https://dwtj.github.io/dwtj_rules_java/java_agent/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://dwtj.github.io/dwtj_rules_java/java_agent/</guid>
+      <description>java_agent  java_agent(name, additional_jar_manifest_attributes, can_redefine_classes, can_retransform_classes, can_set_native_method_prefix, deps, premain_class, srcs)  ATTRIBUTES
+   Name Description Type Mandatory Default     name A unique name for this target. Name required    additional_jar_manifest_attributes A list of strings; each will be added as a line of the output JAR&amp;rsquo;s manifest file. List of strings optional []   can_redefine_classes - Boolean optional False   can_retransform_classes - Boolean optional False   can_set_native_method_prefix - Boolean optional False   deps - List of labels optional []   premain_class - String required    srcs A list of Java source files whose derived class files should be included in this Java agent (and any of its dependents).</description>
+    </item>
+    
+    <item>
+      <title>java_binary</title>
+      <link>https://dwtj.github.io/dwtj_rules_java/java_binary/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://dwtj.github.io/dwtj_rules_java/java_binary/</guid>
+      <description>java_binary  java_binary(name, additional_jar_manifest_attributes, deps, java_agents, main_class, srcs)  ATTRIBUTES
+   Name Description Type Mandatory Default     name A unique name for this target. Name required    additional_jar_manifest_attributes A list of strings; each will be added as a line of the output JAR&amp;rsquo;s manifest file. The JAR&amp;rsquo;s Main-Class header is automatically set according to the target&amp;rsquo;s main_class attribute. List of strings optional []   deps - List of labels optional []   java_agents A dict from java_agent targets to option strings.</description>
+    </item>
+    
+    <item>
+      <title>java_import</title>
+      <link>https://dwtj.github.io/dwtj_rules_java/java_import/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://dwtj.github.io/dwtj_rules_java/java_import/</guid>
+      <description>
+java_import  java_import(name, jars)  ATTRIBUTES
+   Name Description Type Mandatory Default     name A unique name for this target. Name required    jars - List of labels required     </description>
+    </item>
+    
+    <item>
+      <title>java_library</title>
+      <link>https://dwtj.github.io/dwtj_rules_java/java_library/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://dwtj.github.io/dwtj_rules_java/java_library/</guid>
+      <description>java_library  java_library(name, additional_jar_manifest_attributes, deps, srcs)  ATTRIBUTES
+   Name Description Type Mandatory Default     name A unique name for this target. Name required    additional_jar_manifest_attributes A list of strings; each will be added as a line of the output JAR&amp;rsquo;s manifest file. List of strings optional []   deps - List of labels optional []   srcs A list of Java source files whose derived class files should be included in this library (and any of its dependents).</description>
+    </item>
+    
+    <item>
+      <title>java_test</title>
+      <link>https://dwtj.github.io/dwtj_rules_java/java_test/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://dwtj.github.io/dwtj_rules_java/java_test/</guid>
+      <description>java_test  java_test(name, additional_jar_manifest_attributes, deps, java_agents, main_class, srcs)  ATTRIBUTES
+   Name Description Type Mandatory Default     name A unique name for this target. Name required    additional_jar_manifest_attributes A list of strings; each will be added as a line of the output JAR&amp;rsquo;s manifest file. The JAR&amp;rsquo;s Main-Class header is automatically set according to the target&amp;rsquo;s main_class attribute. List of strings optional []   deps - List of labels optional []   java_agents A dict from java_agent targets to strings.</description>
+    </item>
+    
+    <item>
+      <title>legacy_java_import</title>
+      <link>https://dwtj.github.io/dwtj_rules_java/legacy_java_import/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://dwtj.github.io/dwtj_rules_java/legacy_java_import/</guid>
+      <description>
+legacy_java_import  legacy_java_import(name, imports)  Wraps legacy Java targets (i.e. those providing JavaInfo but not JavaDependencyInfo) so that they can be used as a dependency of these new Java rules.
+ATTRIBUTES
+   Name Description Type Mandatory Default     name A unique name for this target. Name required    imports - List of labels required     </description>
+    </item>
+    
+  </channel>
+</rss>

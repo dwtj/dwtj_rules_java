@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  
+  <url>
+    <loc>https://dwtj.github.io/dwtj_rules_java/categories/</loc>
+  </url>
+  
+  <url>
+    <loc>https://dwtj.github.io/dwtj_rules_java/java_agent/</loc>
+  </url>
+  
+  <url>
+    <loc>https://dwtj.github.io/dwtj_rules_java/java_binary/</loc>
+  </url>
+  
+  <url>
+    <loc>https://dwtj.github.io/dwtj_rules_java/java_import/</loc>
+  </url>
+  
+  <url>
+    <loc>https://dwtj.github.io/dwtj_rules_java/java_library/</loc>
+  </url>
+  
+  <url>
+    <loc>https://dwtj.github.io/dwtj_rules_java/java_test/</loc>
+  </url>
+  
+  <url>
+    <loc>https://dwtj.github.io/dwtj_rules_java/legacy_java_import/</loc>
+  </url>
+  
+  <url>
+    <loc>https://dwtj.github.io/dwtj_rules_java/</loc>
+  </url>
+  
+  <url>
+    <loc>https://dwtj.github.io/dwtj_rules_java/tags/</loc>
+  </url>
+  
+</urlset>
