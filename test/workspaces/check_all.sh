@@ -1,5 +1,5 @@
 #!/bin/sh -
-# 
+#
 # This script expects to be run from the root of the `dwtj_rules_java`
 # workspace.
 
@@ -79,10 +79,14 @@ if bazel build //:ErrorJava > /dev/null 2> /dev/null ; then
     exit 1
 fi
 
-# This should pass:
+# All of these should pass:
 cd "$ROOT_WORKSPACE/test/workspaces/smoke_test_executable_arguments"
 bazel clean
-bazel run //:JavaBinaryExpectsArguments -- Hello World
+bazel build //...
+bazel run //:binary_should_fail_unless_run_with_args -- Hello World
+bazel run //:binary_should_pass
+bazel test //:test_should_fail_unless_run_with_test_args --test_arg Hello --test_arg World
+bazel test //:test_should_pass
 
 echo
 echo "SUCCESS: All test workspace checks passed."
