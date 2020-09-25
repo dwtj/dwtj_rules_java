@@ -7,3 +7,4 @@ test/workspaces/smoke_test_google_java_format_aspect
 test/workspaces/smoke_test_javadoc_aspect
 test/workspaces/smoke_test_error_prone_aspect
 test/workspaces/smoke_test_checkstyle_aspect
+test/workspaces/smoke_test_executable_arguments

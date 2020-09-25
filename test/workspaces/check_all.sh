@@ -79,5 +79,10 @@ if bazel build //:ErrorJava > /dev/null 2> /dev/null ; then
     exit 1
 fi
 
+# This should pass:
+cd "$ROOT_WORKSPACE/test/workspaces/smoke_test_executable_arguments"
+bazel clean
+bazel run //:JavaBinaryExpectsArguments -- Hello World
+
 echo
 echo "SUCCESS: All test workspace checks passed."
