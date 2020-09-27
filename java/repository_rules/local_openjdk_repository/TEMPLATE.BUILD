@@ -12,6 +12,16 @@ load(
     "javadoc_toolchain",
 )
 
+exports_files(
+    [
+        "java",
+        "javac",
+        "jar",
+        "javadoc",
+    ],
+    visibility = ["//visibility:public"],
+)
+
 dwtj_java_compiler_toolchain(
     name = "_java_compiler_toolchain",
     javac_executable = ":javac",
