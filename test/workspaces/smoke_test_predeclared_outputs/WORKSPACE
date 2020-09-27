@@ -1,0 +1,23 @@
+workspace(name = "smoke_test_predeclared_outputs")
+
+# CONFIGURE `@dwtj_rules_java` #################################################
+
+local_repository(
+    name = "dwtj_rules_java",
+    path = "../../..",
+)
+
+load(
+    "@dwtj_rules_java//java:repositories.bzl",
+    "dwtj_local_openjdk_repository",
+)
+
+# CONFIGURE `@dwtj_local_openjdk` ##############################################
+
+dwtj_local_openjdk_repository(
+    name = "dwtj_local_openjdk",
+)
+
+load("@dwtj_local_openjdk//:defs.bzl", "register_java_toolchains")
+
+register_java_toolchains()

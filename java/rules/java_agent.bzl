@@ -26,7 +26,9 @@ def _java_agent_impl(ctx):
     #  `Premain-Class` to `ctx.attr.additional_jar_manifest_attributes`.
     # TODO(dwtj): Maybe figure out a way to prevent this code duplication.
 
-    output_jar = ctx.actions.declare_file(ctx.attr.name + ".jar")
+    output_jar = ctx.outputs.output_jar
+    if output_jar == None:
+        output_jar = ctx.actions.declare_file(ctx.attr.name + ".jar")
 
     # NOTE(dwtj): Rule `attr` are frozen; we can't modify it directly.
     manifest_attr = [
@@ -107,6 +109,7 @@ java_agent = rule(
         "can_set_native_method_prefix": attr.bool(
             default = False,
         ),
+        "output_jar": attr.output()
     },
     provides = [
         JavaAgentInfo,
