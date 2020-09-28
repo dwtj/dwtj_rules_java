@@ -49,6 +49,7 @@ def write_java_run_script_from_ctx(ctx, java_dependency_info, java_runtime_toolc
         main_class = ctx.attr.main_class,
         java_agents = _java_agents_dict_as_list_of_pairs(ctx.attr.java_agents),
         java_runtime_toolchain_info = java_runtime_toolchain_info,
+        jvm_flags = ctx.attr.jvm_flags,
     )
 
     run_script, cp_args_file, jvm_flags_args_file, run_time_jars = write_java_run_script(
@@ -98,6 +99,9 @@ def write_java_run_script(java_execution_info, actions, temp_file_prefix):
 
     # Create a sequence of command line flags to pass to the `java` command:
     jvm_flags = actions.args()
+    jvm_flags.add_all(
+        java_execution_info.jvm_flags,
+    )
     jvm_flags.add_all(
         java_execution_info.java_agents,
         map_each = _java_agent_and_options_to_flag,

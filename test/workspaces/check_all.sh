@@ -94,5 +94,13 @@ bazel clean
 bazel build //...
 bazel test //...
 
+# All of these should pass:
+cd "$ROOT_WORKSPACE/test/workspaces/smoke_test_java_rule_attributes"
+bazel clean
+bazel build //...
+bazel run //attrs/data:read_each_line
+bazel run //attrs/jvm_args:check_system_property
+bazel test //...
+
 echo
 echo "SUCCESS: All test workspace checks passed."

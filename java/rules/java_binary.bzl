@@ -27,17 +27,20 @@ def _java_binary_impl(ctx):
         extract_java_runtime_toolchain_info(ctx),
     )
 
+    runfiles = [
+        extract_java_executable(ctx),
+        run_script,
+        class_path_args_file,
+        jvm_flags_args_file,
+    ]
+    runfiles.extend(ctx.files.data)
+
     return [
         DefaultInfo(
             files = depset([java_compilation_info.class_files_output_jar]),
             executable = run_script,
             runfiles = ctx.runfiles(
-                files = [
-                    extract_java_executable(ctx),
-                    run_script,
-                    class_path_args_file,
-                    jvm_flags_args_file,
-                ],
+                files = runfiles,
                 transitive_files = run_time_jars,
             ),
         ),
@@ -67,6 +70,13 @@ java_binary = rule(
                 JavaInfo,
             ],
             default = [],
+        ),
+        "data": attr.label_list(
+            default = list(),
+            allow_files = True,
+        ),
+        "jvm_flags": attr.string_list(
+            default = list(),
         ),
         "additional_jar_manifest_attributes": attr.string_list(
             doc = "A list of strings; each will be added as a line of the output JAR's manifest file. The JAR's `Main-Class` header is automatically set according to the target's `main_class` attribute.",

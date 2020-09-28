@@ -22,10 +22,12 @@ def compile_and_jar_java_target(ctx):
       ctx: A rule `ctx` instance following various Java rule conventions needed
         to compile Java sources. These conventions include well-defined:
 
-        - a `srcs` attribute (where all elements are `File`s)
-        - a `deps` attribute (where all elements provide `JavaDependencyInfo`)
-        - an `output_jar` attribute (which is an optionally set `attr.output()`).
-        - a Java compiler toolchain
+        - A `srcs` attribute (a list where all elements are `File`s).
+        - A `deps` attribute (a list where all elements provide
+          `JavaDependencyInfo`)
+        - An `output_jar` attribute (an `attr.output()` with either a string
+          or `None` value).
+        - A Java compiler toolchain.
 
     Returns:
       A `JavaCompilationInfo` describing the compilation of Java sources for
