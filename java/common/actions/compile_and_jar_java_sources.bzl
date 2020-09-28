@@ -24,6 +24,7 @@ def compile_and_jar_java_target(ctx):
 
         - a `srcs` attribute (where all elements are `File`s)
         - a `deps` attribute (where all elements provide `JavaDependencyInfo`)
+        - an `output_jar` attribute (which is an optionally set `attr.output()`).
         - a Java compiler toolchain
 
     Returns:
@@ -32,6 +33,10 @@ def compile_and_jar_java_target(ctx):
       a `File` named `<target_name>.jar`.
     '''
     maybe_main_class = None if not hasattr(ctx.attr, "main_class") else ctx.attr.main_class
+
+    output_jar = ctx.outputs.output_jar
+    if output_jar == None:
+        output_jar = ctx.actions.declare_file(ctx.attr.name + ".jar")
 
     srcs_args_file = write_java_sources_args_file(
         name = ctx.attr.name + ".java_srcs.args",
@@ -46,7 +51,7 @@ def compile_and_jar_java_target(ctx):
             direct = [],
             transitive = [dep[JavaDependencyInfo].compile_time_class_path_jars for dep in ctx.attr.deps],
         ),
-        class_files_output_jar = ctx.actions.declare_file(ctx.attr.name + ".jar"),
+        class_files_output_jar = output_jar,
         additional_jar_manifest_attributes = ctx.attr.additional_jar_manifest_attributes,
         main_class = maybe_main_class,
     )
