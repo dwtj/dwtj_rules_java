@@ -88,5 +88,11 @@ bazel run //:binary_should_pass
 bazel test //:test_should_fail_unless_run_with_test_args --test_arg Hello --test_arg World
 bazel test //:test_should_pass
 
+# This should pass:
+cd "$ROOT_WORKSPACE/test/workspaces/smoke_test_predeclared_outputs"
+bazel clean
+bazel build //...
+bazel test //...
+
 echo
 echo "SUCCESS: All test workspace checks passed."
