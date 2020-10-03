@@ -1,0 +1,4 @@
+bazel-bin
+bazel-out
+bazel-smoke_test_remote_openjdk_repository
+bazel-testlogs

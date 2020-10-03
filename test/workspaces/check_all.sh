@@ -22,6 +22,11 @@ if bazel build //:MyBadLibrary > /dev/null 2> /dev/null ; then
     exit 1
 fi
 
+cd "$ROOT_WORKSPACE/test/workspaces/smoke_test_remote_openjdk_repository"
+bazel clean
+bazel build //...
+bazel test //...
+
 # All of these commands should pass:
 cd "$ROOT_WORKSPACE/test/workspaces/smoke_test_use_legacy_java_rules"
 bazel clean
