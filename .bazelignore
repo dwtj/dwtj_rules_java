@@ -12,3 +12,4 @@ test/workspaces/smoke_test_checkstyle_aspect
 test/workspaces/smoke_test_executable_arguments
 test/workspaces/smoke_test_predeclared_outputs
 test/workspaces/smoke_test_java_rule_attributes
+test/workspaces/smoke_test_jvm_native_interfaces

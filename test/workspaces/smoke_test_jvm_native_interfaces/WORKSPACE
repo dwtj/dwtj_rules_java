@@ -1,0 +1,30 @@
+workspace(name = "smoke_test_remote_openjdk_repository")
+
+# CONFIGURE `@dwtj_rules_java` #################################################
+
+local_repository(
+    name = "dwtj_rules_java",
+    path = "../../..",
+)
+
+load(
+    "@dwtj_rules_java//test/workspaces:external_repositories.bzl",
+    "adoptopenjdk_linux_v11_0_8_10",
+    "rules_cc",
+)
+
+# CONFIGURE JAVA TOOLCHAINS ####################################################
+
+# TODO(dwtj): Figure out how to make this test workspace more portable.
+#  (E.g., make this test runnable on macOS or different CPU architectures).
+adoptopenjdk_linux_v11_0_8_10(
+    name = "openjdk",
+)
+
+load("@openjdk//:defs.bzl", "register_java_toolchains")
+
+register_java_toolchains()
+
+# CONFIGURE `@rules_cc` ########################################################
+
+rules_cc()

@@ -107,5 +107,10 @@ bazel run //attrs/data:read_each_line
 bazel run //attrs/jvm_args:check_system_property
 bazel test //...
 
+cd "$ROOT_WORKSPACE/test/workspaces/smoke_test_jvm_native_interfaces"
+bazel clean
+bazel build //...
+bazel test //...
+
 echo
 echo "SUCCESS: All test workspace checks passed."
