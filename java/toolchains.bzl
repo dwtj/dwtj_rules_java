@@ -11,6 +11,8 @@ load("//java:rules/toolchains/java_compiler_toolchain.bzl", "java_compiler_toolc
 
 load("//java:rules/toolchains/java_runtime_toolchain.bzl", "java_runtime_toolchain")
 
+load("//java:rules/toolchains/graalvm_native_image_toolchain.bzl", _graalvm_native_image_toolchain = "graalvm_native_image_toolchain")
+
 load("//java:rules/toolchains/google_java_format_toolchain.bzl", _google_java_format_toolchain = "google_java_format_toolchain")
 
 load("//java:rules/toolchains/javadoc_toolchain.bzl", _javadoc_toolchain = "javadoc_toolchain")
@@ -22,6 +24,8 @@ load("//java:rules/toolchains/checkstyle_toolchain.bzl", _checkstyle_toolchain =
 dwtj_java_compiler_toolchain = java_compiler_toolchain
 
 dwtj_java_runtime_toolchain = java_runtime_toolchain
+
+graalvm_native_image_toolchain = _graalvm_native_image_toolchain
 
 google_java_format_toolchain = _google_java_format_toolchain
 

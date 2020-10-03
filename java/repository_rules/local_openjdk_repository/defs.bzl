@@ -1,8 +1,8 @@
 '''Defines a repository rule which finds local `java` and `javac` executables on
 the system path, symlinks them into the root of the repository, and synthesizes
-some boilerplate to wrap these in Java toolchains. If the user has named a
-repository `local_openjdk`, then they can register these toolchains via
-`@local_openjdk//defs.bzl%register_java_toolchains`.
+some boilerplate to wrap these in Java toolchains. If a user uses this rule to
+create a repository named `local_openjdk`, then they can register these
+toolchains via `@local_openjdk//defs.bzl%register_java_toolchains`.
 '''
 
 def _symlink_which_executable_else_fail(repository_ctx, exec_name):

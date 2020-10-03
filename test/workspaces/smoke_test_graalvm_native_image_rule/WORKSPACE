@@ -1,0 +1,34 @@
+workspace(name = "smoke_test_graalvm_native_image_rule")
+
+# CONFIGURE `@dwtj_rules_java` #################################################
+
+local_repository(
+    name = "dwtj_rules_java",
+    path = "../../..",
+)
+
+load(
+    "@dwtj_rules_java//java:repositories.bzl",
+    "dwtj_local_openjdk_repository",
+    "local_graalvm_repository",
+)
+
+# CONFIGURE `@dwtj_local_openjdk` ##############################################
+
+dwtj_local_openjdk_repository(
+    name = "dwtj_local_openjdk",
+)
+
+load("@dwtj_local_openjdk//:defs.bzl", "register_java_toolchains")
+
+register_java_toolchains()
+
+# CONFIGURE `@local_graalvm` ###################################################
+
+local_graalvm_repository(
+    name = "local_graalvm",
+)
+
+load("@local_graalvm//:defs.bzl", "register_graalvm_toolchains")
+
+register_graalvm_toolchains()

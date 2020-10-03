@@ -1,7 +1,8 @@
 '''Re-exports the provider definitions for public use.
 
 Most uses won't need to use these definitions directly. They may be useful for
-users building their own Bazel rules and want to integrate with these rules.
+users who are building their own Bazel rules and want to integrate their
+rules with these rules.
 '''
 
 # TODO(dwtj): Consider putting toolchain instance providers here too.
