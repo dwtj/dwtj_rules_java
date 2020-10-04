@@ -4,11 +4,15 @@
 load("//java:providers/JavaDependencyInfo.bzl", "JavaDependencyInfo")
 load("//java:common/extract/toolchain_info.bzl", "extract_graalvm_native_image_toolchain_info")
 
+def file_to_path(file):
+    return file.path
+
 def _build_script_name(ctx):
     return ctx.attr.name  + ".build_native_image.sh"
 
 # TODO(dwtj): Consider revising control flow so that this is called just once,
-#  not twice.
+#  not twice. Maybe just cache the result. But where? I probably can't just use
+#  a script global variable. Does Bazel provide some target-local storage?
 def _make_class_path_depset(ctx):
     depsets = []
     for dep in ctx.attr.deps:
@@ -16,36 +20,41 @@ def _make_class_path_depset(ctx):
         depsets.append(dep_info.compile_time_class_path_jars)
     return depset([], transitive = depsets)
 
-def _make_class_path_string(ctx):
+def _add_image_name_arg(ctx, args):
+    args.add(ctx.outputs.output_image)
+
+def _build_args(ctx):
+    args = ctx.actions.args()
+    _add_all_class_path_args(ctx, args)
+    _add_all_options_args(ctx, args)
+    _add_main_class_arg(ctx, args)
+    _add_image_name_arg(ctx, args)
+    return args
+
+def _add_all_class_path_args(ctx, args):
     toolchain_info = extract_graalvm_native_image_toolchain_info(ctx)
     jar_depset = _make_class_path_depset(ctx)
-    jar_list = [jar.path for jar in jar_depset.to_list()]
-    return toolchain_info.class_path_separator.join(jar_list)
-
-def _make_native_image_build_script(ctx):
-    toolchain_info = extract_graalvm_native_image_toolchain_info(ctx)
-    build_script = ctx.actions.declare_file(_build_script_name(ctx))
-    ctx.actions.expand_template(
-        template = toolchain_info.graalvm_native_image_script_template,
-        output = build_script,
-        substitutions = {
-            "{NATIVE_IMAGE_EXEC}": toolchain_info.native_image_exec.path,
-            "{CLASS_PATH}": _make_class_path_string(ctx),
-            "{MAIN_CLASS}": ctx.attr.main_class,
-            "{OUTPUT_IMAGE}": ctx.outputs.output_image.path,
-        },
-        is_executable = True,
+    args.add_joined(
+        "--class-path",
+        jar_depset,
+        join_with = toolchain_info.class_path_separator,
+        map_each = file_to_path,
     )
-    return build_script
+    return args
+
+def _add_all_options_args(ctx, args):
+    args.add_all(ctx.attr.native_image_options)
+
+def _add_main_class_arg(ctx, args):
+    args.add(ctx.attr.main_class)
 
 def _build_native_image(ctx):
     toolchain_info = extract_graalvm_native_image_toolchain_info(ctx)
-    build_script = _make_native_image_build_script(ctx)
     ctx.actions.run(
-        outputs = [ctx.outputs.output_image],
+        executable = toolchain_info.native_image_exec,
         inputs = _make_class_path_depset(ctx),
-        executable = build_script,
-        tools = [toolchain_info.native_image_exec],
+        outputs = [ctx.outputs.output_image],
+        arguments = [_build_args(ctx)],
         mnemonic = "GraalVmNativeImage",
         progress_message = "Building native image for `{}`".format(ctx.label),
         # NOTE(dwtj): Currently, we `use_default_shell_env` so that the
@@ -78,6 +87,9 @@ graalvm_native_image = rule(
         "output_image": attr.output(
             # TODO(dwtj): Make this optional.
             mandatory = True,
+        ),
+        "native_image_options": attr.string_list(
+            doc = "A list representing options to add to the `native-image` command invocation. These will be added directly to a Bourne shell script (These options are placed after the `--class-path` argument generated from the `deps` attribute.)",
         ),
     },
     toolchains = [
