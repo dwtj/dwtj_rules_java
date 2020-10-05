@@ -39,11 +39,11 @@ local_graalvm_repository = repository_rule(
                          #  `native-image` executable.
     attrs = {
         "_build_file_template": attr.label(
-            default = Label("@dwtj_rules_java//java:repository_rules/local_graalvm_repository/TEMPLATE.BUILD"),
+            default = Label("@dwtj_rules_java//graalvm:repository_rules/local_graalvm_repository/TEMPLATE.BUILD"),
             allow_single_file = True,
         ),
         "_defs_bzl_file_template": attr.label(
-            default = Label("@dwtj_rules_java//java:repository_rules/local_graalvm_repository/TEMPLATE.defs.bzl"),
+            default = Label("@dwtj_rules_java//graalvm:repository_rules/local_graalvm_repository/TEMPLATE.defs.bzl"),
             allow_single_file = True,
         ),
     }

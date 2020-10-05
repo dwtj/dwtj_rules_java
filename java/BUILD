@@ -6,7 +6,6 @@ exports_files([
     "aspects/checkstyle_aspect/TEMPLATE.run_checkstyle.sh",
     "common/actions/TEMPLATE.compile_and_jar_java_sources.sh",
     "common/actions/TEMPLATE.java_run_script.sh",
-    "rules/graalvm_native_image/TEMPLATE.build_graalvm_native_image.sh",
 ])
 
 exports_files(

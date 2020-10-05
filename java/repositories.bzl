@@ -1,4 +1,4 @@
-'''Exports all repository rules.
+'''Exports all Java repository rules.
 
 These help users setup their Bazel workspace and its external workspaces.
 '''
@@ -6,8 +6,6 @@ These help users setup their Bazel workspace and its external workspaces.
 load("//java:repository_rules/local_openjdk_repository/defs.bzl", "local_openjdk_repository")
 
 load("//java:repository_rules/remote_openjdk_repository/defs.bzl", "remote_openjdk_repository")
-
-load("//java:repository_rules/local_graalvm_repository/defs.bzl", _local_graalvm_repository = "local_graalvm_repository")
 
 load("//java:repository_rules/remote_google_java_format_repository/defs.bzl", _remote_google_java_format_repository = "remote_google_java_format_repository")
 
@@ -18,8 +16,6 @@ load("//java:repository_rules/maven_checkstyle_repository/defs.bzl", _maven_chec
 dwtj_local_openjdk_repository = local_openjdk_repository
 
 dwtj_remote_openjdk_repository = remote_openjdk_repository
-
-local_graalvm_repository = _local_graalvm_repository
 
 remote_google_java_format_repository = _remote_google_java_format_repository
 

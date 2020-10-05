@@ -1,4 +1,4 @@
-'''Exports all toolchain rules.
+'''Exports all Java toolchain rules.
 
 These can help users define their own toolchain instances. Most users shouldn't
 need to use these rules directly. Instead, most users will find it simpler to
@@ -11,8 +11,6 @@ load("//java:toolchain_rules/java_compiler_toolchain.bzl", "java_compiler_toolch
 
 load("//java:toolchain_rules/java_runtime_toolchain.bzl", "java_runtime_toolchain")
 
-load("//java:toolchain_rules/graalvm_native_image_toolchain.bzl", _graalvm_native_image_toolchain = "graalvm_native_image_toolchain")
-
 load("//java:toolchain_rules/google_java_format_toolchain.bzl", _google_java_format_toolchain = "google_java_format_toolchain")
 
 load("//java:toolchain_rules/javadoc_toolchain.bzl", _javadoc_toolchain = "javadoc_toolchain")
@@ -24,8 +22,6 @@ load("//java:toolchain_rules/checkstyle_toolchain.bzl", _checkstyle_toolchain = 
 dwtj_java_compiler_toolchain = java_compiler_toolchain
 
 dwtj_java_runtime_toolchain = java_runtime_toolchain
-
-graalvm_native_image_toolchain = _graalvm_native_image_toolchain
 
 google_java_format_toolchain = _google_java_format_toolchain
 

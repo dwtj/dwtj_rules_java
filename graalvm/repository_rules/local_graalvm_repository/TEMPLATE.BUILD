@@ -5,7 +5,7 @@
 '''Defines the Java toolchains provided by this repository, "@{REPOSITORY_NAME}".
 '''
 
-load("@dwtj_rules_java//java:toolchains.bzl", "graalvm_native_image_toolchain")
+load("@dwtj_rules_java//graalvm:toolchains.bzl", "graalvm_native_image_toolchain")
 
 graalvm_native_image_toolchain(
     name = "_graalvm_native_image_toolchain",
@@ -15,6 +15,6 @@ graalvm_native_image_toolchain(
 toolchain(
     name = "graalvm_native_image_toolchain",
     toolchain = ":_graalvm_native_image_toolchain",
-    toolchain_type = "@dwtj_rules_java//java/toolchains/graalvm_native_image_toolchain:toolchain_type",
+    toolchain_type = "@dwtj_rules_java//graalvm/toolchains/graalvm_native_image_toolchain:toolchain_type",
     visibility = ["//visibility:public"],
 )

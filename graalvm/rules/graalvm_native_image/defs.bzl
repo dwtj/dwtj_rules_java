@@ -2,7 +2,7 @@
 '''
 
 load("//java:providers/JavaDependencyInfo.bzl", "JavaDependencyInfo")
-load("//java:common/extract/toolchain_info.bzl", "extract_graalvm_native_image_toolchain_info")
+load("//graalvm:common/extract/toolchain_info.bzl", "extract_graalvm_native_image_toolchain_info")
 
 def file_to_path(file):
     return file.path
@@ -93,6 +93,6 @@ graalvm_native_image = rule(
         ),
     },
     toolchains = [
-        "@dwtj_rules_java//java/toolchains/graalvm_native_image_toolchain:toolchain_type",
+        "@dwtj_rules_java//graalvm/toolchains/graalvm_native_image_toolchain:toolchain_type",
     ],
 )

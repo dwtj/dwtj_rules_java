@@ -13,4 +13,4 @@ test/workspaces/smoke_test_executable_arguments
 test/workspaces/smoke_test_predeclared_outputs
 test/workspaces/smoke_test_java_rule_attributes
 test/workspaces/smoke_test_jvm_native_interfaces
-test/workspaces/smoke_test_graalvm_native_image_rule
+test/workspaces/graalvm/smoke_test_graalvm_native_image_rule
