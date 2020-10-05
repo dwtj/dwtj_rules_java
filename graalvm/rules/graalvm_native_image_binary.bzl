@@ -1,4 +1,4 @@
-'''Defines the `graalvm_native_image` rule.
+'''Defines the `graalvm_native_image_binary` rule.
 '''
 
 load("//java:providers/JavaDependencyInfo.bzl", "JavaDependencyInfo")
@@ -65,7 +65,7 @@ def _build_native_image(ctx):
         use_default_shell_env = True,
     )
 
-def _graalvm_native_image_impl(ctx):
+def _graalvm_native_image_binary_impl(ctx):
     _build_native_image(ctx)
     return [
         DefaultInfo(
@@ -73,8 +73,8 @@ def _graalvm_native_image_impl(ctx):
         )
     ]
 
-graalvm_native_image = rule(
-    implementation = _graalvm_native_image_impl,
+graalvm_native_image_binary = rule(
+    implementation = _graalvm_native_image_binary_impl,
     attrs = {
         "main_class": attr.string(
             mandatory = True,

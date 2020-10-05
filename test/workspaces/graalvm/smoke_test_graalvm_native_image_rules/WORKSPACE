@@ -1,4 +1,4 @@
-workspace(name = "smoke_test_graalvm_native_image_rule")
+workspace(name = "smoke_test_graalvm_native_image_rules")
 
 # CONFIGURE `@dwtj_rules_java` #################################################
 

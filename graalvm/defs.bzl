@@ -3,6 +3,6 @@
 This file re-exports all rules for public use.
 '''
 
-load("//graalvm:rules/graalvm_native_image/defs.bzl", _graalvm_native_image = "graalvm_native_image")
+load("//graalvm:rules/graalvm_native_image_binary.bzl", _graalvm_native_image_binary = "graalvm_native_image_binary")
 
-graalvm_native_image  = _graalvm_native_image
+graalvm_native_image_binary  = _graalvm_native_image_binary
