@@ -7,19 +7,19 @@ rules should be used if for some reason the user finds the toolchains from the
 repository rules are not right for their needs.
 '''
 
-load("//java:rules/toolchains/java_compiler_toolchain.bzl", "java_compiler_toolchain")
+load("//java:toolchain_rules/java_compiler_toolchain.bzl", "java_compiler_toolchain")
 
-load("//java:rules/toolchains/java_runtime_toolchain.bzl", "java_runtime_toolchain")
+load("//java:toolchain_rules/java_runtime_toolchain.bzl", "java_runtime_toolchain")
 
-load("//java:rules/toolchains/graalvm_native_image_toolchain.bzl", _graalvm_native_image_toolchain = "graalvm_native_image_toolchain")
+load("//java:toolchain_rules/graalvm_native_image_toolchain.bzl", _graalvm_native_image_toolchain = "graalvm_native_image_toolchain")
 
-load("//java:rules/toolchains/google_java_format_toolchain.bzl", _google_java_format_toolchain = "google_java_format_toolchain")
+load("//java:toolchain_rules/google_java_format_toolchain.bzl", _google_java_format_toolchain = "google_java_format_toolchain")
 
-load("//java:rules/toolchains/javadoc_toolchain.bzl", _javadoc_toolchain = "javadoc_toolchain")
+load("//java:toolchain_rules/javadoc_toolchain.bzl", _javadoc_toolchain = "javadoc_toolchain")
 
-load("//java:rules/toolchains/error_prone_toolchain.bzl", _error_prone_toolchain = "error_prone_toolchain")
+load("//java:toolchain_rules/error_prone_toolchain.bzl", _error_prone_toolchain = "error_prone_toolchain")
 
-load("//java:rules/toolchains/checkstyle_toolchain.bzl", _checkstyle_toolchain = "checkstyle_toolchain")
+load("//java:toolchain_rules/checkstyle_toolchain.bzl", _checkstyle_toolchain = "checkstyle_toolchain")
 
 dwtj_java_compiler_toolchain = java_compiler_toolchain
 
