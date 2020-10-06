@@ -3,60 +3,45 @@
 
 load("//java:providers/JavaDependencyInfo.bzl", "JavaDependencyInfo")
 load("//graalvm:common/extract/toolchain_info.bzl", "extract_graalvm_native_image_toolchain_info")
+load("//graalvm:common/actions/args.bzl", "singleton_args")
+load(
+    "//graalvm:common/actions/native_image.bzl",
+    "make_class_path_depset",
+    "make_native_image_options_args",
+    "make_class_path_args",
+)
 
-def file_to_path(file):
-    return file.path
-
-def _build_script_name(ctx):
-    return ctx.attr.name  + ".build_native_image.sh"
-
-# TODO(dwtj): Consider revising control flow so that this is called just once,
-#  not twice. Maybe just cache the result. But where? I probably can't just use
-#  a script global variable. Does Bazel provide some target-local storage?
-def _make_class_path_depset(ctx):
-    depsets = []
-    for dep in ctx.attr.deps:
-        dep_info = dep[JavaDependencyInfo]
-        depsets.append(dep_info.compile_time_class_path_jars)
-    return depset([], transitive = depsets)
-
-def _add_image_name_arg(ctx, args):
-    args.add(ctx.outputs.output_image)
-
-def _build_args(ctx):
+def _make_maybe_static_args(ctx):
     args = ctx.actions.args()
-    _add_all_class_path_args(ctx, args)
-    _add_all_options_args(ctx, args)
-    _add_main_class_arg(ctx, args)
-    _add_image_name_arg(ctx, args)
+    if ctx.attr.linkage == "static":
+        args.add("--libc=musl")
+        args.add("--static")
+    elif ctx.attr.linkage == "shared":
+        # NOTE(dwtj): By "shared" we don't mean pass that we pass the
+        #  `--shared` option to `native-image`. That would create a shared
+        #  library (i.e. an `.so` file). Rather, we just mean that we are making
+        #  a binary (a.k.a. executable) whose dependencies (e.g. `libc`, `zlib`,
+        #  `pthread`) are linked dynamically.
+        # NOTE(dwtj): We just return an empty `Args` object.
+        pass
+    else:
+        fail("Unexpected value in `graalvm_native_image_binary.linkage` attribute: " + ctx.attr.linkage)
     return args
-
-def _add_all_class_path_args(ctx, args):
-    toolchain_info = extract_graalvm_native_image_toolchain_info(ctx)
-    jar_depset = _make_class_path_depset(ctx)
-    args.add_joined(
-        "--class-path",
-        jar_depset,
-        join_with = toolchain_info.class_path_separator,
-        map_each = file_to_path,
-    )
-    return args
-
-def _add_all_options_args(ctx, args):
-    args.add_all(ctx.attr.native_image_options)
-
-def _add_main_class_arg(ctx, args):
-    args.add(ctx.attr.main_class)
 
 def _build_native_image(ctx):
     toolchain_info = extract_graalvm_native_image_toolchain_info(ctx)
     ctx.actions.run(
         executable = toolchain_info.native_image_exec,
-        inputs = _make_class_path_depset(ctx),
-        outputs = [ctx.outputs.output_image],
-        arguments = [_build_args(ctx)],
-        mnemonic = "GraalVmNativeImage",
-        progress_message = "Building native image for `{}`".format(ctx.label),
+        inputs = make_class_path_depset(ctx),
+        outputs = [ctx.outputs.output],
+        arguments = [
+            make_class_path_args(ctx),
+            make_native_image_options_args(ctx),
+            singleton_args(ctx, ctx.attr.main_class),
+            singleton_args(ctx, ctx.outputs.output),
+        ],
+        mnemonic = "GraalVmNativeImageBinary",
+        progress_message = "Building `native-image` binary executable for `{}`".format(ctx.label),
         # NOTE(dwtj): Currently, we `use_default_shell_env` so that the
         #  `native-image` executable can find the system C compiler and
         #  libraries.
@@ -67,11 +52,7 @@ def _build_native_image(ctx):
 
 def _graalvm_native_image_binary_impl(ctx):
     _build_native_image(ctx)
-    return [
-        DefaultInfo(
-            files = depset([ctx.outputs.output_image]),
-        )
-    ]
+    return [DefaultInfo(files = depset([ctx.outputs.output]))]
 
 graalvm_native_image_binary = rule(
     implementation = _graalvm_native_image_binary_impl,
@@ -84,12 +65,17 @@ graalvm_native_image_binary = rule(
             providers = [JavaDependencyInfo],
             mandatory = True,
         ),
-        "output_image": attr.output(
-            # TODO(dwtj): Make this optional.
+        "output": attr.output(
+            # TODO(dwtj): Consider making this optional.
+            # TODO(dwtj): Write doc string.
             mandatory = True,
         ),
         "native_image_options": attr.string_list(
-            doc = "A list representing options to add to the `native-image` command invocation. These will be added directly to a Bourne shell script (These options are placed after the `--class-path` argument generated from the `deps` attribute.)",
+            doc = "A list representing options to add to the `native-image` command invocation. These options are placed after any automatically-generated options (e.g., the `--class-path` option generated from the `deps` attribute).",
+        ),
+        "linkage": attr.string(
+            values = ["static", "shared"],
+            default = "shared",
         ),
     },
     toolchains = [
