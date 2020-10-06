@@ -29,6 +29,11 @@ def make_class_path_args(ctx):
     )
     return args
 
+def make_class_path_str(ctx):
+    separator = extract_graalvm_native_image_toolchain_info(ctx).class_path_separator
+    jar_paths = [jar.path for jar in make_class_path_depset(ctx).to_list()]
+    return separator.join(jar_paths)
+
 def make_native_image_options_args(ctx):
     args = ctx.actions.args()
     args.add_all(ctx.attr.native_image_options)
