@@ -89,7 +89,6 @@ graalvm_native_image_library = rule(
             providers = [JavaDependencyInfo],
             mandatory = True,
         ),
-        # TODO(dwtj): Add support for this attribute.
         "native_image_options": attr.string_list(
             doc = "A list representing options to add to the `native-image` command invocation. These options are placed after any automatically-generated options (e.g., the `--class-path` option generated from the `deps` attribute).",
         ),
