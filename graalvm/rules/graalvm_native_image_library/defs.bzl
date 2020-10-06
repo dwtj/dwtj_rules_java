@@ -3,7 +3,6 @@
 
 load("//java:providers/JavaDependencyInfo.bzl", "JavaDependencyInfo")
 load("//graalvm:common/extract/toolchain_info.bzl", "extract_graalvm_native_image_toolchain_info")
-load("//graalvm:common/actions/args.bzl", "singleton_args")
 load(
     "//graalvm:common/actions/native_image.bzl",
     "make_class_path_depset",

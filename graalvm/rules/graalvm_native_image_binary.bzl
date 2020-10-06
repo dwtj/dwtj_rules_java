@@ -3,7 +3,6 @@
 
 load("//java:providers/JavaDependencyInfo.bzl", "JavaDependencyInfo")
 load("//graalvm:common/extract/toolchain_info.bzl", "extract_graalvm_native_image_toolchain_info")
-load("//graalvm:common/actions/args.bzl", "singleton_args")
 load(
     "//graalvm:common/actions/native_image.bzl",
     "make_class_path_depset",
@@ -37,8 +36,8 @@ def _build_native_image(ctx):
         arguments = [
             make_class_path_args(ctx),
             make_native_image_options_args(ctx),
-            singleton_args(ctx, ctx.attr.main_class),
-            singleton_args(ctx, ctx.outputs.output),
+            ctx.attr.main_class,
+            ctx.outputs.output.path,
         ],
         mnemonic = "GraalVmNativeImageBinary",
         progress_message = "Building `native-image` binary executable for `{}`".format(ctx.label),
