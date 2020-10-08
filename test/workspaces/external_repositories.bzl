@@ -18,6 +18,7 @@ def adoptopenjdk_linux_v11_0_8_10(name = "adoptopenjdk_linux_v11_0_8_10"):
         url = "https://github.com/AdoptOpenJDK/openjdk11-binaries/releases/download/jdk-11.0.8%2B10/OpenJDK11U-jdk_x64_linux_hotspot_11.0.8_10.tar.gz",
         sha256 = "6e4cead158037cb7747ca47416474d4f408c9126be5b96f9befd532e0a762b47",
         strip_prefix = "jdk-11.0.8+10",
+        os = "linux",
     )
 
 _RULES_CC_COMMIT = "02becfef8bc97bda4f9bb64e153f1b0671aec4ba"

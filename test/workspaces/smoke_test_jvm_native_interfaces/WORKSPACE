@@ -18,10 +18,10 @@ load(
 # TODO(dwtj): Figure out how to make this test workspace more portable.
 #  (E.g., make this test runnable on macOS or different CPU architectures).
 adoptopenjdk_linux_v11_0_8_10(
-    name = "openjdk",
+    name = "openjdk_linux",
 )
 
-load("@openjdk//:defs.bzl", "register_java_toolchains")
+load("@openjdk_linux//:defs.bzl", "register_java_toolchains")
 
 register_java_toolchains()
 
