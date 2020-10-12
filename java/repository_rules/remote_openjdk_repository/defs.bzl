@@ -79,14 +79,30 @@ def _expand_rust_jni_build_file_template(repository_ctx):
         substitutions = {
             "{REPOSITORY_NAME}": repository_ctx.name,
             # TODO(dwtj): Generalize this once more OSes are supported.
+            "{JNI_HEADER_LABEL}":    "//:include/jni.h",
             "{JNI_MD_HEADER_LABEL}": "//:include/linux/jni_md.h",
-            "{JNI_HEADER_LABEL}": "//:include/jni.h",
+        },
+        executable = False,
+    )
+
+
+def _expand_rust_jvmti_build_file_template(repository_ctx):
+    repository_ctx.template(
+        "rust/jvmti/BUILD",
+        repository_ctx.attr._rust_jvmti_build_file_template,
+        substitutions = {
+            "{REPOSITORY_NAME}": repository_ctx.name,
+            "{JVMTI_HEADER_LABEL}":  "//:include/jvmti.h",
+            "{JNI_HEADER_LABEL}":    "//:include/jni.h",
+            # TODO(dwtj): Generalize this once more OSes are supported.
+            "{JNI_MD_HEADER_LABEL}": "//:include/linux/jni_md.h",
         },
         executable = False,
     )
 
 def _expand_rust_package_templates(repository_ctx):
     _expand_rust_jni_build_file_template(repository_ctx)
+    _expand_rust_jvmti_build_file_template(repository_ctx)
 
 def _remote_openjdk_repository_impl(repository_ctx):
     # TODO(dwtj): Add support for `exec_compatible_with` attribute.
@@ -147,6 +163,10 @@ remote_openjdk_repository = repository_rule(
         ),
         "_rust_jni_build_file_template": attr.label(
             default = "//java:repository_rules/remote_openjdk_repository/rust/jni/TEMPLATE.BUILD",
+            allow_single_file = True,
+        ),
+        "_rust_jvmti_build_file_template": attr.label(
+            default = "//java:repository_rules/remote_openjdk_repository/rust/jvmti/TEMPLATE.BUILD",
             allow_single_file = True,
         )
     }
