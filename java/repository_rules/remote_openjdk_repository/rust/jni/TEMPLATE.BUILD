@@ -31,4 +31,9 @@ rust_library(
     name = "jni",
     srcs = ["jni.rs"],
     visibility = ["//visibility:public"],
+    rustc_flags = [
+        "-A", "non-snake-case",
+        "-A", "non-upper-case-globals",
+        "-A", "non-camel-case-types",
+    ],
 )
