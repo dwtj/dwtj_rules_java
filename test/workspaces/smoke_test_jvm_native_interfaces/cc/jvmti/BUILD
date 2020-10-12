@@ -15,7 +15,7 @@ cc_binary(
 #  actually run.
 dwtj_java_binary(
     name = "MyBin",
-    main_class = "jvmti.MyBin",
+    main_class = "cc.jvmti.MyBin",
     srcs = ["MyBin.java"],
     output_jar = "MyBin.jar",
 )
@@ -28,7 +28,7 @@ sh_test(
         ":MyBin.jar",
     ],
     args = [
-        "jvmti/libmyagent.so",
+        "cc/jvmti/libmyagent.so",
         "$(location :MyBin.jar)",
     ]
 )

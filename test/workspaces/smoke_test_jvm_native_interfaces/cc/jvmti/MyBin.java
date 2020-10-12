@@ -1,4 +1,4 @@
-package jvmti;
+package cc.jvmti;
 
 class MyBin {
     public static void main(String[] args) {

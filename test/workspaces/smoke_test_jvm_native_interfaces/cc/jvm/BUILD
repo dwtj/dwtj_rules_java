@@ -3,7 +3,7 @@ load("@dwtj_rules_java//java:defs.bzl", "dwtj_java_binary")
 
 dwtj_java_binary(
     name = "Hello",
-    main_class = "jvm.Hello",
+    main_class = "cc.jvm.Hello",
     srcs = ["Hello.java"],
     output_jar = "Hello.jar",
 )
@@ -20,8 +20,8 @@ sh_test(
     args = [
         "$(location :jni_invocation_api_test_exec)",
         "$(location :Hello.jar)",
-        "jvm/Hello", # NOTE(dwtj): We use slash-separated not dot-separated
-                     #  class. This is what the JNI Invocation API expects.
+        "cc/jvm/Hello", # NOTE(dwtj): We use slash-separated not dot-separated
+                        #  class. This is what the JNI Invocation API expects.
     ],
     data = [
         ":jni_invocation_api_test_exec",

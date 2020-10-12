@@ -1,4 +1,4 @@
-package jni;
+package rust.jni;
 
 class MyLib {
     static {

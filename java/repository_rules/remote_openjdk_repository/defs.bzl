@@ -72,6 +72,22 @@ def _expand_cc_package_templates(repository_ctx):
     _expand_cc_jvm_build_file_template(repository_ctx)
     _expand_cc_jvmti_build_file_template(repository_ctx)
 
+def _expand_rust_jni_build_file_template(repository_ctx):
+    repository_ctx.template(
+        "rust/jni/BUILD",
+        repository_ctx.attr._rust_jni_build_file_template,
+        substitutions = {
+            "{REPOSITORY_NAME}": repository_ctx.name,
+            # TODO(dwtj): Generalize this once more OSes are supported.
+            "{JNI_MD_HEADER_LABEL}": "//:include/linux/jni_md.h",
+            "{JNI_HEADER_LABEL}": "//:include/jni.h",
+        },
+        executable = False,
+    )
+
+def _expand_rust_package_templates(repository_ctx):
+    _expand_rust_jni_build_file_template(repository_ctx)
+
 def _remote_openjdk_repository_impl(repository_ctx):
     # TODO(dwtj): Add support for `exec_compatible_with` attribute.
     if len(repository_ctx.attr.exec_compatible_with) > 0:
@@ -81,6 +97,7 @@ def _remote_openjdk_repository_impl(repository_ctx):
     _expand_root_build_file_template(repository_ctx)
     _expand_root_defs_bzl_file_template(repository_ctx)
     _expand_cc_package_templates(repository_ctx)
+    _expand_rust_package_templates(repository_ctx)
 
     # TODO(dwtj): Consider what should be returned here to help reproducibility.
     return None
@@ -128,5 +145,9 @@ remote_openjdk_repository = repository_rule(
             default = Label("@dwtj_rules_java//java:repository_rules/remote_openjdk_repository/cc/jvmti/TEMPLATE.BUILD"),
             allow_single_file = True,
         ),
+        "_rust_jni_build_file_template": attr.label(
+            default = "//java:repository_rules/remote_openjdk_repository/rust/jni/TEMPLATE.BUILD",
+            allow_single_file = True,
+        )
     }
 )

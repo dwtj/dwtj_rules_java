@@ -4,15 +4,15 @@ package(
 
 alias(
     name = "jni_headers",
-    actual = "@openjdk_linux//cc/jni:headers",
+    actual = "@openjdk_linux_x64//cc/jni:headers",
 )
 
 alias(
     name = "jvmti_headers",
-    actual = "@openjdk_linux//cc/jvmti:headers",
+    actual = "@openjdk_linux_x64//cc/jvmti:headers",
 )
 
 alias(
     name = "jvm",
-    actual = "@openjdk_linux//cc/jvm",
+    actual = "@openjdk_linux_x64//cc/jvm",
 )
