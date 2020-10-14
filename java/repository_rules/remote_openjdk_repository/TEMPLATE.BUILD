@@ -24,6 +24,7 @@ dwtj_java_compiler_toolchain(
     name = "_java_compiler_toolchain",
     javac_executable = ":bin/javac",
     jar_executable = ":bin/jar",
+    visibility = ["//visibility:public"],
 )
 
 toolchain(

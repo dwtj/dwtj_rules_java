@@ -1,6 +1,9 @@
 '''Defines some helper functions to extract info from a target's toolchains.
 '''
 
+load("//java:toolchain_rules/java_compiler_toolchain.bzl", "JavaCompilerToolchainInfo")
+
+_JAVA_COMPILER_TOOLCHAIN_TYPE = "@dwtj_rules_java//java/toolchains/java_compiler_toolchain:toolchain_type"
 _JAVA_RUNTIME_TOOLCHAIN_TYPE = "@dwtj_rules_java//java/toolchains/java_runtime_toolchain:toolchain_type"
 _CHECKSTYLE_TOOLCHAIN_TYPE = '@dwtj_rules_java//java/toolchains/checkstyle_toolchain:toolchain_type'
 
@@ -18,6 +21,24 @@ def extract_java_runtime_toolchain_info(ctx):
     '''Returns this target's `JavaRuntimeToolchainInfo`.
     '''
     return ctx.toolchains[_JAVA_RUNTIME_TOOLCHAIN_TYPE].java_runtime_toolchain_info
+
+def extract_java_compiler_toolchain_info(ctx):
+    '''Returns this target's `JavaCompilerToolchainInfo`.
+
+    This info comes from either from the resolved toolchain of type
+    `java_compiler_toolchain:toolchain_type` or from the target's
+    `java_compiler_toolchain` override attribute.
+
+    Args:
+      ctx: the Bazel `ctx` object of a particular Bazel target.
+    Returns:
+      `JavaCompilerToolchainInfo`
+    '''
+    attr = ctx.attr.java_compiler_toolchain
+    if attr != None:
+        return attr[JavaCompilerToolchainInfo]
+    else:
+        return ctx.toolchains[_JAVA_COMPILER_TOOLCHAIN_TYPE].java_compiler_toolchain_info
 
 def extract_checkstyle_toolchain_info(ctx):
     return ctx.toolchains[_CHECKSTYLE_TOOLCHAIN_TYPE].checkstyle_toolchain_info

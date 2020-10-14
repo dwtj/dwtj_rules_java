@@ -8,8 +8,7 @@ load("//java:providers/JavaCompilationInfo.bzl", "JavaCompilationInfo")
 load("//java:providers/JavaDependencyInfo.bzl", "JavaDependencyInfo")
 load("//java:common/actions/write_java_sources_args_file.bzl", "write_java_sources_args_file")
 load("//java:common/actions/write_class_path_args_file.bzl", "write_compile_time_class_path_args_file")
-
-_JAVA_COMPILER_TOOLCHAIN_TYPE = "@dwtj_rules_java//java/toolchains/java_compiler_toolchain:toolchain_type"
+load("//java:common/extract/toolchain_info.bzl", "extract_java_compiler_toolchain_info")
 
 def compile_and_jar_java_target(ctx):
     '''Interprets a Java target's `ctx` & calls `compile_and_jar_java_sources`.
@@ -61,7 +60,7 @@ def compile_and_jar_java_target(ctx):
     compile_and_jar_java_sources(
         label = ctx.label,
         compilation_info = java_compilation_info,
-        compiler_toolchain_info = ctx.toolchains[_JAVA_COMPILER_TOOLCHAIN_TYPE].java_compiler_toolchain_info,
+        compiler_toolchain_info = extract_java_compiler_toolchain_info(ctx),
         actions = ctx.actions,
         temp_file_prefix = ctx.attr.name
     )

@@ -40,15 +40,21 @@ JavaCompilerToolchainInfo = provider(
 )
 
 def _java_compiler_toolchain_impl(ctx):
-    toolchain_info = platform_common.ToolchainInfo(
-        java_compiler_toolchain_info = JavaCompilerToolchainInfo(
-            javac_executable = ctx.file.javac_executable,
-            jar_executable = ctx.file.jar_executable,
-            compile_and_jar_java_sources_script_template = ctx.file._compile_and_jar_java_sources_script_template,
-            class_path_separator = ctx.attr.class_path_separator,
-        ),
+    java_compiler_toolchain_info = JavaCompilerToolchainInfo(
+        javac_executable = ctx.file.javac_executable,
+        jar_executable = ctx.file.jar_executable,
+        compile_and_jar_java_sources_script_template = ctx.file._compile_and_jar_java_sources_script_template,
+        class_path_separator = ctx.attr.class_path_separator,
     )
-    return [toolchain_info]
+
+    toolchain_info = platform_common.ToolchainInfo(
+        java_compiler_toolchain_info = java_compiler_toolchain_info,
+    )
+
+    return [
+        toolchain_info,
+        java_compiler_toolchain_info,
+    ]
 
 java_compiler_toolchain = rule(
     implementation = _java_compiler_toolchain_impl,
@@ -77,5 +83,6 @@ java_compiler_toolchain = rule(
         "class_path_separator": attr.string(
             default = ":",
         )
-    }
+    },
+    provides = [JavaCompilerToolchainInfo]
 )
