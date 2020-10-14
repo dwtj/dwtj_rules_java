@@ -55,18 +55,18 @@ def compile_and_jar_java_target(ctx):
         class_files_output_jar = output_jar,
         additional_jar_manifest_attributes = ctx.attr.additional_jar_manifest_attributes,
         main_class = maybe_main_class,
+        java_compiler_toolchain_info = extract_java_compiler_toolchain_info(ctx),
     )
 
     compile_and_jar_java_sources(
         label = ctx.label,
         compilation_info = java_compilation_info,
-        compiler_toolchain_info = extract_java_compiler_toolchain_info(ctx),
         actions = ctx.actions,
         temp_file_prefix = ctx.attr.name
     )
     return java_compilation_info
 
-def compile_and_jar_java_sources(label, compilation_info, compiler_toolchain_info, actions, temp_file_prefix):
+def compile_and_jar_java_sources(label, compilation_info, actions, temp_file_prefix):
     '''Invokes `javac` on Java sources and then `jar`s the results.
 
     To create the output JAR, some temporary temporary files are created (e.g.
@@ -77,7 +77,6 @@ def compile_and_jar_java_sources(label, compilation_info, compiler_toolchain_inf
     Args:
       label: The label of the Java target to be built.
       compilation_info: A `JavaCompilationInfo` provider instance.
-      compiler_toolchain_info: A `JavaCompilerToolchainInfo` provider instance.
       actions: The `actions` instance from which actions are emitted.
       temp_file_prefix: A string to prefix to the name of temporary files. This
         is conventionally the name of the target calling this function.
@@ -85,6 +84,8 @@ def compile_and_jar_java_sources(label, compilation_info, compiler_toolchain_inf
     Returns:
       `None`
     '''
+
+    compiler_toolchain_info = compilation_info.java_compiler_toolchain_info
 
     # Use a helper function to declare, build and write an @args file for the
     #  `javac` class path:

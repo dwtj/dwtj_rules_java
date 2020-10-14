@@ -1,0 +1,1 @@
+build --aspects @dwtj_rules_java//java:aspects.bzl%error_prone_aspect

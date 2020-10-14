@@ -15,6 +15,11 @@ load(
     "maven_error_prone_repository",
 )
 
+load(
+    "@dwtj_rules_java//test/workspaces:external_repositories.bzl",
+    "rules_jvm_external",
+)
+
 # CONFIGURE `@dwtj_local_openjdk` ##############################################
 
 dwtj_local_openjdk_repository(
@@ -26,22 +31,9 @@ load("@dwtj_local_openjdk//:defs.bzl", "register_java_toolchains")
 register_java_toolchains()
 
 # CONFIGURE `@rules_jvm_external` ##############################################
-
 # NOTE(dwtj): These rules are a prerequisite of `maven_error_prone_repository`.
 
-# NOTE(dwtj): This version was used just because it was the latest release as of
-#  2020-07-28.
-RULES_JVM_EXTERNAL_ARCHIVE_INFO = {
-    "tag": "3.3",
-    "sha256": "d85951a92c0908c80bd8551002d66cb23c3434409c814179c0ff026b53544dab",
-}
-
-http_archive(
-    name = "rules_jvm_external",
-    strip_prefix = "rules_jvm_external-%s" % RULES_JVM_EXTERNAL_ARCHIVE_INFO["tag"],
-    sha256 = RULES_JVM_EXTERNAL_ARCHIVE_INFO["sha256"],
-    url = "https://github.com/bazelbuild/rules_jvm_external/archive/%s.zip" % RULES_JVM_EXTERNAL_ARCHIVE_INFO["tag"],
-)
+rules_jvm_external()
 
 # CONFIGURE `@error_prone` #####################################################
 

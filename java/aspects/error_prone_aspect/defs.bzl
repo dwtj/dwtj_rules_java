@@ -3,6 +3,7 @@
 
 load("//java:providers/JavaCompilationInfo.bzl", "JavaCompilationInfo")
 load("//java:common/actions/write_class_path_args_file.bzl", "write_compile_time_class_path_args_file")
+load("//java:common/extract/toolchain_info.bzl", "extract_java_compiler_toolchain_info")
 
 ErrorProneAspectInfo = provider(
     fields = {
@@ -17,15 +18,11 @@ def _to_path(file):
     '''Used as a map function.'''
     return file.path
 
-def _extract_class_path_separator(aspect_ctx):
-    return aspect_ctx.toolchains['@dwtj_rules_java//java/toolchains/java_compiler_toolchain:toolchain_type'] \
-        .java_compiler_toolchain_info \
-        .class_path_separator
+def _extract_class_path_separator(target):
+    return target[JavaCompilationInfo].java_compiler_toolchain_info.class_path_separator
 
-def _extract_javac_executable(aspect_ctx):
-    return aspect_ctx.toolchains['@dwtj_rules_java//java/toolchains/java_compiler_toolchain:toolchain_type'] \
-        .java_compiler_toolchain_info \
-        .javac_executable
+def _extract_javac_executable(target):
+    return target[JavaCompilationInfo].java_compiler_toolchain_info.javac_executable
 
 def _extract_error_prone_java_info(aspect_ctx):
     return aspect_ctx.toolchains['@dwtj_rules_java//java/toolchains/error_prone_toolchain:toolchain_type'] \
@@ -44,9 +41,9 @@ def _error_prone_aspect_impl(target, aspect_ctx):
     jars = target[JavaCompilationInfo].class_path_jars
     srcs = target[JavaCompilationInfo].srcs
     srcs_args_file = target[JavaCompilationInfo].srcs_args_file
-    javac_executable = _extract_javac_executable(aspect_ctx)
     error_prone_info = _extract_error_prone_java_info(aspect_ctx)
-    path_separator = _extract_class_path_separator(aspect_ctx)
+    javac_executable = _extract_javac_executable(target)
+    path_separator = _extract_class_path_separator(target)
 
     # Create both temporary args files, i.e., `@`-files.
     # TODO(dwtj): Similar args files should be made by the target rule. Consider
@@ -147,7 +144,9 @@ error_prone_aspect = aspect(
         )
     },
     toolchains = [
-        "@dwtj_rules_java//java/toolchains/java_compiler_toolchain:toolchain_type",
+        # NOTE(dwtj): We don't include the `java_compiler_toolchain` on the
+        #  aspect, because the aspect gets this from the Java target being
+        #  analyzed.
         "@dwtj_rules_java//java/toolchains/error_prone_toolchain:toolchain_type",
     ],
 )

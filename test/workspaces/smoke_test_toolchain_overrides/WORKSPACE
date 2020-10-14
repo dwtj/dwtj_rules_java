@@ -8,9 +8,15 @@ local_repository(
 )
 
 load(
+    "@dwtj_rules_java//java:repositories.bzl",
+    "maven_error_prone_repository",
+)
+
+load(
     "@dwtj_rules_java//test/workspaces:external_repositories.bzl",
     "adoptopenjdk_linux_v11_0_8_10",
     "remote_graalvm_linux_x64",
+    "rules_jvm_external",
 )
 
 # CONFIGURE `@adoptopenjdk_linux_v11_0_8_10` ##################################
@@ -27,3 +33,26 @@ register_java_toolchains()
 # CONFIGURE `@remote_graalvm_linux_x64` #######################################
 
 remote_graalvm_linux_x64()
+
+# CONFIGURE `@rules_jvm_external` #############################################
+# NOTE(dwtj): These rules are a prerequisite of `maven_error_prone_repository`.
+
+rules_jvm_external()
+
+# CONFIGURE `@error_prone` #####################################################
+# NOTE(dwtj): We enable Error Prone aspect to check that it is using the
+#  `java_compiler_toolchain` override attribute on the Java target (if there
+#  is such an attribute).
+
+maven_error_prone_repository(
+    name = "error_prone",
+)
+
+load(
+    "@error_prone//:defs.bzl",
+    "fetch_error_prone_toolchain",
+    "register_error_prone_toolchain",
+)
+
+fetch_error_prone_toolchain()
+register_error_prone_toolchain()

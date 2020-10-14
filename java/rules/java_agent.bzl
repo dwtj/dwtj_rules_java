@@ -56,13 +56,13 @@ def _java_agent_impl(ctx):
         ),
         class_files_output_jar = output_jar,
         main_class = None,
-        additional_jar_manifest_attributes = manifest_attr
+        additional_jar_manifest_attributes = manifest_attr,
+        java_compiler_toolchain_info = extract_java_compiler_toolchain_info(ctx),
     )
 
     compile_and_jar_java_sources(
         label = ctx.label,
         compilation_info = compilation_info,
-        compiler_toolchain_info = extract_java_compiler_toolchain_info(ctx),
         actions = ctx.actions,
         temp_file_prefix = ctx.attr.name,
     )

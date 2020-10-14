@@ -59,3 +59,16 @@ def rules_rust():
         sha256 = _RULES_RUST_SHA256,
         strip_prefix = "rules_rust-{}".format(_RULES_RUST_COMMIT),
     )
+
+RULES_JVM_EXTERNAL_ARCHIVE_INFO = {
+    "tag": "3.3",
+    "sha256": "d85951a92c0908c80bd8551002d66cb23c3434409c814179c0ff026b53544dab",
+}
+
+def rules_jvm_external(name = "rules_jvm_external"):
+    http_archive(
+        name = name,
+        strip_prefix = "rules_jvm_external-%s" % RULES_JVM_EXTERNAL_ARCHIVE_INFO["tag"],
+        sha256 = RULES_JVM_EXTERNAL_ARCHIVE_INFO["sha256"],
+        url = "https://github.com/bazelbuild/rules_jvm_external/archive/%s.zip" % RULES_JVM_EXTERNAL_ARCHIVE_INFO["tag"],
+    )
