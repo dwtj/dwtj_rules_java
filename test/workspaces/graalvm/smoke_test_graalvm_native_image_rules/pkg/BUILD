@@ -64,7 +64,7 @@ graalvm_native_image_library(
     name = "hello_native_library",
     main_class = "pkg.Hello",
     deps = [":hello_java_library"],
-    shared_library_output = "hello.so",
+    library_output = "hello.so",
     header_output = "hello.h",
     dynamic_header_output = "hello_dynamic.h",
     graal_isolate_header_output = "graal_isolate.h",

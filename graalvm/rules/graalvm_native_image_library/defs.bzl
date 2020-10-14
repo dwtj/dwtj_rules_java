@@ -10,20 +10,19 @@ load(
     "make_class_path_str",
 )
 
-def _make_image_path(ctx):
-    pkg = ctx.label.package
-    name = ctx.attr.name
-    if pkg == "":
+def _image_name(ctx):
+    name = ctx.attr.image_name
+    if name != "":
         return name
     else:
-        return "{}/{}".format(pkg, name)
+        return ctx.attr.name
 
 def _make_build_script_name(ctx):
     return ctx.attr.name + ".build_native_image_library.sh"
 
 def _make_outputs_list(ctx):
     return [
-        ctx.outputs.shared_library_output,
+        ctx.outputs.library_output,
         ctx.outputs.header_output,
         ctx.outputs.dynamic_header_output,
         ctx.outputs.graal_isolate_header_output,
@@ -36,12 +35,14 @@ def _expand_build_script_template(ctx, build_script):
         template = toolchain_info.build_native_image_library_script_template,
         output = build_script,
         substitutions = {
+            "{TARGET_NAME}": ctx.attr.name,
+            "{TARGET_PACKAGE_PATH}": ctx.label.package,
+            "{IMAGE_NAME}": _image_name(ctx),
+            "{MAIN_CLASS}": ctx.attr.main_class,
             "{NATIVE_IMAGE_EXECUTABLE}": toolchain_info.native_image_exec.path,
             "{CLASS_PATH}": make_class_path_str(ctx),
-            "{MAIN_CLASS}": ctx.attr.main_class,
-            "{IMAGE_PATH}": _make_image_path(ctx),
-            "{SHARED_LIBRARY_OUTPUT}": ctx.outputs.shared_library_output.path,
-            "{SHARED_LIBRARY_FILE_EXTENSION}": toolchain_info.shared_library_file_extension,
+            "{LIBRARY_OUTPUT}": ctx.outputs.library_output.path,
+            "{LIBRARY_FILE_EXTENSION}": toolchain_info.shared_library_file_extension,
             "{HEADER_OUTPUT}": ctx.outputs.header_output.path,
             "{DYNAMIC_HEADER_OUTPUT}": ctx.outputs.dynamic_header_output.path,
             "{GRAAL_ISOLATE_HEADER_OUTPUT}": ctx.outputs.graal_isolate_header_output.path,
@@ -82,7 +83,12 @@ graalvm_native_image_library = rule(
     implementation = _graalvm_native_image_library_impl,
     attrs = {
         "main_class": attr.string(
-            mandatory = True,
+            doc = "If this is set, then the created image will use this Java class's main method as the main entry point. (Methods with appropriate parameters and annotated with `@CEntryPoint` will be used as entry points regardless of whether this is or isn't set.)",
+            mandatory = False,
+        ),
+        "image_name": attr.string(
+            doc = "If this is not set, then this target's name attribute will be used as the image name.",
+            mandatory = False,
         ),
         "deps": attr.label_list(
             allow_empty = False,
@@ -92,7 +98,7 @@ graalvm_native_image_library = rule(
         "native_image_options": attr.string_list(
             doc = "A list representing options to add to the `native-image` command invocation. These options are placed after any automatically-generated options (e.g., the `--class-path` option generated from the `deps` attribute).",
         ),
-        "shared_library_output": attr.output(
+        "library_output": attr.output(
             # TODO(dwtj): Consider making this attribute optional.
             mandatory = True,
         ),

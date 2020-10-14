@@ -8,7 +8,7 @@ load("@rules_cc//cc:defs.bzl", "cc_import", "cc_library")
 
 _NAME_SUFFIXES = {
     "graalvm_native_image_library": "_graalvm_native_image_library",
-    "shared_library": ".so",
+    "library": ".so",
     "header": ".h",
     "dynamic_header": "_dynamic.h",
     "graal_isolate_header_cc_library": "_graal_isolate_header_cc_library",
@@ -58,7 +58,7 @@ def _main_library(name, main_library_visibility):
     cc_import(
         name = _names(name, "cc_import"),
         hdrs = [_names(name, "header")],
-        shared_library = _names(name, "shared_library"),
+        shared_library = _names(name, "library"),
     )
 
     # Declare a `cc_library` which includes both the above library (to get the
@@ -83,7 +83,7 @@ def _main_library_dynamic(name, main_library_visibility):
     cc_import(
         name = _names(name, "cc_import_dynamic"),
         hdrs = [_names(name, "dynamic_header")],
-        shared_library = _names(name, "shared_library"),
+        shared_library = _names(name, "library"),
     )
     cc_library(
         name = _names(name, "main_cc_library_dynamic"),
@@ -126,7 +126,7 @@ def graalvm_native_image_cc_library(
         main_class = main_class,
         deps = deps,
         native_image_options = native_image_options,
-        shared_library_output = _names(name, "shared_library"),
+        library_output = _names(name, "library"),
         header_output = _names(name, "header"),
         dynamic_header_output = _names(name, "dynamic_header"),
         graal_isolate_header_output = "graal_isolate.h",
