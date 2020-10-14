@@ -12,6 +12,23 @@ load(
     "dwtj_remote_openjdk_repository",
 )
 
+load(
+    "@dwtj_rules_java//graalvm:repositories.bzl",
+    "remote_graalvm_repository",
+)
+
+_REMOTE_GRAALVM_REPOSITORY_RELEASE_VERSION = "20.2.0"
+_REMOTE_GRAALVM_REPOSITORY_RELEASE_SHA256 = "5db74b5b8888712d2ac3cd7ae2a8361c2aa801bc94c801f5839351aba5064e29"
+
+def remote_graalvm_linux_x64(name = "remote_graalvm_linux_x64"):
+    remote_graalvm_repository(
+        name = name,
+        url = "https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-{0}/graalvm-ce-java11-linux-amd64-{0}.tar.gz".format(_REMOTE_GRAALVM_REPOSITORY_RELEASE_VERSION),
+        sha256 = _REMOTE_GRAALVM_REPOSITORY_RELEASE_SHA256,
+        strip_prefix = "graalvm-ce-java11-{}".format(_REMOTE_GRAALVM_REPOSITORY_RELEASE_VERSION),
+        os = "linux",
+    )
+
 def adoptopenjdk_linux_v11_0_8_10(name = "adoptopenjdk_linux_v11_0_8_10"):
     dwtj_remote_openjdk_repository(
         name = name,

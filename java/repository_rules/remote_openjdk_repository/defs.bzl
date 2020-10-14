@@ -4,6 +4,9 @@ appropriate Bazel targets. In particular, executables are wrapped in Bazel
 toolchains.
 '''
 
+def _template_label(template_path):
+    return Label("@dwtj_rules_java//java:repository_rules/remote_openjdk_repository/" + template_path)
+
 def _download_archive(repository_ctx):
     repository_ctx.download_and_extract(
         url = repository_ctx.attr.url,
@@ -15,7 +18,7 @@ def _download_archive(repository_ctx):
 def _expand_root_build_file_template(repository_ctx):
     repository_ctx.template(
         "BUILD",
-        repository_ctx.attr._root_build_file_template,
+        _template_label("TEMPLATE.BUILD"),
         substitutions = {
             "{REPOSITORY_NAME}": repository_ctx.name,
             "{EXEC_COMPATIBLE_WITH}": "[]"
@@ -26,7 +29,7 @@ def _expand_root_build_file_template(repository_ctx):
 def _expand_root_defs_bzl_file_template(repository_ctx):
     repository_ctx.template(
         "defs.bzl",
-        repository_ctx.attr._root_defs_bzl_file_template,
+        _template_label("TEMPLATE.defs.bzl"),
         substitutions = {
             "{REPOSITORY_NAME}": repository_ctx.name,
         },
@@ -36,7 +39,7 @@ def _expand_root_defs_bzl_file_template(repository_ctx):
 def _expand_cc_jni_build_file_template(repository_ctx):
     repository_ctx.template(
         "cc/jni/BUILD",
-        repository_ctx.attr._cc_jni_build_file_template,
+        _template_label("cc/jni/TEMPLATE.BUILD"),
         substitutions = {
             "{REPOSITORY_NAME}": repository_ctx.name,
             # TODO(dwtj): Generalize this once more OSes are supported.
@@ -48,7 +51,7 @@ def _expand_cc_jni_build_file_template(repository_ctx):
 def _expand_cc_jvm_build_file_template(repository_ctx):
     repository_ctx.template(
         "cc/jvm/BUILD",
-        repository_ctx.attr._cc_jvm_build_file_template,
+        _template_label("cc/jvm/TEMPLATE.BUILD"),
         substitutions = {
             "{REPOSITORY_NAME}": repository_ctx.name,
             # TODO(dwtj): Generalize this once more OSes are supported.
@@ -60,7 +63,7 @@ def _expand_cc_jvm_build_file_template(repository_ctx):
 def _expand_cc_jvmti_build_file_template(repository_ctx):
     repository_ctx.template(
         "cc/jvmti/BUILD",
-        repository_ctx.attr._cc_jvmti_build_file_template,
+        _template_label("cc/jvmti/TEMPLATE.BUILD"),
         substitutions = {
             "{REPOSITORY_NAME}": repository_ctx.name,
         },
@@ -75,7 +78,7 @@ def _expand_cc_package_templates(repository_ctx):
 def _expand_rust_jni_build_file_template(repository_ctx):
     repository_ctx.template(
         "rust/jni/BUILD",
-        repository_ctx.attr._rust_jni_build_file_template,
+        _template_label("rust/jni/TEMPLATE.BUILD"),
         substitutions = {
             "{REPOSITORY_NAME}": repository_ctx.name,
             # TODO(dwtj): Generalize this once more OSes are supported.
@@ -85,11 +88,10 @@ def _expand_rust_jni_build_file_template(repository_ctx):
         executable = False,
     )
 
-
 def _expand_rust_jvmti_build_file_template(repository_ctx):
     repository_ctx.template(
         "rust/jvmti/BUILD",
-        repository_ctx.attr._rust_jvmti_build_file_template,
+        _template_label("rust/jvmti/TEMPLATE.BUILD"),
         substitutions = {
             "{REPOSITORY_NAME}": repository_ctx.name,
             "{JVMTI_HEADER_LABEL}":  "//:include/jvmti.h",
@@ -104,7 +106,19 @@ def _expand_rust_package_templates(repository_ctx):
     _expand_rust_jni_build_file_template(repository_ctx)
     _expand_rust_jvmti_build_file_template(repository_ctx)
 
-def _remote_openjdk_repository_impl(repository_ctx):
+# NOTE(dwtj): This function is not private (in contrast to Bazel conventions)
+#  because it is called both as the `implementation` for this repository rule
+#  and also as part of the `implementation` of the `remote_graalvm_repository`
+#  repository rule.
+def remote_openjdk_repository_impl(repository_ctx):
+    '''Downloads the archive & wraps files within it by instantiating templates.
+
+    Args:
+      repository_ctx: A Bazel [repository_ctx](https://docs.bazel.build/versions/master/skylark/lib/repository_ctx.html).
+
+    Returns:
+      None
+    '''
     # TODO(dwtj): Add support for `exec_compatible_with` attribute.
     if len(repository_ctx.attr.exec_compatible_with) > 0:
        fail("The `remote_openjdk_repository.exec_compatible_with` attribute is not yet supported.")
@@ -119,7 +133,7 @@ def _remote_openjdk_repository_impl(repository_ctx):
     return None
 
 remote_openjdk_repository = repository_rule(
-    implementation = _remote_openjdk_repository_impl,
+    implementation = remote_openjdk_repository_impl,
     attrs = {
         "url": attr.string(
             mandatory = True,
@@ -141,33 +155,5 @@ remote_openjdk_repository = repository_rule(
         "os": attr.string(
             values = ["linux"],
         ),
-        "_root_build_file_template": attr.label(
-            default = Label("@dwtj_rules_java//java:repository_rules/remote_openjdk_repository/TEMPLATE.BUILD"),
-            allow_single_file = True,
-        ),
-        "_root_defs_bzl_file_template": attr.label(
-            default = Label("@dwtj_rules_java//java:repository_rules/remote_openjdk_repository/TEMPLATE.defs.bzl"),
-            allow_single_file = True,
-        ),
-        "_cc_jni_build_file_template": attr.label(
-            default = Label("@dwtj_rules_java//java:repository_rules/remote_openjdk_repository/cc/jni/TEMPLATE.BUILD"),
-            allow_single_file = True,
-        ),
-        "_cc_jvm_build_file_template": attr.label(
-            default = Label("@dwtj_rules_java//java:repository_rules/remote_openjdk_repository/cc/jvm/TEMPLATE.BUILD"),
-            allow_single_file = True,
-        ),
-        "_cc_jvmti_build_file_template": attr.label(
-            default = Label("@dwtj_rules_java//java:repository_rules/remote_openjdk_repository/cc/jvmti/TEMPLATE.BUILD"),
-            allow_single_file = True,
-        ),
-        "_rust_jni_build_file_template": attr.label(
-            default = "//java:repository_rules/remote_openjdk_repository/rust/jni/TEMPLATE.BUILD",
-            allow_single_file = True,
-        ),
-        "_rust_jvmti_build_file_template": attr.label(
-            default = "//java:repository_rules/remote_openjdk_repository/rust/jvmti/TEMPLATE.BUILD",
-            allow_single_file = True,
-        )
     }
 )

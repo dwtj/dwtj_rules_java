@@ -8,5 +8,5 @@ repository, "@{REPOSITORY_NAME}".
 
 def register_graalvm_toolchains():
     native.register_toolchains(
-        "@{REPOSITORY_NAME}//:graalvm_native_image_toolchain",
+        "@{REPOSITORY_NAME}//graalvm:graalvm_native_image_toolchain",
     )
