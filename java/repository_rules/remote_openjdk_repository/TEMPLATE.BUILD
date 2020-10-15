@@ -6,7 +6,6 @@
 '''Defines the Java toolchains provided by this repository, "@{REPOSITORY_NAME}".
 '''
 
-
 load(
     "@dwtj_rules_java//java:toolchains.bzl",
     "dwtj_java_compiler_toolchain",
@@ -14,17 +13,19 @@ load(
     "javadoc_toolchain",
 )
 
+package(
+    default_visibility = ["//visibility:public"],
+)
+
 # TODO(dwtj): Consider exporting a much more narrow the set of files.
 exports_files(
     glob(["**/*"]),
-    visibility = ["//visibility:public"],
 )
 
 dwtj_java_compiler_toolchain(
     name = "_java_compiler_toolchain",
     javac_executable = ":bin/javac",
     jar_executable = ":bin/jar",
-    visibility = ["//visibility:public"],
 )
 
 toolchain(
@@ -32,7 +33,6 @@ toolchain(
     toolchain = ":_java_compiler_toolchain",
     toolchain_type = "@dwtj_rules_java//java/toolchains/java_compiler_toolchain:toolchain_type",
     exec_compatible_with = {EXEC_COMPATIBLE_WITH},
-    visibility = ["//visibility:public"],
 )
 
 dwtj_java_runtime_toolchain(
@@ -45,7 +45,6 @@ toolchain(
     toolchain = ":_java_runtime_toolchain",
     toolchain_type = "@dwtj_rules_java//java/toolchains/java_runtime_toolchain:toolchain_type",
     exec_compatible_with = {EXEC_COMPATIBLE_WITH},
-    visibility = ["//visibility:public"],
 )
 
 javadoc_toolchain(
@@ -58,5 +57,4 @@ toolchain(
     toolchain = ":_javadoc_toolchain",
     toolchain_type = "@dwtj_rules_java//java/toolchains/javadoc_toolchain:toolchain_type",
     exec_compatible_with = {EXEC_COMPATIBLE_WITH},
-    visibility = ["//visibility:public"],
 )

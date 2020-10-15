@@ -2,6 +2,7 @@
 '''
 
 load("//java:toolchain_rules/java_compiler_toolchain.bzl", "JavaCompilerToolchainInfo")
+load("//java:toolchain_rules/java_runtime_toolchain.bzl", "JavaRuntimeToolchainInfo")
 
 _JAVA_COMPILER_TOOLCHAIN_TYPE = "@dwtj_rules_java//java/toolchains/java_compiler_toolchain:toolchain_type"
 _JAVA_RUNTIME_TOOLCHAIN_TYPE = "@dwtj_rules_java//java/toolchains/java_runtime_toolchain:toolchain_type"
@@ -19,8 +20,21 @@ def extract_java_runtime_toolchain_class_path_separator(ctx):
 
 def extract_java_runtime_toolchain_info(ctx):
     '''Returns this target's `JavaRuntimeToolchainInfo`.
+
+    This info comes from either the resolved toolchain of type
+    `java_runtime_toolchain:toolchain_type` or from the targets
+    `java_compiler_toolchain` override attribute.
+
+    Args:
+      ctx: The Bazel `ctx` object of a particular Bazel target.
+    Returns:
+      `JavaRuntimeToolchainInfo`
     '''
-    return ctx.toolchains[_JAVA_RUNTIME_TOOLCHAIN_TYPE].java_runtime_toolchain_info
+    attr = ctx.attr.java_runtime_toolchain
+    if attr != None:
+        return attr[JavaRuntimeToolchainInfo]
+    else:
+        return ctx.toolchains[_JAVA_RUNTIME_TOOLCHAIN_TYPE].java_runtime_toolchain_info
 
 def extract_java_compiler_toolchain_info(ctx):
     '''Returns this target's `JavaCompilerToolchainInfo`.
@@ -30,7 +44,7 @@ def extract_java_compiler_toolchain_info(ctx):
     `java_compiler_toolchain` override attribute.
 
     Args:
-      ctx: the Bazel `ctx` object of a particular Bazel target.
+      ctx: The Bazel `ctx` object of a particular Bazel target.
     Returns:
       `JavaCompilerToolchainInfo`
     '''

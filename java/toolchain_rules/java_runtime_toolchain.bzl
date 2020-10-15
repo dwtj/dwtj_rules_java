@@ -41,14 +41,18 @@ JavaRuntimeToolchainInfo = provider(
 )
 
 def _java_compiler_toolchain_impl(ctx):
-    toolchain_info = platform_common.ToolchainInfo(
-        java_runtime_toolchain_info = JavaRuntimeToolchainInfo(
-            java_executable = ctx.file.java_executable,
-            java_run_script_template = ctx.file._java_run_script_template,
-            class_path_separator = ctx.attr.class_path_separator,
-        ),
+    java_runtime_toolchain_info = JavaRuntimeToolchainInfo(
+        java_executable = ctx.file.java_executable,
+        java_run_script_template = ctx.file._java_run_script_template,
+        class_path_separator = ctx.attr.class_path_separator,
     )
-    return [toolchain_info]
+    toolchain_info = platform_common.ToolchainInfo(
+        java_runtime_toolchain_info = java_runtime_toolchain_info,
+    )
+    return [
+        toolchain_info,
+        java_runtime_toolchain_info,
+    ]
 
 java_runtime_toolchain = rule(
     implementation = _java_compiler_toolchain_impl,
@@ -71,5 +75,6 @@ java_runtime_toolchain = rule(
         "class_path_separator": attr.string(
             default = ":",
         )
-    }
+    },
+    provides = [JavaRuntimeToolchainInfo],
 )

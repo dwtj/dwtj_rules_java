@@ -7,10 +7,11 @@ load("//java:providers/JavaDependencyInfo.bzl", "JavaDependencyInfo")
 load("//java:providers/JavaExecutionInfo.bzl", "JavaExecutionInfo")
 
 load("//java:toolchain_rules/java_compiler_toolchain.bzl", "JavaCompilerToolchainInfo")
+load("//java:toolchain_rules/java_runtime_toolchain.bzl", "JavaRuntimeToolchainInfo")
 
 load("//java:common/actions/compile_and_jar_java_sources.bzl", "compile_and_jar_java_target")
 load("//java:common/actions/write_java_run_script.bzl", "write_java_run_script_from_ctx")
-load("//java:common/extract/toolchain_info.bzl", "extract_java_runtime_toolchain_info", "extract_java_executable")
+load("//java:common/extract/toolchain_info.bzl", "extract_java_executable")
 load(
     "//java:common/providers.bzl",
     "singleton_java_dependency_info",
@@ -26,7 +27,6 @@ def _java_binary_impl(ctx):
     java_execution_info, run_script, class_path_args_file, jvm_flags_args_file, run_time_jars = write_java_run_script_from_ctx(
         ctx,
         java_dependency_info,
-        extract_java_runtime_toolchain_info(ctx),
     )
 
     runfiles = [
@@ -113,6 +113,10 @@ java_binary = rule(
         "java_compiler_toolchain": attr.label(
             doc = "This optional attribute can override the global Java compiler toolchain. This expects a label for a `java_compiler_toolchain` target (or more precisely, a target providing `JavaCompilerToolchainInfo`).",
             providers = [JavaCompilerToolchainInfo],
+        ),
+        "java_runtime_toolchain": attr.label(
+            doc = "This optional attribute can override the global Java runtime toolchain. This expects a label for a `java_runtime_toolchain` target (or more precisely, a target providing `JavaRuntimeToolchainInfo`).",
+            providers = [JavaRuntimeToolchainInfo],
         ),
     },
     provides = [

@@ -9,6 +9,8 @@ load("//java:providers/JavaExecutionInfo.bzl", "JavaExecutionInfo")
 
 load("//java:common/actions/write_class_path_args_file.bzl", "write_run_time_class_path_args_file")
 
+load("//java:common/extract/toolchain_info.bzl", "extract_java_runtime_toolchain_info", "extract_java_executable")
+
 def _java_agent_and_options_to_flag(java_agent_and_options):
     '''Convert a 2-tuple to a java flag.
 
@@ -30,19 +32,21 @@ def _java_agent_and_options_to_flag(java_agent_and_options):
 def _java_agents_dict_as_list_of_pairs(java_agents_dict):
     return java_agents_dict.items()
 
-def write_java_run_script_from_ctx(ctx, java_dependency_info, java_runtime_toolchain_info):
+def write_java_run_script_from_ctx(ctx, java_dependency_info):
     '''Unpacks a target `ctx` by convention and calls `write_java_run_script()`.
 
     Args:
       ctx: The [`ctx`][1] of the Java target for which this function is building
           a run script.
       java_dependency_info: The `JavaDependencyInfo` of *this* target.
-      java_runtime_toolchain_info: The `JavaRuntimeToolchainInfo` to use.
 
-    Returns: A 4-tuple: (info: JavaExecutionInfo, java_run_script: File, class_path_args_file: File, run_time_jars: depset of File)
+    Returns:
+      A 4-tuple: (info: JavaExecutionInfo, java_run_script: File, class_path_args_file: File, run_time_jars: depset of File)
 
     [1]: https://docs.bazel.build/versions/3.4.0/skylark/lib/ctx.html
     '''
+    java_runtime_toolchain_info = extract_java_runtime_toolchain_info(ctx)
+
     java_execution_info = JavaExecutionInfo(
         java_dependency_info = java_dependency_info,
         deps = ctx.attr.deps,
