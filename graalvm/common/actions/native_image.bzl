@@ -14,7 +14,7 @@ def make_class_path_depset(ctx):
     depsets = []
     for dep in ctx.attr.deps:
         dep_info = dep[JavaDependencyInfo]
-        depsets.append(dep_info.compile_time_class_path_jars)
+        depsets.append(dep_info.run_time_class_path_jars)
     return depset([], transitive = depsets)
 
 def make_class_path_args(ctx):
