@@ -6,22 +6,18 @@
 `@{REPOSITORY_NAME}`.
 '''
 
-# TODO(dwtj): Figure out how to install a `native-image` executable within a
-#  just-downloaded GraalVM distribution. Then use these targets to wrap that
-#  executable.
+load("@dwtj_rules_java//graalvm:toolchains.bzl", "graalvm_native_image_toolchain")
 
-#load("@dwtj_rules_java//graalvm:toolchains.bzl", "graalvm_native_image_toolchain")
-#
-#graalvm_native_image_toolchain(
-#    name = "_graalvm_native_image_toolchain",
-#    native_image_exec = ":bin/native-image",
-#    class_path_separator = ":",
-#    shared_library_file_extension = "so",
-#)
-#
-#toolchain(
-#    name = "graalvm_native_image_toolchain",
-#    toolchain = ":_graalvm_native_image_toolchain",
-#    toolchain_type = "@dwtj_rules_java//graalvm/toolchains/graalvm_native_image_toolchain:toolchain_type",
-#    visibility = ["//visibility:public"],
-#)
+graalvm_native_image_toolchain(
+    name = "_graalvm_native_image_toolchain",
+    native_image_exec = "//:bin/native-image",
+    class_path_separator = ":",
+    shared_library_file_extension = "so",
+)
+
+toolchain(
+    name = "graalvm_native_image_toolchain",
+    toolchain = ":_graalvm_native_image_toolchain",
+    toolchain_type = "@dwtj_rules_java//graalvm/toolchains/graalvm_native_image_toolchain:toolchain_type",
+    visibility = ["//visibility:public"],
+)

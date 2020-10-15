@@ -17,15 +17,18 @@ load(
     "remote_graalvm_repository",
 )
 
-_REMOTE_GRAALVM_REPOSITORY_RELEASE_VERSION = "20.2.0"
-_REMOTE_GRAALVM_REPOSITORY_RELEASE_SHA256 = "5db74b5b8888712d2ac3cd7ae2a8361c2aa801bc94c801f5839351aba5064e29"
+_REMOTE_GRAALVM_VERSION = "20.2.0"
+_REMOTE_GRAALVM_ARCHIVE_SHA256 = "5db74b5b8888712d2ac3cd7ae2a8361c2aa801bc94c801f5839351aba5064e29"
+_REMOTE_GRAALVM_NATIVE_IMAGE_INSTALLABLE_JAR_SHA256 = "92b429939f12434575e4d586f79c5b686d322f29211d1608ed6055a97a35925c"
 
 def remote_graalvm_linux_x64(name = "remote_graalvm_linux_x64"):
     remote_graalvm_repository(
         name = name,
-        url = "https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-{0}/graalvm-ce-java11-linux-amd64-{0}.tar.gz".format(_REMOTE_GRAALVM_REPOSITORY_RELEASE_VERSION),
-        sha256 = _REMOTE_GRAALVM_REPOSITORY_RELEASE_SHA256,
-        strip_prefix = "graalvm-ce-java11-{}".format(_REMOTE_GRAALVM_REPOSITORY_RELEASE_VERSION),
+        url = "https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-{0}/graalvm-ce-java11-linux-amd64-{0}.tar.gz".format(_REMOTE_GRAALVM_VERSION),
+        sha256 = _REMOTE_GRAALVM_ARCHIVE_SHA256,
+        strip_prefix = "graalvm-ce-java11-{}".format(_REMOTE_GRAALVM_VERSION),
+        native_image_installable_jar_url = "https://github.com/graalvm/graalvm-ce-builds/releases/download/vm-{0}/native-image-installable-svm-java11-linux-amd64-{0}.jar".format(_REMOTE_GRAALVM_VERSION),
+        native_image_installable_jar_sha256 = _REMOTE_GRAALVM_NATIVE_IMAGE_INSTALLABLE_JAR_SHA256,
         os = "linux",
     )
 

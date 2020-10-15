@@ -18,9 +18,21 @@ def _expand_graal_package_templates(repository_ctx):
         executable = False,
     )
 
+def _download_and_install_graalvm_native_image_installable_jar(repository_ctx):
+    JAR_PATH = "native_image_installable.jar"
+    repository_ctx.download(
+        output = JAR_PATH,
+        url = repository_ctx.attr.native_image_installable_jar_url,
+        sha256 = repository_ctx.attr.native_image_installable_jar_sha256,
+    )
+    repository_ctx.execute(
+        ["bin/gu", "install", "--file", JAR_PATH],
+    )
+
 def _remote_graalvm_repository_impl(repository_ctx):
-    _expand_graal_package_templates(repository_ctx)
     remote_openjdk_repository_impl(repository_ctx)
+    _expand_graal_package_templates(repository_ctx)
+    _download_and_install_graalvm_native_image_installable_jar(repository_ctx)
     return None
 
 remote_graalvm_repository = repository_rule(
@@ -34,6 +46,12 @@ remote_graalvm_repository = repository_rule(
         ),
         "strip_prefix": attr.string(
             default = "",
+        ),
+        "native_image_installable_jar_url": attr.string(
+            mandatory = True,
+        ),
+        "native_image_installable_jar_sha256": attr.string(
+            mandatory = True,
         ),
         "exec_compatible_with": attr.label_list(
             default = list(),
