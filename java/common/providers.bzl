@@ -3,14 +3,38 @@
 
 load("//java:providers/JavaDependencyInfo.bzl", "JavaDependencyInfo")
 
-def singleton_java_dependency_info(jar):
-    '''Returns a `JavaDependencyInfo` with just the given `jar` as a CT/RT dep.
+def jar_list_java_dependency_info(jars):
+    '''A `JavaDependencyInfo` with just the JAR `File` list as the CT & RT deps.
     '''
-    singleton_depset = depset(direct = [jar])
+    jar_list_depset = depset(direct = jars)
     return JavaDependencyInfo(
-        run_time_class_path_jars = singleton_depset,
-        compile_time_class_path_jars = singleton_depset,
+        compile_time_class_path_jars = jar_list_depset,
+        run_time_class_path_jars = jar_list_depset,
     )
+
+def make_standard_java_target_java_dependency_info(ctx, output_jar):
+    '''A `JavaDependencyInfo` with `output_jar` at CT & transitive deps at RT.
+
+    Args:
+      ctx: The `ctx` object of this Java target.
+      output_jar: The JAR `File` created by this Java target.
+    Return:
+      `JavaDependencyInfo`
+    '''
+    deps = []
+    for dep in ctx.attr.deps:
+        dep_info = dep[JavaDependencyInfo]
+        deps.append(dep_info.run_time_class_path_jars)
+
+    return JavaDependencyInfo(
+        compile_time_class_path_jars = depset(direct = [output_jar]),
+        run_time_class_path_jars = depset(
+            direct = [output_jar],
+            transitive = deps,
+        ),
+    )
+
+
 
 def make_legacy_java_info(java_compilation_info, deps):
     '''Makes a `JavaInfo` like the given args.

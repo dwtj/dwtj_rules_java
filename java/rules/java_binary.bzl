@@ -14,14 +14,15 @@ load("//java:common/actions/write_java_run_script.bzl", "write_java_run_script_f
 load("//java:common/extract/toolchain_info.bzl", "extract_java_executable")
 load(
     "//java:common/providers.bzl",
-    "singleton_java_dependency_info",
     "make_legacy_java_info",
+    "make_standard_java_target_java_dependency_info"
 )
 
 # NOTE(dwtj): This is very similar to `_java_test_impl()`.
 def _java_binary_impl(ctx):
     java_compilation_info = compile_and_jar_java_target(ctx)
-    java_dependency_info = singleton_java_dependency_info(
+    java_dependency_info = make_standard_java_target_java_dependency_info(
+        ctx,
         java_compilation_info.class_files_output_jar,
     )
     java_execution_info, run_script, class_path_args_file, jvm_flags_args_file, run_time_jars = write_java_run_script_from_ctx(

@@ -9,7 +9,7 @@ load("//java:toolchain_rules/java_compiler_toolchain.bzl", "JavaCompilerToolchai
 
 load(
     "//java:common/providers.bzl",
-    "singleton_java_dependency_info",
+    "make_standard_java_target_java_dependency_info",
     "make_legacy_java_info",
 )
 load("//java:common/actions/write_java_sources_args_file.bzl", "write_java_sources_args_file")
@@ -70,7 +70,7 @@ def _java_agent_impl(ctx):
     return [
         DefaultInfo(files = depset(direct = [output_jar])),
         compilation_info,
-        singleton_java_dependency_info(output_jar),
+        make_standard_java_target_java_dependency_info(ctx, output_jar),
         JavaAgentInfo(
             java_agent_jar = output_jar,
             premain_class = ctx.attr.premain_class,

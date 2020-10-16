@@ -2,14 +2,11 @@
 '''
 
 load("//java:providers/JavaDependencyInfo.bzl", "JavaDependencyInfo")
+load("//java:common/providers.bzl", "jar_list_java_dependency_info")
 
 def _java_import_impl(ctx):
-    jars_depset = depset(direct = ctx.files.jars)
     return [
-        JavaDependencyInfo(
-            compile_time_class_path_jars = jars_depset,
-            run_time_class_path_jars = jars_depset,
-        ),
+        jar_list_java_dependency_info(ctx.files.jars),
         JavaInfo(
             # The 0-th JAR is wrapped in this `JavaInfo`. This `JavaInfo`
             #  includes a list of exported `JavaInfo`s, one for each of the rest

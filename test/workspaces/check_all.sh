@@ -118,6 +118,14 @@ bazel build //...
 # TODO(dwtj): Consider adding some actual tests to this workspace.
 #bazel test //...
 
+cd "$ROOT_WORKSPACE/test/workspaces/smoke_test_transitive_dependencies"
+bazel clean
+bazel test //st/simple:A
+if bazel build //st/simple:ThisShouldFailToCompile > /dev/null 2> /dev/null ; then
+    echo 'ERROR: `bazel build @smoke_test_transitive_dependencies//st/simple:ThisShouldFailToCompile` passed, but it should have failed.'
+    exit 1
+fi
+
 cd "$ROOT_WORKSPACE/test/workspaces/graalvm/smoke_test_graalvm_native_image_rules"
 bazel clean
 bazel build //...
@@ -130,3 +138,4 @@ bazel test //...
 
 echo
 echo "SUCCESS: All test workspace checks passed."
+echo

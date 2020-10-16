@@ -10,7 +10,7 @@ load("//java:common/actions/compile_and_jar_java_sources.bzl", "compile_and_jar_
 
 load(
     "//java:common/providers.bzl",
-    "singleton_java_dependency_info",
+    "make_standard_java_target_java_dependency_info",
     "make_legacy_java_info",
 )
 
@@ -21,7 +21,7 @@ def _java_library_impl(ctx):
     return [
         DefaultInfo(files = depset(direct = [output_jar])),
         java_compilation_info,
-        singleton_java_dependency_info(output_jar),
+        make_standard_java_target_java_dependency_info(ctx, output_jar),
         make_legacy_java_info(java_compilation_info, ctx.attr.deps),
     ]
 
