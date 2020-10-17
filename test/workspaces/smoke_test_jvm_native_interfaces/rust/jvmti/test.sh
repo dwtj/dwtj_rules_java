@@ -13,5 +13,6 @@ java "-agentpath:${AGENT_PATH}" -jar "${EXECUTABLE_JAR}" | tee stdout.log
 #  somewhere in the above command's standard output. If one of them doesn't,
 #  then `grep` will a non-zero exit code, and because `set -e` was set above,
 #  this will fail this Bazel test.
-grep 'Hello, from `Agent_OnLoad()`, implemented in Rust.' stdout.log
-grep 'Hello, from `rust.jvmti.MyApp`, written in Java.' stdout.log
+grep 'Hello, from `Agent_OnLoad()`, implemented in Rust.' stdout.log > /dev/null
+grep 'Hello, from `rust.jvmti.MyApp`, written in Java.' stdout.log > /dev/null
+grep 'Default for `jvmtiCapabilities.can_generate_all_class_hook_events`: 0' stdout.log > /dev/null

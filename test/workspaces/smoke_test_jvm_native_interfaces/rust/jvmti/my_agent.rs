@@ -1,7 +1,15 @@
 use jvmti::{
     JavaVM,
     jint,
+    jvmtiCapabilities,
 };
+
+pub fn use_derived_default_trait_impl() {
+    let capa = jvmtiCapabilities {
+        ..Default::default()
+    };
+    println!("Default for `jvmtiCapabilities.can_generate_all_class_hook_events`: {}", capa.can_generate_all_class_hook_events());
+}
 
 #[no_mangle]
 pub extern fn Agent_OnLoad(
@@ -10,6 +18,7 @@ pub extern fn Agent_OnLoad(
     reserved: *mut ::std::os::raw::c_void,
 ) -> jint {
     println!("Hello, from `Agent_OnLoad()`, implemented in Rust.");
+    use_derived_default_trait_impl();
     return 0;
 }
 
