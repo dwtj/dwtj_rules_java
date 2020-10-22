@@ -4,21 +4,21 @@
 def _template_label(template_path):
     return Label("@dwtj_rules_java//graalvm:repository_rules/local_graalvm_repository/" + template_path)
 
-def _symlink_which_executable_else_fail(repository_ctx, exec_name):
+def _symlink_which_executable_else_fail(repository_ctx, exec_name, symlink_path):
     exec = repository_ctx.which(exec_name)
     if exec != None:
-        repository_ctx.symlink(exec, "bin/" + exec_name)
+        repository_ctx.symlink(exec, symlink_path)
     else:
         fail("Could not find a required executable on the system path: `{}`".format(exec_name))
 
 def _local_graalvm_repository_impl(repository_ctx):
-    _symlink_which_executable_else_fail(repository_ctx, "native-image")
+    _symlink_which_executable_else_fail(repository_ctx, "native-image", "jdk/bin/native-image")
 
-    # Make BUILD file in package `//bin` such that we can refer to the
-    #  `native-image` executable (symlink) with the label `//bin:native-image`.
+    # Make BUILD file in package `//jdk` such that we can refer to the
+    #  `native-image` executable (symlink) with the label `//jdk:bin/native-image`.
     repository_ctx.file(
-        "bin/BUILD",
-        content = 'exports_files(["native-image"], visibility = ["//visibility:public"])',
+        "jdk/BUILD",
+        content = 'exports_files(["bin/native-image"], visibility = ["//visibility:public"])',
         executable = False,
     )
 

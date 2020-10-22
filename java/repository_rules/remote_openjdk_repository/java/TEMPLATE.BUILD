@@ -17,15 +17,10 @@ package(
     default_visibility = ["//visibility:public"],
 )
 
-# TODO(dwtj): Consider exporting a much more narrow the set of files.
-exports_files(
-    glob(["**/*"]),
-)
-
 dwtj_java_compiler_toolchain(
     name = "_java_compiler_toolchain",
-    javac_executable = ":bin/javac",
-    jar_executable = ":bin/jar",
+    javac_executable = "//jdk:bin/javac",
+    jar_executable = "//jdk:bin/jar",
 )
 
 toolchain(
@@ -37,7 +32,7 @@ toolchain(
 
 dwtj_java_runtime_toolchain(
     name = "_java_runtime_toolchain",
-    java_executable = ":bin/java",
+    java_executable = "//jdk:bin/java",
 )
 
 toolchain(
@@ -49,7 +44,7 @@ toolchain(
 
 javadoc_toolchain(
     name = "_javadoc_toolchain",
-    javadoc_executable = ":bin/javadoc"
+    javadoc_executable = "//jdk:bin/javadoc"
 )
 
 toolchain(

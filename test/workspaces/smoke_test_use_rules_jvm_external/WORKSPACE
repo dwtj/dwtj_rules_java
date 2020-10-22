@@ -20,7 +20,7 @@ dwtj_local_openjdk_repository(
     name = "dwtj_local_openjdk",
 )
 
-load("@dwtj_local_openjdk//:defs.bzl", "register_java_toolchains")
+load("@dwtj_local_openjdk//java:defs.bzl", "register_java_toolchains")
 
 register_java_toolchains()
 

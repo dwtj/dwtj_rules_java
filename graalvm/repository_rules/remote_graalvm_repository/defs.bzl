@@ -1,4 +1,8 @@
-load("//java:repository_rules/remote_openjdk_repository/defs.bzl", "remote_openjdk_repository_impl")
+load(
+    "//java:repository_rules/remote_openjdk_repository/defs.bzl",
+    "download_openjdk_dist_archive",
+    "expand_all_standard_openjdk_templates",
+)
 
 def _expand_graal_package_templates(repository_ctx):
     repository_ctx.template(
@@ -26,11 +30,12 @@ def _download_and_install_graalvm_native_image_installable_jar(repository_ctx):
         sha256 = repository_ctx.attr.native_image_installable_jar_sha256,
     )
     repository_ctx.execute(
-        ["bin/gu", "install", "--file", JAR_PATH],
+        ["jdk/bin/gu", "install", "--file", JAR_PATH],
     )
 
 def _remote_graalvm_repository_impl(repository_ctx):
-    remote_openjdk_repository_impl(repository_ctx)
+    download_openjdk_dist_archive(repository_ctx)
+    expand_all_standard_openjdk_templates(repository_ctx)
     _expand_graal_package_templates(repository_ctx)
     _download_and_install_graalvm_native_image_installable_jar(repository_ctx)
     return None

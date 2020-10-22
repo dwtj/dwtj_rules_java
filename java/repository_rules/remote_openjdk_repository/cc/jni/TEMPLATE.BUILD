@@ -11,14 +11,14 @@ licenses(["restricted"])  # GPLv2, portions of GPLv2 with "Classpath" exception
 
 cc_library(
     name = "headers",
-    hdrs = ["@{REPOSITORY_NAME}//:include/jni.h"],
+    hdrs = ["@{REPOSITORY_NAME}//jdk:include/jni.h"],
     deps = [":md_headers"],
-    strip_include_prefix = "/include",
+    strip_include_prefix = "/jdk/include",
     visibility = ["//visibility:public"],
 )
 
 cc_library(
     name = "md_headers",
-    hdrs = ["@{REPOSITORY_NAME}//:{JNI_MD_HEADER_DIR}/jni_md.h"],
-    strip_include_prefix = "/{JNI_MD_HEADER_DIR}",
+    hdrs = ["@{REPOSITORY_NAME}//jdk:{JNI_MD_HEADER_DIR}/jni_md.h"],
+    strip_include_prefix = "/jdk/{JNI_MD_HEADER_DIR}",
 )

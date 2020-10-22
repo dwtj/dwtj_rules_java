@@ -26,7 +26,7 @@ load(
 
 adoptopenjdk_linux_v11_0_8_10()
 
-load("@adoptopenjdk_linux_v11_0_8_10//:defs.bzl", "register_java_toolchains")
+load("@adoptopenjdk_linux_v11_0_8_10//java:defs.bzl", "register_java_toolchains")
 
 register_java_toolchains()
 

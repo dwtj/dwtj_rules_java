@@ -9,9 +9,9 @@ load("@rules_cc//cc:defs.bzl", "cc_library")
 cc_library(
     name = "headers",
     hdrs = [
-        "@{REPOSITORY_NAME}//:include/jvmti.h",
-        "@{REPOSITORY_NAME}//:include/jvmticmlr.h",
+        "@{REPOSITORY_NAME}//jdk:include/jvmti.h",
+        "@{REPOSITORY_NAME}//jdk:include/jvmticmlr.h",
     ],
-    strip_include_prefix = "/include",
+    strip_include_prefix = "/jdk/include",
     visibility = ["//visibility:public"],
 )

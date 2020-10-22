@@ -12,20 +12,10 @@ load(
     "javadoc_toolchain",
 )
 
-exports_files(
-    [
-        "java",
-        "javac",
-        "jar",
-        "javadoc",
-    ],
-    visibility = ["//visibility:public"],
-)
-
 dwtj_java_compiler_toolchain(
     name = "_java_compiler_toolchain",
-    javac_executable = ":javac",
-    jar_executable = ":jar",
+    javac_executable = "//jdk:bin/javac",
+    jar_executable = "//jdk:bin/jar",
 )
 
 toolchain(
@@ -37,7 +27,7 @@ toolchain(
 
 dwtj_java_runtime_toolchain(
     name = "_java_runtime_toolchain",
-    java_executable = ":java",
+    java_executable = "//jdk:bin/java",
 )
 
 toolchain(
@@ -49,7 +39,7 @@ toolchain(
 
 javadoc_toolchain(
     name = "_javadoc_toolchain",
-    javadoc_executable = ":javadoc"
+    javadoc_executable = "//jdk:bin/javadoc"
 )
 
 toolchain(

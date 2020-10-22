@@ -11,5 +11,5 @@ sh_test(
     name = "test",
     srcs = ["test.sh"],
     data = [":mytest"],
-    args = ["$(location :mytest)"],
+    args = ["$(rootpath :mytest)"],
 )

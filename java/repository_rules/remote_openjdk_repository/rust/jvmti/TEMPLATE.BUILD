@@ -2,9 +2,9 @@
 substitutions:
 
 - REPOSITORY_NAME: {REPOSITORY_NAME}
-- JVMTI_HEADER_LABEL: {JVMTI_HEADER_LABEL}    --  E.g., "//:include/jvmti.h"
-- JNI_HEADER_LABEL: {JNI_HEADER_LABEL}        --  E.g., "//:include/jni.h"
-- JNI_MD_HEADER_LABEL: {JNI_MD_HEADER_LABEL}  --  E.g., "//:include/linux/jni_md.h"
+- JVMTI_HEADER_LABEL: {JVMTI_HEADER_LABEL}    --  E.g., "//jdk:include/jvmti.h"
+- JNI_HEADER_LABEL: {JNI_HEADER_LABEL}        --  E.g., "//jdk:include/jni.h"
+- JNI_MD_HEADER_LABEL: {JNI_MD_HEADER_LABEL}  --  E.g., "//jdk:include/linux/jni_md.h"
 '''
 
 # TODO(dwtj): Also implement analogous rules for `jvmticmlr.h`.
@@ -14,11 +14,11 @@ load("@io_bazel_rules_rust//rust:rust.bzl", "rust_library")
 _BINDGEN_CMD_BASH = ''' \
 bindgen \
     "--with-derive-default" \
-    --output "$(location jvmti.rs)" \
-    "$(location {JVMTI_HEADER_LABEL})" \
+    --output "$(execpath jvmti.rs)" \
+    "$(execpath {JVMTI_HEADER_LABEL})" \
     -- \
-    -I`dirname "$(location {JNI_HEADER_LABEL})"` \
-    -I`dirname "$(location {JNI_MD_HEADER_LABEL})"` \
+    -I`dirname "$(execpath {JNI_HEADER_LABEL})"` \
+    -I`dirname "$(execpath {JNI_MD_HEADER_LABEL})"` \
 '''
 
 genrule(

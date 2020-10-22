@@ -7,18 +7,31 @@ toolchains.
 def _template_label(template_path):
     return Label("@dwtj_rules_java//java:repository_rules/remote_openjdk_repository/" + template_path)
 
-def _download_archive(repository_ctx):
+def download_openjdk_dist_archive(repository_ctx):
     repository_ctx.download_and_extract(
+        output = "jdk",
         url = repository_ctx.attr.url,
         sha256 = repository_ctx.attr.sha256,
         stripPrefix = repository_ctx.attr.strip_prefix,
         allow_fail = False,
     )
 
-def _expand_root_build_file_template(repository_ctx):
+def _expand_jdk_package_templates(repository_ctx):
     repository_ctx.template(
-        "BUILD",
-        _template_label("TEMPLATE.BUILD"),
+        "jdk/BUILD",
+        _template_label("jdk/TEMPLATE.BUILD"),
+        substitutions = {},  # NOTE(dwtj): No substitutions needed yet.
+        executable = False,
+    )
+
+def _expand_java_package_templates(repository_ctx):
+    _expand_java_build_file_template(repository_ctx)
+    _expand_java_defs_bzl_file_template(repository_ctx)
+
+def _expand_java_build_file_template(repository_ctx):
+    repository_ctx.template(
+        "java/BUILD",
+        _template_label("java/TEMPLATE.BUILD"),
         substitutions = {
             "{REPOSITORY_NAME}": repository_ctx.name,
             "{EXEC_COMPATIBLE_WITH}": "[]"
@@ -26,10 +39,10 @@ def _expand_root_build_file_template(repository_ctx):
         executable = False,
     )
 
-def _expand_root_defs_bzl_file_template(repository_ctx):
+def _expand_java_defs_bzl_file_template(repository_ctx):
     repository_ctx.template(
-        "defs.bzl",
-        _template_label("TEMPLATE.defs.bzl"),
+        "java/defs.bzl",
+        _template_label("java/TEMPLATE.defs.bzl"),
         substitutions = {
             "{REPOSITORY_NAME}": repository_ctx.name,
         },
@@ -82,8 +95,8 @@ def _expand_rust_jni_build_file_template(repository_ctx):
         substitutions = {
             "{REPOSITORY_NAME}": repository_ctx.name,
             # TODO(dwtj): Generalize this once more OSes are supported.
-            "{JNI_HEADER_LABEL}":    "//:include/jni.h",
-            "{JNI_MD_HEADER_LABEL}": "//:include/linux/jni_md.h",
+            "{JNI_HEADER_LABEL}":    "//jdk:include/jni.h",
+            "{JNI_MD_HEADER_LABEL}": "//jdk:include/linux/jni_md.h",
         },
         executable = False,
     )
@@ -94,10 +107,10 @@ def _expand_rust_jvmti_build_file_template(repository_ctx):
         _template_label("rust/jvmti/TEMPLATE.BUILD"),
         substitutions = {
             "{REPOSITORY_NAME}": repository_ctx.name,
-            "{JVMTI_HEADER_LABEL}":  "//:include/jvmti.h",
-            "{JNI_HEADER_LABEL}":    "//:include/jni.h",
+            "{JVMTI_HEADER_LABEL}":  "//jdk:include/jvmti.h",
+            "{JNI_HEADER_LABEL}":    "//jdk:include/jni.h",
             # TODO(dwtj): Generalize this once more OSes are supported.
-            "{JNI_MD_HEADER_LABEL}": "//:include/linux/jni_md.h",
+            "{JNI_MD_HEADER_LABEL}": "//jdk:include/linux/jni_md.h",
         },
         executable = False,
     )
@@ -106,11 +119,13 @@ def _expand_rust_package_templates(repository_ctx):
     _expand_rust_jni_build_file_template(repository_ctx)
     _expand_rust_jvmti_build_file_template(repository_ctx)
 
-# NOTE(dwtj): This function is not private (in contrast to Bazel conventions)
-#  because it is called both as the `implementation` for this repository rule
-#  and also as part of the `implementation` of the `remote_graalvm_repository`
-#  repository rule.
-def remote_openjdk_repository_impl(repository_ctx):
+def expand_all_standard_openjdk_templates(repository_ctx):
+    _expand_jdk_package_templates(repository_ctx)
+    _expand_java_package_templates(repository_ctx)
+    _expand_cc_package_templates(repository_ctx)
+    _expand_rust_package_templates(repository_ctx)
+
+def _remote_openjdk_repository_impl(repository_ctx):
     '''Downloads the archive & wraps files within it by instantiating templates.
 
     Args:
@@ -123,17 +138,14 @@ def remote_openjdk_repository_impl(repository_ctx):
     if len(repository_ctx.attr.exec_compatible_with) > 0:
        fail("The `remote_openjdk_repository.exec_compatible_with` attribute is not yet supported.")
 
-    _download_archive(repository_ctx)
-    _expand_root_build_file_template(repository_ctx)
-    _expand_root_defs_bzl_file_template(repository_ctx)
-    _expand_cc_package_templates(repository_ctx)
-    _expand_rust_package_templates(repository_ctx)
+    download_openjdk_dist_archive(repository_ctx)
+    expand_all_standard_openjdk_templates(repository_ctx)
 
     # TODO(dwtj): Consider what should be returned here to help reproducibility.
     return None
 
 remote_openjdk_repository = repository_rule(
-    implementation = remote_openjdk_repository_impl,
+    implementation = _remote_openjdk_repository_impl,
     attrs = {
         "url": attr.string(
             mandatory = True,

@@ -13,7 +13,7 @@ load(
 
 cc_import(
     name = "jvm_import",
-    shared_library = "@{REPOSITORY_NAME}//:{SHARED_LIBRARY_PATH}",
+    shared_library = "@{REPOSITORY_NAME}//jdk:{SHARED_LIBRARY_PATH}",
 )
 
 cc_library(
