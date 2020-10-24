@@ -16,12 +16,21 @@ def _download_openjdk_source_archive(repository_ctx):
 def _guess_built_jdk_dist_dir(_repository_ctx):
     return "jdk_source_archive/build/linux-x86_64-server-release/images/jdk"
 
+def _execute_mv_command(repository_ctx, source, dest):
+    res = repository_ctx.execute(["mv", source, dest])
+    if res.return_code != 0:
+        fail("Move command failed: `mv '{}' '{}'`".format(source, dest))
+
+def _execute_rmdir_command(repository_ctx, dir):
+    res = repository_ctx.execute(["rmdir", dir])
+    if res.return_code != 0:
+        fail("Remove directory failed: `rmdir '{}'`")
+
 def _build_jdk_dist_from_source_archive(repository_ctx):
+    configure_cmd = ["bash", "configure"]
+    configure_cmd.extend(repository_ctx.attr.configure_args)
     res = repository_ctx.execute(
-        [
-            "bash",
-            "configure",
-        ],
+        configure_cmd,
         working_directory = "jdk_source_archive",
         quiet = False,
     )
@@ -44,31 +53,15 @@ def _remote_openjdk_source_repository_impl(repository_ctx):
         fail("Use of the `remote_openjdk_source_repository` is only supported on linux, but `repository_ctx.os.name` is `{}`".format(repository_ctx.os.name))
 
     expand_all_standard_openjdk_templates(repository_ctx)
-    res = repository_ctx.execute(["mv", "jdk/BUILD", "jdk.BUILD"])
-    if res.return_code != 0:
-        fail("Command failed: `mv jdk/BUILD jdk.BUILD`")
 
-    res = repository_ctx.execute(["rmdir", "jdk"])
-    if res.return_code != 0:
-        fail("Command failed: `rmdir jdk`")
+    _execute_mv_command(repository_ctx, "jdk/BUILD", "jdk.BUILD")
+    _execute_rmdir_command(repository_ctx, "jdk")
 
     _download_openjdk_source_archive(repository_ctx)
     _build_jdk_dist_from_source_archive(repository_ctx)
 
-    res = repository_ctx.execute(
-        [
-            "mv",
-            _guess_built_jdk_dist_dir(repository_ctx),
-            "jdk",
-        ],
-    )
-    if res.return_code != 0:
-        fail("Failed to move the JDK build output into place.")
-
-
-    res = repository_ctx.execute(["mv", "jdk.BUILD", "jdk/BUILD"])
-    if res.return_code != 0:
-        fail("Command failed: `mv jdk.BUILD jdk/BUILD`")
+    _execute_mv_command(repository_ctx, _guess_built_jdk_dist_dir(repository_ctx), "jdk")
+    _execute_mv_command(repository_ctx, "jdk.BUILD", "jdk/BUILD")
 
 remote_openjdk_source_repository = repository_rule(
     implementation = _remote_openjdk_source_repository_impl,
@@ -81,6 +74,10 @@ remote_openjdk_source_repository = repository_rule(
         ),
         "strip_prefix": attr.string(
             mandatory = True,
+        ),
+        "configure_args": attr.string_list(
+            doc = """A list of strings, where each string is passed as an argument to the `configure` script. E.g., `["--with-toolchain-type=clang"]`.""",
+            default = [],
         ),
         "_root_build_file_template": attr.label(
             default = Label("//java/repository_rules/remote_openjdk_source_repository/TEMPLATE.BUILD")

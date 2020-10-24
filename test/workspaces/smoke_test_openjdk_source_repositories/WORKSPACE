@@ -8,12 +8,16 @@ local_repository(
 load("@dwtj_rules_java//java:repositories.bzl", "remote_openjdk_source_repository")
 
 remote_openjdk_source_repository(
-    name = "jdk_16_21",
-    url = "https://github.com/openjdk/jdk/archive/jdk-16+21.tar.gz",
-    sha256 = "c3d2fa52e400099b22e7c2f901c3c21d888bf2b227dce9d44174a7e97a1dfb33",
-    strip_prefix = "jdk-jdk-16-21"
+    name = "jdk_15_ga",
+    url = "https://github.com/openjdk/jdk/archive/jdk-15-ga.tar.gz",
+    sha256 = "f86e3828e5e5988fb555a9f6c7b84603fb819bd05a381f241860205af309d812",
+    strip_prefix = "jdk-jdk-15-ga",
+    configure_args = [
+        "--quiet",
+        "--disable-warnings-as-errors",
+    ],
 )
 
-load("@jdk_16_21//java:defs.bzl", "register_java_toolchains")
+load("@jdk_15_ga//java:defs.bzl", "register_java_toolchains")
 
 register_java_toolchains()
