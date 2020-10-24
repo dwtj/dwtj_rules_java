@@ -12,6 +12,7 @@ remote_openjdk_source_repository(
     url = "https://github.com/openjdk/jdk/archive/jdk-15-ga.tar.gz",
     sha256 = "f86e3828e5e5988fb555a9f6c7b84603fb819bd05a381f241860205af309d812",
     strip_prefix = "jdk-jdk-15-ga",
+    build_configuration_name = "linux-x86_64-server-release",
     configure_args = [
         "--quiet",
         "--disable-warnings-as-errors",

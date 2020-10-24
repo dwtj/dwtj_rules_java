@@ -13,8 +13,8 @@ def _download_openjdk_source_archive(repository_ctx):
     )
 
 # TODO(dwtj): Learn more about JDK builds to make this more robust and general.
-def _guess_built_jdk_dist_dir(_repository_ctx):
-    return "jdk_source_archive/build/linux-x86_64-server-release/images/jdk"
+def _guess_built_jdk_dist_dir(repository_ctx):
+    return "jdk_source_archive/build/{}/images/jdk".format(repository_ctx.attr.build_configuration_name)
 
 def _execute_mv_command(repository_ctx, source, dest):
     res = repository_ctx.execute(["mv", source, dest])
@@ -78,6 +78,12 @@ remote_openjdk_source_repository = repository_rule(
         "configure_args": attr.string_list(
             doc = """A list of strings, where each string is passed as an argument to the `configure` script. E.g., `["--with-toolchain-type=clang"]`.""",
             default = [],
+        ),
+        # TODO(dwtj): Redesign this to help make portable targets. (Currently,
+        #  a user should be able to use a `select()` expression.)
+        "build_configuration_name": attr.string(
+            mandatory = True,
+            doc = 'E.g., "linux-x86_64-server-release"',
         ),
         "_root_build_file_template": attr.label(
             default = Label("//java/repository_rules/remote_openjdk_source_repository/TEMPLATE.BUILD")
