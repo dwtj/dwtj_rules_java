@@ -39,6 +39,22 @@ def _build_jdk_dist_from_source_archive(repository_ctx):
     if res.return_code != 0:
         fail("The JDK build failed.")
 
+def _remote_openjdk_source_repository_impl(repository_ctx):
+    if repository_ctx.os.name != "linux":
+        fail("Use of the `remote_openjdk_source_repository` is only supported on linux, but `repository_ctx.os.name` is `{}`".format(repository_ctx.os.name))
+
+    expand_all_standard_openjdk_templates(repository_ctx)
+    res = repository_ctx.execute(["mv", "jdk/BUILD", "jdk.BUILD"])
+    if res.return_code != 0:
+        fail("Command failed: `mv jdk/BUILD jdk.BUILD`")
+
+    res = repository_ctx.execute(["rmdir", "jdk"])
+    if res.return_code != 0:
+        fail("Command failed: `rmdir jdk`")
+
+    _download_openjdk_source_archive(repository_ctx)
+    _build_jdk_dist_from_source_archive(repository_ctx)
+
     res = repository_ctx.execute(
         [
             "mv",
@@ -49,13 +65,10 @@ def _build_jdk_dist_from_source_archive(repository_ctx):
     if res.return_code != 0:
         fail("Failed to move the JDK build output into place.")
 
-def _remote_openjdk_source_repository_impl(repository_ctx):
-    if repository_ctx.os.name != "linux":
-        fail("Use of the `remote_openjdk_source_repository` is only supported on linux, but `repository_ctx.os.name` is `{}`".format(repository_ctx.os.name))
 
-    _download_openjdk_source_archive(repository_ctx)
-    _build_jdk_dist_from_source_archive(repository_ctx)
-    expand_all_standard_openjdk_templates(repository_ctx)
+    res = repository_ctx.execute(["mv", "jdk.BUILD", "jdk/BUILD"])
+    if res.return_code != 0:
+        fail("Command failed: `mv jdk.BUILD jdk/BUILD`")
 
 remote_openjdk_source_repository = repository_rule(
     implementation = _remote_openjdk_source_repository_impl,
