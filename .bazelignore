@@ -18,3 +18,4 @@ test/workspaces/smoke_test_transitive_dependencies
 test/workspaces/smoke_test_openjdk_source_repositories
 test/workspaces/graalvm/smoke_test_graalvm_native_image_rules
 test/workspaces/graalvm/smoke_test_remote_graalvm_repository
+test/workspaces/graalvm/smoke_test_graalvm_native_image_resources
