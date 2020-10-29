@@ -1,0 +1,14 @@
+workspace(name = "smoke_test_known_openjdk_repository_macro")
+
+local_repository(
+    name = "dwtj_rules_java",
+    path = "../../..",
+)
+
+load("@dwtj_rules_java//java:repositories.bzl", "known_openjdk_repository")
+
+known_openjdk_repository(name = "default_linux_openjdk")
+
+load("@default_linux_openjdk//java:defs.bzl", "register_java_toolchains")
+
+register_java_toolchains()
