@@ -3,7 +3,6 @@ load("//java:repository_macros/known_openjdk_repository/providers/default.bzl", 
 load("//java:repository_macros/known_openjdk_repository/providers/adoptopenjdk.bzl", "adoptopenjdk_repositories")
 load("//java:repository_macros/known_openjdk_repository/providers/adoptopenjdk_upstream.bzl", "adoptopenjdk_upstream_repositories")
 load("//java:repository_macros/known_openjdk_repository/providers/jdk_java_net.bzl", "jdk_java_net_repositories")
-load("//java:repository_macros/known_openjdk_repository/providers/oracle_java_se.bzl", "oracle_java_se_repositories")
 load("//java:common/structs/KnownOpenJdkRepository.bzl", "KnownOpenJdkRepository")
 
 def _known_repositories():
@@ -12,7 +11,6 @@ def _known_repositories():
     repos.extend(adoptopenjdk_repositories())
     repos.extend(adoptopenjdk_upstream_repositories())
     repos.extend(jdk_java_net_repositories())
-    repos.extend(oracle_java_se_repositories())
     return repos
 
 _KNOWN_REPOSITORIES = _known_repositories()
