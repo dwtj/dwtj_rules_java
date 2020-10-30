@@ -20,24 +20,20 @@ register_java_toolchains()
 known_openjdk_repository(
     name = "jdk_java_net_linux_jdk_14_0_2",
     provider = "jdk_java_net",
-    os = "linux",
     version = "14.0.2",
 )
 
 known_openjdk_repository(
     name = "adoptopenjdk_upstream_linux_jdk_11_0_9_11",
     provider = "adoptopenjdk_upstream",
-    os = "linux",
     version = "11.0.9+11",
 )
 
 known_openjdk_repository(
     name = "adoptopenjdk_linux_jdk_11_0_9_11",
     provider = "adoptopenjdk",
-    os = "linux",
     version = "11.0.9+11.1"
 )
-
 
 # TODO(dwtj): Re-enable this once I fix the crashes.
 # known_openjdk_repository(
@@ -47,3 +43,15 @@ known_openjdk_repository(
 #     os = "linux",
 #     version = "11.0.9+11_openj9-0.23.0"
 # )
+
+known_openjdk_repository(
+    name = "amazon_corretto_linux_jdk_8_272_10_3",
+    provider = "amazon_corretto",
+    version = "8.272.10.3",
+)
+
+known_openjdk_repository(
+    name = "amazon_corretto_linux_jdk_11_0_9_11_1",
+    provider = "amazon_corretto",
+    version = "11.0.9.11.1",
+)

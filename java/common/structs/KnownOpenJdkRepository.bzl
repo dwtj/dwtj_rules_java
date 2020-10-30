@@ -2,7 +2,7 @@ _ATTRIBUTE_VALID_VALUES = {
     "provider": [
         "__default__",
         "adoptopenjdk_upstream",
-        "oracle_java_se",
+        "amazon_corretto",
         "jdk_java_net",
         "adoptopenjdk",
     ],
