@@ -9,7 +9,7 @@ load("//java:providers/JavaExecutionInfo.bzl", "JavaExecutionInfo")
 
 load("//java:common/actions/write_class_path_args_file.bzl", "write_run_time_class_path_args_file")
 
-load("//java:common/extract/toolchain_info.bzl", "extract_java_runtime_toolchain_info", "extract_java_executable")
+load("//java:common/extract/toolchain_info.bzl", "extract_java_runtime_toolchain_info")
 
 def _java_agent_and_options_to_flag(java_agent_and_options):
     '''Convert a 2-tuple to a java flag.
