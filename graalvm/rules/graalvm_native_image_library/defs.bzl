@@ -42,7 +42,7 @@ def _expand_build_script_template(ctx, build_script):
             "{NATIVE_IMAGE_EXECUTABLE}": toolchain_info.native_image_exec.path,
             "{CLASS_PATH}": make_class_path_str(ctx),
             "{LIBRARY_OUTPUT}": ctx.outputs.library_output.path,
-            "{LIBRARY_FILE_EXTENSION}": toolchain_info.shared_library_file_extension,
+            "{SHARED_LIBRARY_FILE_EXTENSION}": toolchain_info.shared_library_file_extension,
             "{HEADER_OUTPUT}": ctx.outputs.header_output.path,
             "{DYNAMIC_HEADER_OUTPUT}": ctx.outputs.dynamic_header_output.path,
             "{GRAAL_ISOLATE_HEADER_OUTPUT}": ctx.outputs.graal_isolate_header_output.path,

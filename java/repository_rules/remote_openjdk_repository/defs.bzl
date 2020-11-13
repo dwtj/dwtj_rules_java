@@ -4,8 +4,51 @@ appropriate Bazel targets. In particular, executables are wrapped in Bazel
 toolchains.
 '''
 
+def make_exec_compatible_with_str(repository_ctx):
+    os_constraints_map = {
+        "linux": "@platforms//os:linux",
+        "macos": "@platforms//os:macos",
+        "windows": "@platforms//os:windows",
+    }
+    os_constraint = os_constraints_map[repository_ctx.attr.os]
+    if os_constraint == None:
+        fail("Unexpected `os` attribute value: " + repository_ctx.attr.os)
+
+    cpu_constraints_map = {
+        "x64": "@platforms//cpu:x86_64",
+        "aarch64": "@platforms//cpu:aarch64",
+    }
+    cpu_constraint = cpu_constraints_map[repository_ctx.attr.cpu]
+    if cpu_constraint == None:
+        fail("Unexpected `cpu` attribute value: " + repository_ctx.attr.cpu)
+
+    return """["{}", "{}"]""".format(os_constraint, cpu_constraint)
+
 def _template_label(template_path):
     return Label("@dwtj_rules_java//java:repository_rules/remote_openjdk_repository/" + template_path)
+
+def _guess_jni_md_header_label(repository_ctx):
+    return "//jdk:{}/jni_md.h".format(_guess_jni_md_header_dir(repository_ctx))
+
+def _guess_jni_md_header_dir(repository_ctx):
+    map = {
+        "linux": "include/linux",
+        "macos": "include/darwin",
+    }
+    dir = map[repository_ctx.attr.os]
+    if dir == None:
+        fail('Unexpected repository rule attribute value: `os` is "{}".'.format(repository_ctx.attr.os))
+    return dir
+
+def _guess_jvm_shared_library_file(repository_ctx):
+    map = {
+        "linux": "lib/server/libjvm.so",
+        "macos": "lib/server/libjvm.dylib",
+    }
+    file = map[repository_ctx.attr.os]
+    if file == None:
+        fail('Unexpected repository rule attribute value: `os` is "{}".'.format(repository_ctx.attr.os))
+    return file
 
 def download_openjdk_dist_archive(repository_ctx):
     repository_ctx.download_and_extract(
@@ -34,7 +77,7 @@ def _expand_java_build_file_template(repository_ctx):
         _template_label("java/TEMPLATE.BUILD"),
         substitutions = {
             "{REPOSITORY_NAME}": repository_ctx.name,
-            "{EXEC_COMPATIBLE_WITH}": "[]"
+            "{EXEC_COMPATIBLE_WITH}": make_exec_compatible_with_str(repository_ctx),
         },
         executable = False,
     )
@@ -55,8 +98,7 @@ def _expand_cc_jni_build_file_template(repository_ctx):
         _template_label("cc/jni/TEMPLATE.BUILD"),
         substitutions = {
             "{REPOSITORY_NAME}": repository_ctx.name,
-            # TODO(dwtj): Generalize this once more OSes are supported.
-            "{JNI_MD_HEADER_DIR}": "include/linux",
+            "{JNI_MD_HEADER_DIR}": _guess_jni_md_header_dir(repository_ctx),
         },
         executable = False,
     )
@@ -67,8 +109,7 @@ def _expand_cc_jvm_build_file_template(repository_ctx):
         _template_label("cc/jvm/TEMPLATE.BUILD"),
         substitutions = {
             "{REPOSITORY_NAME}": repository_ctx.name,
-            # TODO(dwtj): Generalize this once more OSes are supported.
-            "{SHARED_LIBRARY_PATH}": "lib/server/libjvm.so",
+            "{JVM_SHARED_LIBRARY_FILE}": _guess_jvm_shared_library_file(repository_ctx),
         },
         executable = False,
     )
@@ -93,10 +134,9 @@ def _expand_rust_jni_build_file_template(repository_ctx):
         "rust/jni/BUILD",
         _template_label("rust/jni/TEMPLATE.BUILD"),
         substitutions = {
-            "{REPOSITORY_NAME}": repository_ctx.name,
-            # TODO(dwtj): Generalize this once more OSes are supported.
+            "{REPOSITORY_NAME}":     repository_ctx.name,
             "{JNI_HEADER_LABEL}":    "//jdk:include/jni.h",
-            "{JNI_MD_HEADER_LABEL}": "//jdk:include/linux/jni_md.h",
+            "{JNI_MD_HEADER_LABEL}": _guess_jni_md_header_label(repository_ctx),
         },
         executable = False,
     )
@@ -109,8 +149,7 @@ def _expand_rust_jvmti_build_file_template(repository_ctx):
             "{REPOSITORY_NAME}": repository_ctx.name,
             "{JVMTI_HEADER_LABEL}":  "//jdk:include/jvmti.h",
             "{JNI_HEADER_LABEL}":    "//jdk:include/jni.h",
-            # TODO(dwtj): Generalize this once more OSes are supported.
-            "{JNI_MD_HEADER_LABEL}": "//jdk:include/linux/jni_md.h",
+            "{JNI_MD_HEADER_LABEL}": _guess_jni_md_header_label(repository_ctx),
         },
         executable = False,
     )
@@ -134,12 +173,8 @@ def _remote_openjdk_repository_impl(repository_ctx):
     Returns:
       None
     '''
-    # TODO(dwtj): Add support for `exec_compatible_with` attribute.
-    if len(repository_ctx.attr.exec_compatible_with) > 0:
-       fail("The `remote_openjdk_repository.exec_compatible_with` attribute is not yet supported.")
-
-    download_openjdk_dist_archive(repository_ctx)
     expand_all_standard_openjdk_templates(repository_ctx)
+    download_openjdk_dist_archive(repository_ctx)
 
     # TODO(dwtj): Consider what should be returned here to help reproducibility.
     return None
@@ -154,18 +189,22 @@ remote_openjdk_repository = repository_rule(
             mandatory = True,
         ),
         "strip_prefix": attr.string(
-            default = "",
+            mandatory = True,
         ),
-        "exec_compatible_with": attr.label_list(
-            default = list(),
-        ),
-        # TODO(dwtj): Maybe figure out how to infer this attribute from context.
-        # TODO(dwtj): Add support more OS values (e.g., macOS).
-        # NOTE(dwtj): Currently, this is only used for the `cc` packages,
-        #  specifically, for wrapping the `jni_md.h` file. So, this value only
-        #  really needs to be correct if the user uses `//cc/jni:headers`.
+        # TODO(dwtj): Consider ways to infer this attribute from context.
         "os": attr.string(
-            values = ["linux"],
+            mandatory = True,
+            values = [
+                "linux",
+                "macos",
+            ],
+        ),
+        "cpu": attr.string(
+            mandatory = True,
+            values = [
+                "x64",
+                "aarch64",
+            ],
         ),
     }
 )

@@ -17,7 +17,7 @@ genrule(
     name = "javah",
     srcs = ["MyLib.java"],
     outs = ["cc_jni_MyLib.h"],
-    cmd_bash = 'javac -d /tmp -h `dirname "$(location cc_jni_MyLib.h)"` "$(location MyLib.java)"'
+    cmd_bash = 'javac -d /tmp -h `dirname "$(execpath cc_jni_MyLib.h)"` "$<"'
 )
 
 cc_binary(
@@ -28,8 +28,18 @@ cc_binary(
     ],
     linkshared = True,
     deps = [
-        "//third_party/openjdk:jni_headers",
+        "//third_party/openjdk/cc:jni_headers",
     ],
+)
+
+# NOTE(dwtj): We copy the `.so` library file to a `.dylib` file as a workaround
+#  for a [bug](https://github.com/bazelbuild/bazel/issues/11082) which appears
+#  on macOS.
+genrule(
+    name = "myjni_dylib",
+    srcs = [":myjni"],
+    outs = ["libmyjni.dylib"],
+    cmd_bash = 'cp "$<" "$@"',
 )
 
 dwtj_java_binary(
@@ -43,11 +53,13 @@ sh_test(
     name = "test",
     srcs = ["test.sh"],
     data = [
+        # TODO(dwtj): Consider making this cleaner by only add one of these.
         ":myjni",
+        ":myjni_dylib",
         ":MyLib.jar",
     ],
     args = [
         "cc/jni",
-        "$(location :MyLib.jar)",
+        "$(rootpath :MyLib.jar)",
     ],
 )

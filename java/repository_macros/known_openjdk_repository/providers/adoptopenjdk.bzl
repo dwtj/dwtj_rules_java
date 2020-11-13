@@ -26,6 +26,13 @@ _KNOWN_OPENJDK_REPOSITORIES = [
     #     sha256 = "b1561f7a69c977bfc9991e61e96dcb200c39300dd9ad423254af117c189e4a8d",
     #     strip_prefix = "jdk-15.0.1+9",
     # ),
+    _Repo(
+        version = "15.0.1+9",
+        url = "https://github.com/AdoptOpenJDK/openjdk15-binaries/releases/download/jdk-15.0.1%2B9/OpenJDK15U-jdk_x64_mac_hotspot_15.0.1_9.tar.gz",
+        sha256 = "d32f9429c4992cef7be559a15c542011503d6bc38c89379800cd209a9d7ec539",
+        strip_prefix = "jdk-15.0.1+9/Contents/Home",
+        os = "macos",
+    ),
 
     # jdk-11.0.9+11 ###########################################################
     _Repo(
@@ -42,6 +49,13 @@ _KNOWN_OPENJDK_REPOSITORIES = [
     #     sha256 = "812d58fac39465802039291a1bc530b4feaaa61b58664d9c458a075921ae8091",
     #     strip_prefix = "jdk-11.0.9+11",
     # ),
+    _Repo(
+        version = "11.0.9+11.1",
+        url = "https://github.com/AdoptOpenJDK/openjdk11-binaries/releases/download/jdk-11.0.9%2B11.1/OpenJDK11U-jdk_x64_mac_hotspot_11.0.9_11.tar.gz",
+        sha256 = "7b21961ffb2649e572721a0dfad64169b490e987937b661cb4e13a594c21e764",
+        strip_prefix = "jdk-11.0.9+11/Contents/Home",
+        os = "macos",
+    ),
 
     # jdk8u272-b10 ############################################################
     _Repo(
@@ -58,4 +72,11 @@ _KNOWN_OPENJDK_REPOSITORIES = [
     #     sha256 = "ca852f976e5b27ccd9b73a527a517496bda865b2ae2a85517ca74486fb8de7da",
     #     strip_prefix = "jdk8u272-b10",
     # ),
+    _Repo(
+        version = "jdk8u275-b01",
+        url = "https://github.com/AdoptOpenJDK/openjdk8-binaries/releases/download/jdk8u275-b01/OpenJDK8U-jdk_x64_mac_hotspot_8u275b01.tar.gz",
+        sha256 = "4afd2b3d21b625392fe4501e9445d1125498e6e7fb78042495c04e7cfc1b5e69",
+        strip_prefix = "jdk8u275-b01/Contents/Home",
+        os = "macos",
+    ),
 ]

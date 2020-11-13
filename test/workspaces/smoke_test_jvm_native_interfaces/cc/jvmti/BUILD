@@ -6,8 +6,8 @@ cc_binary(
     srcs = ["myagent.cc"],
     linkshared = True,
     deps = [
-        "//third_party/openjdk:jni_headers",
-        "//third_party/openjdk:jvmti_headers",
+        "//third_party/openjdk/cc:jni_headers",
+        "//third_party/openjdk/cc:jvmti_headers",
     ],
 )
 

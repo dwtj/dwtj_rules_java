@@ -11,7 +11,7 @@ dwtj_java_binary(
 cc_binary(
     name = "jni_invocation_api_test_exec",
     srcs = ["jni_invocation_api_test.cc"],
-    deps = ["//third_party/openjdk:jvm"],
+    deps = ["//third_party/openjdk/cc:jvm"],
 )
 
 sh_test(

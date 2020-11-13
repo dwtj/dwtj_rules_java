@@ -1,4 +1,10 @@
 load("@dwtj_rules_java//graalvm:defs.bzl", "graalvm_native_image_library")
+load(
+    "@rules_cc//cc:defs.bzl",
+    "cc_library",
+    "cc_import",
+    "cc_test",
+)
 
 graalvm_native_image_library(
     name = "native_image_library",

@@ -15,17 +15,24 @@ load(
 load(
     "@dwtj_rules_java//test/workspaces:external_repositories.bzl",
     "remote_graalvm_linux_x64",
+    "remote_graalvm_macos_x64",
 )
 
 # CONFIGURE `@remote_graalvm_linux_x64` #######################################
 
-# TODO(dwtj): Figure out how to make this test workspace more portable.
-#  (E.g., make this test runnable on macOS or different CPU architectures).
 remote_graalvm_linux_x64()
 
-load("@remote_graalvm_linux_x64//java:defs.bzl", "register_java_toolchains")
+load("@remote_graalvm_linux_x64//java:defs.bzl", register_linux_java_toolchains = "register_java_toolchains")
 
-register_java_toolchains()
+register_linux_java_toolchains()
+
+# CONFIGURE `@remote_graalvm_macos_x64` #######################################
+
+remote_graalvm_macos_x64()
+
+load("@remote_graalvm_macos_x64//java:defs.bzl", register_macos_java_toolchains = "register_java_toolchains")
+
+register_macos_java_toolchains()
 
 # CONFIGURE `@local_graalvm` ###################################################
 

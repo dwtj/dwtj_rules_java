@@ -1,7 +1,7 @@
 # This file was generated from a template with the following substitutions:
 #
 # - REPOSITORY_NAME: {REPOSITORY_NAME}
-# - EXEC_COMPATIBLE_WITH: {EXEC_COMPATIBLE_WITH}
+# - EXEC_COMPATIBLE_WITH: {EXEC_COMPATIBLE_WITH}  --  e.g. '["@platforms//os:linux", "@platforms//cpu:x86_64"]'
 
 '''Defines the Java toolchains provided by this repository, "@{REPOSITORY_NAME}".
 '''

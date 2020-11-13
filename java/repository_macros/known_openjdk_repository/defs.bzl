@@ -48,4 +48,5 @@ def known_openjdk_repository(name = None, **kwargs):
         sha256 = repo.sha256,
         strip_prefix = repo.strip_prefix,
         os = repo.os,
+        cpu = repo.cpu_arch,
     )

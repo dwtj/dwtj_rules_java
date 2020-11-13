@@ -1,6 +1,14 @@
 '''Defines the `local_graalvm_repository` repository rule.
 '''
 
+def _guess_shared_library_file_extension(repository_ctx):
+    os_name = repository_ctx.os.name
+    if os_name == "linux":
+        return "so"
+    if os_name == "mac os x":
+        return "dylib"
+    fail('Unknown OS name: "{}"'.format(os_name))
+
 def _template_label(template_path):
     return Label("@dwtj_rules_java//graalvm:repository_rules/local_graalvm_repository/" + template_path)
 
@@ -27,6 +35,7 @@ def _local_graalvm_repository_impl(repository_ctx):
         _template_label("graalvm/TEMPLATE.BUILD"),
         substitutions = {
             "{REPOSITORY_NAME}": repository_ctx.name,
+            "{SHARED_LIBRARY_FILE_EXTENSION}": _guess_shared_library_file_extension(repository_ctx),
         },
         executable = False,
     )

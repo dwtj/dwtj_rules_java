@@ -11,9 +11,20 @@ load("@dwtj_rules_java//java:repositories.bzl", "known_openjdk_repository")
 
 known_openjdk_repository(name = "default_linux_openjdk")
 
-load("@default_linux_openjdk//java:defs.bzl", "register_java_toolchains")
+load("@default_linux_openjdk//java:defs.bzl", register_linux_java_toolchains = "register_java_toolchains")
 
-register_java_toolchains()
+register_linux_java_toolchains()
+
+# CONFIGURE `@default_linux_openjdk` ##########################################
+
+known_openjdk_repository(
+    name = "default_macos_openjdk",
+    os = "macos",
+)
+
+load("@default_macos_openjdk//java:defs.bzl", register_macos_java_toolchains = "register_java_toolchains")
+
+register_macos_java_toolchains()
 
 # CONFIGURE OTHER KNOWN OPENJDK REPOSITORIES ##################################
 
@@ -21,6 +32,13 @@ known_openjdk_repository(
     name = "jdk_java_net_linux_jdk_14_0_2",
     provider = "jdk_java_net",
     version = "14.0.2",
+)
+
+known_openjdk_repository(
+    name = "jdk_java_net_macos_jdk_14_0_2",
+    provider = "jdk_java_net",
+    version = "14.0.2",
+    os = "macos",
 )
 
 known_openjdk_repository(
@@ -32,7 +50,14 @@ known_openjdk_repository(
 known_openjdk_repository(
     name = "adoptopenjdk_linux_jdk_11_0_9_11",
     provider = "adoptopenjdk",
-    version = "11.0.9+11.1"
+    version = "11.0.9+11.1",
+)
+
+known_openjdk_repository(
+    name = "adoptopenjdk_macos_jdk_11_0_9_11",
+    provider = "adoptopenjdk",
+    version = "11.0.9+11.1",
+    os = "macos",
 )
 
 # TODO(dwtj): Re-enable this once I fix the crashes.
@@ -44,14 +69,22 @@ known_openjdk_repository(
 #     version = "11.0.9+11_openj9-0.23.0"
 # )
 
+# TODO(dwtj): Re-enable this once I fix the crashes.
+# known_openjdk_repository(
+#     name = "amazon_corretto_linux_jdk_8_272_10_3",
+#     provider = "amazon_corretto",
+#     version = "8.272.10.3",
+# )
+
 known_openjdk_repository(
-    name = "amazon_corretto_linux_jdk_8_272_10_3",
+    name = "amazon_corretto_linux_jdk_11_0_9_12_1",
     provider = "amazon_corretto",
-    version = "8.272.10.3",
+    version = "11.0.9.12.1",
 )
 
 known_openjdk_repository(
-    name = "amazon_corretto_linux_jdk_11_0_9_11_1",
+    name = "amazon_corretto_macos_jdk_11_0_9_12_1",
     provider = "amazon_corretto",
-    version = "11.0.9.11.1",
+    version = "11.0.9.12.1",
+    os = "macos",
 )

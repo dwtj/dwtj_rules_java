@@ -35,6 +35,10 @@ graalvm_native_image_toolchain = rule(
         ),
         "shared_library_file_extension": attr.string(
             mandatory = True,
+            values = [
+                "so",
+                "dylib",
+            ],
         ),
         "_build_native_image_library_script_template": attr.label(
             allow_single_file = True,

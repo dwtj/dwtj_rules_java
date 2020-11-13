@@ -7,7 +7,7 @@ rust_library(
     srcs = ["MyLib.rs"],
     crate_type = "cdylib",
     edition = "2018",
-    deps = ["@openjdk_linux_x64//rust/jni"],
+    deps = ["//third_party/openjdk/rust:jni"],
 )
 
 dwtj_java_binary(
@@ -18,20 +18,28 @@ dwtj_java_binary(
 )
 
 rename_cdylib(
-  name = "rename",
+  name = "libmyjni_so",
   src = "my_lib_rust_cdylib",
   out = "libmyjni.so",
+)
+
+rename_cdylib(
+  name = "libmyjni_dylib",
+  src = "my_lib_rust_cdylib",
+  out = "libmyjni.dylib",
 )
 
 sh_test(
     name = "test",
     srcs = ["test.sh"],
     data = [
-        ":libmyjni.so",
+        # TODO(dwtj): Consider making this cleaner by only add one of these.
+        ":libmyjni_so",
+        ":libmyjni_dylib",
         ":MyLib.jar",
     ],
     args = [
-        "$(location :libmyjni.so)",
-        "$(location :MyLib.jar)",
+        "$(rootpath :libmyjni_so)",
+        "$(rootpath :MyLib.jar)",
     ],
 )

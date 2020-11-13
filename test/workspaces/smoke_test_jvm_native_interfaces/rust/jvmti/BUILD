@@ -13,7 +13,7 @@ rust_library(
     name = "my_agent_rust_cdylib",
     srcs = ["my_agent.rs"],
     crate_type = "cdylib",
-    deps = ["@openjdk_linux_x64//rust/jvmti"],
+    deps = ["//third_party/openjdk/rust:jvmti"],
     edition = "2018",
     rustc_flags = ["-A", "unused-variables"]
 )

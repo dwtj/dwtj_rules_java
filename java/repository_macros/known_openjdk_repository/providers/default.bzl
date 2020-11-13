@@ -23,17 +23,17 @@ _KNOWN_OPENJDK_REPOSITORIES = [
         strip_prefix = "jdk-15.0.1",
     ),
     _Repo(
-        os = "macos",
         version = "__default__",
         url = "https://download.java.net/java/GA/jdk15.0.1/51f4f36ad4ef43e39d0dfdbaf6549e32/9/GPL/openjdk-15.0.1_osx-x64_bin.tar.gz",
         sha256 = "e1d4868fb082d9202261c5a05251eded56fb805da2d641a65f604988b00b1979",
         strip_prefix = "jdk-15.0.1.jdk/Contents/Home",
+        os = "macos",
     ),
     _Repo(
-        os = "windows",
         version = "__default__",
         url = "https://download.java.net/java/GA/jdk15.0.1/51f4f36ad4ef43e39d0dfdbaf6549e32/9/GPL/openjdk-15.0.1_windows-x64_bin.zip",
         sha256 = "0a27c733fc7ceaaae3856a9c03f5e2304af30a32de6b454b8762ec02447c5464",
         strip_prefix = "jdk-15.0.1",
+        os = "windows",
     ),
 ]

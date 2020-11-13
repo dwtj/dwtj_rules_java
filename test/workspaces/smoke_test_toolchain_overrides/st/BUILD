@@ -7,14 +7,20 @@ load(
 dwtj_java_library(
     name = "MustBeCompiledWithGraal",
     srcs = ["MustBeCompiledWithGraal.java"],
-    java_compiler_toolchain = "@remote_graalvm_linux_x64//java:_java_compiler_toolchain",
+    java_compiler_toolchain = select({
+        "@bazel_tools//src/conditions:linux_x86_64": "@remote_graalvm_linux_x64//java:_java_compiler_toolchain",
+        "@bazel_tools//src/conditions:darwin": "@remote_graalvm_macos_x64//java:_java_compiler_toolchain",
+    }),
 )
 
 dwtj_java_test(
     name = "MustBeRunWithGraal",
     main_class = "st.MustBeRunWithGraal",
     srcs = ["MustBeRunWithGraal.java"],
-    java_runtime_toolchain = "@remote_graalvm_linux_x64//java:_java_runtime_toolchain",
+    java_runtime_toolchain = select({
+        "@bazel_tools//src/conditions:linux_x86_64": "@remote_graalvm_linux_x64//java:_java_runtime_toolchain",
+        "@bazel_tools//src/conditions:darwin": "@remote_graalvm_macos_x64//java:_java_runtime_toolchain",
+    })
 )
 
 dwtj_java_test(

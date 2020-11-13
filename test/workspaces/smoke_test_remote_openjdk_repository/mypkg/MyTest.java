@@ -4,7 +4,7 @@ import static java.lang.System.getProperty;
 import static java.lang.System.out;
 
 class MyTest {
-    private static final String expectedVersion = "11.0.8";
+    private static final String expectedVersion = "11.0.9";
 
     public static void main(String[] args) {
         String actualVersion = getProperty("java.version");

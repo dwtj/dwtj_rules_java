@@ -85,6 +85,16 @@ remote_openjdk_source_repository = repository_rule(
             mandatory = True,
             doc = 'E.g., "linux-x86_64-server-release"',
         ),
+        # TODO(dwtj): Consider removing this.
+        "os": attr.string(
+            values = ["linux"],
+            default = "linux",
+        ),
+        # TODO(dwtj): Consider removing this.
+        "cpu": attr.string(
+            values = ["x64"],
+            default = "x64",
+        ),
         "_root_build_file_template": attr.label(
             default = Label("//java/repository_rules/remote_openjdk_source_repository/TEMPLATE.BUILD")
         ),

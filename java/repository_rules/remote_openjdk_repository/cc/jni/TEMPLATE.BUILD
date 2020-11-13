@@ -2,7 +2,7 @@
 substitutions:
 
 - REPOSITORY_NAME: {REPOSITORY_NAME}
-- JNI_MD_HEADER_DIR: {JNI_MD_HEADER_DIR}
+- JNI_MD_HEADER_DIR: {JNI_MD_HEADER_DIR}  --  e.g. "include/linux"
 '''
 
 load("@rules_cc//cc:defs.bzl", "cc_library")

@@ -21,6 +21,8 @@ bindgen \
     -I`dirname "$(execpath {JNI_MD_HEADER_LABEL})"` \
 '''
 
+# TODO(dwtj): Consider using a proper `rust_bindgen` rule. (I tried it once, but
+#  I ran into a problem. I can't remember the problem any more.)
 genrule(
     name = "bindgen",
     srcs = [

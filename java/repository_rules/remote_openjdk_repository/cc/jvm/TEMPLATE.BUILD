@@ -2,7 +2,7 @@
 substitutions:
 
 - REPOSITORY_NAME: {REPOSITORY_NAME}
-- SHARED_LIBRARY_PATH: {SHARED_LIBRARY_PATH}
+- JVM_SHARED_LIBRARY_FILE: {JVM_SHARED_LIBRARY_FILE}
 '''
 
 load(
@@ -13,7 +13,7 @@ load(
 
 cc_import(
     name = "jvm_import",
-    shared_library = "@{REPOSITORY_NAME}//jdk:{SHARED_LIBRARY_PATH}",
+    shared_library = "@{REPOSITORY_NAME}//jdk:{JVM_SHARED_LIBRARY_FILE}",
 )
 
 cc_library(
