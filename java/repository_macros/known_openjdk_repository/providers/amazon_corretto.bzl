@@ -29,8 +29,8 @@ _KNOWN_OPENJDK_REPOSITORIES = [
     # https://github.com/corretto/corretto-11 #################################
     _Repo(
         version = "11.0.9.12.1",
-        url = "https://corretto.aws/downloads/resources/11.0.9.12.1/amazon-corretto-11.0.9.12.1-linux-x86.tar.gz",
-        sha256 = "27f951f6011c32b4940a4b2af63bfa112d9917487cb89ee3212dedcffa0c203a",
+        url = "https://corretto.aws/downloads/resources/11.0.9.12.1/amazon-corretto-11.0.9.12.1-linux-x64.tar.gz",
+        sha256 = "448494766be37bb8a4ecd983a09742d28b1fa426684417b0dec2f3b03c44f3a3",
         strip_prefix = "amazon-corretto-11.0.9.12.1-linux-x64",
     ),
     _Repo(
