@@ -2,10 +2,10 @@ workspace(name = "smoke_test_openjdk_source_repositories")
 
 local_repository(
     name = "dwtj_rules_java",
-    path = "../../..",
+    path = "../../../..",
 )
 
-load("@dwtj_rules_java//java:repositories.bzl", "remote_openjdk_source_repository")
+load("@dwtj_rules_java//experimental/java:repositories.bzl", "remote_openjdk_source_repository")
 
 remote_openjdk_source_repository(
     name = "jdk_15_ga",

@@ -1,5 +1,6 @@
 example
 website
+
 test/workspaces/smoke_test_basic_java_rules
 test/workspaces/smoke_test_remote_openjdk_repository
 test/workspaces/smoke_test_use_legacy_java_rules
@@ -15,8 +16,9 @@ test/workspaces/smoke_test_java_rule_attributes
 test/workspaces/smoke_test_jvm_native_interfaces
 test/workspaces/smoke_test_toolchain_overrides
 test/workspaces/smoke_test_transitive_dependencies
-test/workspaces/smoke_test_openjdk_source_repositories
 test/workspaces/smoke_test_known_openjdk_repository_macro
 test/workspaces/graalvm/smoke_test_graalvm_native_image_rules
 test/workspaces/graalvm/smoke_test_remote_graalvm_repository
 test/workspaces/graalvm/smoke_test_graalvm_native_image_resources
+
+experimental/test/workspaces/smoke_test_openjdk_source_repositories

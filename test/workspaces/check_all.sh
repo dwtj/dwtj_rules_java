@@ -141,12 +141,6 @@ if bazel build //st/simple:ThisShouldFailToCompile > /dev/null 2> /dev/null ; th
     exit 1
 fi
 
-WORKSPACE="$ROOT_WORKSPACE/test/workspaces/smoke_test_openjdk_source_repositories"
-echo $WORKSPACE
-cd "$WORKSPACE"
-bazel build //...
-bazel test //...
-
 WORKSPACE="$ROOT_WORKSPACE/test/workspaces/smoke_test_known_openjdk_repository_macro"
 echo $WORKSPACE
 cd "$WORKSPACE"
