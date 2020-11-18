@@ -42,7 +42,7 @@ graalvm_native_image_toolchain = rule(
         ),
         "_build_native_image_library_script_template": attr.label(
             allow_single_file = True,
-            default = Label("@dwtj_rules_java//graalvm:rules/graalvm_native_image_library/TEMPLATE.build_native_image_library.sh"),
+            default = Label("@dwtj_rules_java//experimental/graalvm:rules/graalvm_native_image_library/TEMPLATE.build_native_image_library.sh"),
         ),
     },
 )

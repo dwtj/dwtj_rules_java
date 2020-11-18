@@ -3,7 +3,10 @@ for declaring a `graalvm_native_image_library` rule and wraping its outputs
 in appropriate rules from `@rules_cc`.
 """
 
-load("@dwtj_rules_java//graalvm:rules/graalvm_native_image_library/defs.bzl", "graalvm_native_image_library")
+load(
+    "@dwtj_rules_java//experimental/graalvm:rules/graalvm_native_image_library/defs.bzl",
+    "graalvm_native_image_library",
+)
 load("@rules_cc//cc:defs.bzl", "cc_import", "cc_library")
 
 _NAME_SUFFIXES = {

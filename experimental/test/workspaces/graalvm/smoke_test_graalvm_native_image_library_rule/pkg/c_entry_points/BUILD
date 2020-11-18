@@ -3,7 +3,7 @@ load(
     "dwtj_java_binary",
     "dwtj_java_library",
 )
-load("@dwtj_rules_java//graalvm:defs.bzl", "graalvm_native_image_library")
+load("@dwtj_rules_java//experimental/graalvm:defs.bzl", "graalvm_native_image_library")
 
 dwtj_java_binary(
     name = "hello_java",
