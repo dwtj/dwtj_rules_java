@@ -22,3 +22,4 @@ test/workspaces/graalvm/smoke_test_remote_graalvm_repository
 test/workspaces/graalvm/smoke_test_graalvm_native_image_resources
 
 experimental/test/workspaces/smoke_test_openjdk_source_repositories
+experimental/test/workspaces/graalvm/smoke_test_graalvm_native_image_cc_library_macro

@@ -1,6 +1,6 @@
 # USE THE MACRO TO CREATE A `native-image` WRAPPED IN A `cc_library` ##########
 
-load("@dwtj_rules_java//graalvm:defs.bzl", "graalvm_native_image_cc_library")
+load("@dwtj_rules_java//experimental/graalvm:defs.bzl", "graalvm_native_image_cc_library")
 load("@rules_cc//cc:defs.bzl", "cc_binary")
 
 graalvm_native_image_cc_library(
