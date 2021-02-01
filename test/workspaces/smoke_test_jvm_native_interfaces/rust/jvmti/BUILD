@@ -1,5 +1,5 @@
 load("@dwtj_rules_java//java:defs.bzl", "dwtj_java_binary")
-load("@io_bazel_rules_rust//rust:rust.bzl", "rust_library")
+load("@rules_rust//rust:rust.bzl", "rust_library")
 load("//bazel/util/rust:rename_cdylib.bzl", "rename_cdylib")
 
 dwtj_java_binary(

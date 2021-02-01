@@ -6,7 +6,7 @@ substitutions:
 - JNI_MD_HEADER_LABEL: {JNI_MD_HEADER_LABEL}  --  E.g., "//jdk:include/linux/jni_md.h"
 '''
 
-load("@io_bazel_rules_rust//rust:rust.bzl", "rust_library")
+load("@rules_rust//rust:rust.bzl", "rust_library")
 
 _BINDGEN_CMD_BASH = ''' \
 bindgen \

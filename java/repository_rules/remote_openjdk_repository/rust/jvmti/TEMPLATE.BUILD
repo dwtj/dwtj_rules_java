@@ -9,7 +9,7 @@ substitutions:
 
 # TODO(dwtj): Also implement analogous rules for `jvmticmlr.h`.
 
-load("@io_bazel_rules_rust//rust:rust.bzl", "rust_library")
+load("@rules_rust//rust:rust.bzl", "rust_library")
 
 _BINDGEN_CMD_BASH = ''' \
 bindgen \

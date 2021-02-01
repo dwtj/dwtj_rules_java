@@ -90,12 +90,13 @@ def rules_cc():
         sha256 = _RULES_CC_SHA256,
     )
 
-_RULES_RUST_COMMIT = "e64700dc9b8b3869bce4f77b78c33cb9d088cc4b"
-_RULES_RUST_SHA256 = "eb384450d3b89332b386173233daa66a71e13cf63fe6d9ee51bd09fba0eb41f2"
+# Latest commit to master branch as of 2021-02-01.
+_RULES_RUST_COMMIT = "4fbf3cf1d7b2c4626abfe7f38c857895dda44cd0"
+_RULES_RUST_SHA256 = "79ad97b2b60ab580c01b7403c37c09e41a0ce5251d4126fccb862eb9e78e2501"
 
 def rules_rust():
     http_archive(
-        name = "io_bazel_rules_rust",
+        name = "rules_rust",
         url = "https://github.com/bazelbuild/rules_rust/archive/{}.tar.gz".format(_RULES_RUST_COMMIT),
         sha256 = _RULES_RUST_SHA256,
         strip_prefix = "rules_rust-{}".format(_RULES_RUST_COMMIT),
