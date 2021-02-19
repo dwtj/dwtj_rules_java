@@ -8,7 +8,7 @@ load("//java:providers/JavaDependencyInfo.bzl", "JavaDependencyInfo")
 load("//java:toolchain_rules/java_compiler_toolchain.bzl", "JavaCompilerToolchainInfo")
 load("//java:toolchain_rules/java_runtime_toolchain.bzl", "JavaRuntimeToolchainInfo")
 
-load("//java:common/actions/compile_and_jar_java_sources.bzl", "compile_and_jar_java_target")
+load("//java:common/actions/compile_java_jar.bzl", "compile_java_jar_for_target")
 load("//java:common/actions/write_java_run_script.bzl", "write_java_run_script_from_ctx")
 load("//java:common/extract/toolchain_info.bzl", "extract_java_executable")
 load(
@@ -19,7 +19,7 @@ load(
 
 # NOTE(dwtj): This is very similar to `_java_binary_impl()`.
 def _java_test_impl(ctx):
-    java_compilation_info = compile_and_jar_java_target(ctx)
+    java_compilation_info = compile_java_jar_for_target(ctx)
     java_dependency_info = make_standard_java_target_java_dependency_info(
         ctx,
         java_compilation_info.class_files_output_jar,
@@ -105,6 +105,10 @@ java_test = rule(
                 JavaAgentInfo,
                 JavaDependencyInfo,
             ],
+            default = dict(),
+        ),
+        "resources": attr.label_keyed_string_dict(
+            allow_files = True,
             default = dict(),
         ),
         "output_jar": attr.output(

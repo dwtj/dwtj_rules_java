@@ -31,10 +31,11 @@ toolchain(
 '''
 
 JavaCompilerToolchainInfo = provider(
+    doc = "Specifies the tools, scripts, and configuration needed to compile and JAR Java targets.",
     fields = {
         "javac_executable": "A `javac` executable file (in the host configuration).",
         "jar_executable": "A `jar` executable file (in the host configuration).",
-        "compile_and_jar_java_sources_script_template": "A template for a script which is used to compile Java sources to a JAR file.",
+        "compile_java_jar_script_template": "A template for a script which is used to compile Java sources to a JAR file.",
         "class_path_separator": "The class path separator to use when invoking this `javac` executable."
     },
 )
@@ -43,7 +44,7 @@ def _java_compiler_toolchain_impl(ctx):
     java_compiler_toolchain_info = JavaCompilerToolchainInfo(
         javac_executable = ctx.file.javac_executable,
         jar_executable = ctx.file.jar_executable,
-        compile_and_jar_java_sources_script_template = ctx.file._compile_and_jar_java_sources_script_template,
+        compile_java_jar_script_template = ctx.file._compile_java_jar_script_template,
         class_path_separator = ctx.attr.class_path_separator,
     )
 
@@ -72,16 +73,16 @@ java_compiler_toolchain = rule(
             cfg = "host",
         ),
         # NOTE(dwtj): This seems like a somewhat roundabout way to make this
-        #  template available for instantiation in the
-        #  `compile_and_jar_java_sources()` helper function, but I haven't yet
-        #  figured out another way to do it which resolves the label to a file.
+        #  template available for instantiation in the `compile_java_jar()`
+        #  helper function, but I haven't yet figured out another way to do it
+        #  which resolves the label to a `File`.
         # TODO(dwtj): Try the `Label()` constructor.
-        "_compile_and_jar_java_sources_script_template": attr.label(
-            default = "@dwtj_rules_java//java:common/actions/TEMPLATE.compile_and_jar_java_sources.sh",
+        "_compile_java_jar_script_template": attr.label(
+            default = "//java:common/actions/TEMPLATE.compile_java_jar.sh",
             allow_single_file = True,
         ),
         "class_path_separator": attr.string(
-            default = ":",
+            default = ":",  # Defaults to the Unix-like class-path separator.
         )
     },
     provides = [JavaCompilerToolchainInfo]

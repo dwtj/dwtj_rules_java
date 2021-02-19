@@ -18,7 +18,8 @@ def make_standard_java_target_java_dependency_info(ctx, output_jar):
     Args:
       ctx: The `ctx` object of this Java target.
       output_jar: The JAR `File` created by this Java target.
-    Return:
+
+    Returns:
       `JavaDependencyInfo`
     '''
     deps = []
