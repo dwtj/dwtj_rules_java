@@ -18,6 +18,7 @@ test/workspaces/smoke_test_toolchain_overrides
 test/workspaces/smoke_test_transitive_dependencies
 test/workspaces/smoke_test_java_resources
 test/workspaces/smoke_test_known_openjdk_repository_macro
+test/workspaces/smoke_test_annotation_processors
 
 test/workspaces/graalvm/smoke_test_graalvm_native_image_binary_rule
 test/workspaces/graalvm/smoke_test_remote_graalvm_repository
