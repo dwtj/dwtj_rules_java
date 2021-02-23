@@ -61,6 +61,7 @@ def compile_java_jar_for_target(ctx):
         main_class = maybe_main_class,
         java_compiler_toolchain_info = extract_java_compiler_toolchain_info(ctx),
         resources = ctx.attr.resources,
+        javac_flags = ctx.attr.javac_flags,
     )
 
     compile_java_jar(
@@ -99,6 +100,21 @@ def compile_java_jar(label, compilation_info, actions, temp_file_prefix):
         jars = compilation_info.class_path_jars,
         actions = actions,
         class_path_separator = compiler_toolchain_info.class_path_separator
+    )
+
+    # Declare, build, and write an @args file of the user's extra flags for the
+    # `javac` command.
+    javac_flags_args_file = actions.declare_file(temp_file_prefix + ".javac_flags.args")
+    javac_flags_args = actions.args()
+    javac_flags_args.set_param_file_format("multiline")
+    javac_flags_args.add_all(
+        compilation_info.javac_flags,
+        omit_if_empty = False,
+    )
+    actions.write(
+        output = javac_flags_args_file,
+        content = javac_flags_args,
+        is_executable = False,
     )
 
     # Declare, build and write a JAR manifest file:
@@ -146,7 +162,9 @@ def compile_java_jar(label, compilation_info, actions, temp_file_prefix):
             "{JAVAC_EXECUTABLE}": compiler_toolchain_info.javac_executable.path,
             "{JAVAC_BUILD_DIR}": javac_build_dir.path,
             "{RESOURCES_DIR}": resources_dir_marker.dirname,
+            # TODO(dwtj): Consider merging these three args files into one.
             "{CLASS_PATH_ARGS_FILE}": class_path_args_file.path,
+            "{JAVAC_FLAGS_ARGS_FILE}": javac_flags_args_file.path,
             "{JAVA_SRCS_ARGS_FILE}": compilation_info.srcs_args_file.path,
             "{JAR_EXECUTABLE}": compiler_toolchain_info.jar_executable.path,
             "{JAR_MANIFEST_FILE}": jar_manifest_file.path,
@@ -165,6 +183,7 @@ def compile_java_jar(label, compilation_info, actions, temp_file_prefix):
         inputs = depset(
             direct = [
                 class_path_args_file,
+                javac_flags_args_file,
                 compilation_info.srcs_args_file,
                 jar_manifest_file,
             ],

@@ -12,6 +12,7 @@ JavaCompilationInfo = provider(
         "additional_jar_manifest_attributes": "A list of strings to be included in the manifest of the generated JAR.",
         "java_compiler_toolchain_info": "The `JavaCompilerToolchainInfo` which should be used to compile this Java target.",
         "resources": "A dict from a `File` to be included in the output JAR to its in-JAR path.",
+        "javac_flags": "A list of strings to be included in the `javac` invocation."
         # TODO(dwtj): Consider supporting compiler plugins
         # TODO(dwtj): Consider supporting "generated_sources_output_jar".
         # TODO(dwtj): Consider supporting "native_headers_archive" (i.e. `javac -h <directory>).
